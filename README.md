@@ -155,3 +155,24 @@ This is implemented using:
 
 - `env-cmd` (installed using `npm install env-cmd -D`)
 - [.env.publish](./.env.publish) which defines environment variables used by `react-scripts build`
+
+### Create a favicon
+
+- Start with a suitable SVG e.g. from https://fonts.google.com/icons
+  - history_black_24dp.svg
+- Change the color to e.g. blue -- `rgb(97,218,251)`
+  - logo_24dp.svg
+- Open the SVG using LibreOffice Draw and use File/Export... to save it as several PNG files with different resolutions:
+  - logo_16dp.png
+  - logo_24dp.png
+  - logo_32dp.png
+  - logo_64dp.png
+- Install ImageMagick and run its convert utility:
+
+```
+"C:\Program Files\ImageMagick-7.1.0-Q16-HDRI\convert" logo_16dp.png logo_24dp.png logo_32dp.png logo_64dp.png -colors 32 -alpha background favicon.ico
+```
+
+Note -- the current image could be better e.g. bigger.
+The SVG file I started with has padding or margin, so the image doesn't occupy its entire canvass e.g. 16 pixels,
+which makes it smaller than other sites' favicons.
