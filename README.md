@@ -176,3 +176,14 @@ This is implemented using:
 Note -- the current image could be better e.g. bigger.
 The SVG file I started with has padding or margin, so the image doesn't occupy its entire canvass e.g. 16 pixels,
 which makes it smaller than other sites' favicons.
+
+### APIs
+
+The application is implemented using these APIs.
+
+- React
+  - https://reactjs.org/docs/getting-started.html
+  - https://react-typescript-cheatsheet.netlify.app/
+  - https://github.com/piotrwitek/react-redux-typescript-guide
+- React Router v6
+  - https://reactrouter.com/docs/en/v6
