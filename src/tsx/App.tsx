@@ -2,11 +2,13 @@
 import React from 'react';
 import * as ReactRouter from 'react-router-dom';
 
+import * as Component from './components';
 import * as Page from './pages';
 
 const App: React.FunctionComponent = () => {
   return (
     <ReactRouter.BrowserRouter basename={process.env.PUBLIC_URL}>
+      <Component.Topbar />
       <AppRoutes />
     </ReactRouter.BrowserRouter>
   );
