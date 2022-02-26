@@ -20,6 +20,7 @@ Use it to record what time you spend on tasks and types of activity.
   - [APIs](#apis)
   - [Data stores](#data-stores)
   - [Filename conventions](#filename-conventions)
+  - [Source directories](#source-directories)
 
 ## Analysis
 
@@ -140,9 +141,10 @@ I initialized the project using [Create React App with TypeScript](https://creat
 
     npx create-react-app time --template typescript
 
-The most useful command is `npm start` which launches the app for interactive development and debugging using Visual
-
-- `npm run build` -- the vanilla version of the optimized build
+- The most useful command is `npm start` which launches the app for interactive development using Visual Studio Code
+- For debugging, do `npm start`, then press F5 to Start Debugging using the "Chrome" settings defined in `launch.json`
+- `npm run build` is the vanilla version of the optimized build (which I don't use)
+- `npm run publish` is a modified version of `npm run build` -- it builds a release version into the `/docs` folder
 
 ### Publishing
 
@@ -151,11 +153,9 @@ The built version of the project is published at this URL:
 - https://cwellsx.github.io/time/
 
 This is served using [GitHub Pages](https://github.com/cwellsx/time/settings/pages) which publishes the `/docs` folder
-of the project, therefore:
+of the project.
 
-- `npm publish` -- builds a release version into the `/docs` folder
-
-This is implemented using:
+The `npm run publish` command is implemented using:
 
 - `env-cmd` (installed using `npm install env-cmd -D`)
 - [.env.publish](./.env.publish) which defines environment variables used by `react-scripts build`
@@ -195,6 +195,7 @@ The application is implemented using these APIs.
   - https://www.typescriptlang.org/docs/
 - IndexedDB with usability
   - https://github.com/jakearchibald/idb
+  - https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
 
 ### Data stores
 
@@ -202,15 +203,14 @@ The application is implemented using these APIs.
   - Timestamp events
   - Tags
   - User-specified settings
-- Assuming "10 periods per day" implies "3500 periods (i.e. 7000 timestamps) per year" -- which is not very much data?
-- At application start-up, all data is loaded into application cache
+- At application start-up, all data is loaded into application cache -- the performance test suggests that's OK
 - Using `useState` seems simpler than `useReducer` so prefer that for now
-- I'll use the `idb` package which wraps the IndexedDB API in promises to make it usable with async/await
+- Use the `idb` package which wraps the IndexedDB API in promises to make it usable with async/await
 
-CRA uses Jest to run unit tests.
-Jest [does not run in the browser](https://create-react-app.dev/docs/running-tests/).
-So to test the behaviour of IndexedDB there are unit tests in [`test.ts`](./src/ts/test.ts),
-written without a framework like jest -- they're run if you navigate to the ./tests page in the browser.
+CRA uses Jest to run unit tests,
+but Jest [does not run in the browser](https://create-react-app.dev/docs/running-tests/) --
+and so to test the behaviour of IndexedDB, there are unit tests in [`tests.ts`](./src/ts_data/tests.ts) which are
+written without a framework like Jest -- they're run if you navigate to the ./tests page in the browser.
 
 ### Filename conventions
 
@@ -219,20 +219,16 @@ written without a framework like jest -- they're run if you navigate to the ./te
 - camelCase for non-React TypeScript filenames --
   https://github.com/basarat/typescript-book/blob/master/docs/styleguide/styleguide.md#filename
 - lowercase_with_underscore for directory names
+
+### Source directories
+
 - All source code except `index.tsx` and `App.tsx` are located in various subdirectories of the `src` directory
 - No nested subdirectories of the `src` directory ... all subdirectories are peers
-
-A module can import from:
-
-- Any file (except `index.ts`) in its own directory
-- Or from the `index.ts` of a peer directory
-
-Therefore:
-
 - `index.ts` defines the public API of the modules in a directory
 - A directory can have private modules which are not exported via its `index.ts`
+- A module can import from any file (except `index.ts`) in its own directory, or from the `index.ts` of a peer directory
 
-React is used in the following directories only:
+React is used in these subdirectories only -- this separates "view" from data, i.e. from the "model" and "controller":
 
 - `ts_hooks`
 - `tsx_components`
