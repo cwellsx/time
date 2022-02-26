@@ -16,6 +16,10 @@ Use it to record what time you spend on tasks and types of activity.
 - [Development](#development)
   - [How to build and run](#how-to-build-and-run)
   - [Publishing](#publishing)
+  - [Create a favicon](#create-a-favicon)
+  - [APIs](#apis)
+  - [Data stores](#data-stores)
+  - [Filename conventions](#filename-conventions)
 
 ## Analysis
 
@@ -187,3 +191,49 @@ The application is implemented using these APIs.
   - https://github.com/piotrwitek/react-redux-typescript-guide
 - React Router v6
   - https://reactrouter.com/docs/en/v6
+- TypeScript language
+  - https://www.typescriptlang.org/docs/
+- IndexedDB with usability
+  - https://github.com/jakearchibald/idb
+
+### Data stores
+
+- Only the most primitive, unprocessed data is persisted to the database:
+  - Timestamp events
+  - Tags
+  - User-specified settings
+- Assuming "10 periods per day" implies "3500 periods (i.e. 7000 timestamps) per year" -- which is not very much data?
+- At application start-up, all data is loaded into application cache
+- Using `useState` seems simpler than `useReducer` so prefer that for now
+- I'll use the `idb` package which wraps the IndexedDB API in promises to make it usable with async/await
+
+CRA uses Jest to run unit tests.
+Jest [does not run in the browser](https://create-react-app.dev/docs/running-tests/).
+So to test the behaviour of IndexedDB there are unit tests in [`test.ts`](./src/ts/test.ts),
+written without a framework like jest -- they're run if you navigate to the ./tests page in the browser.
+
+### Filename conventions
+
+- PascalCase for React filenames --
+  https://github.com/airbnb/javascript/tree/master/react#naming
+- camelCase for non-React TypeScript filenames --
+  https://github.com/basarat/typescript-book/blob/master/docs/styleguide/styleguide.md#filename
+- lowercase_with_underscore for directory names
+- All source code except `index.tsx` and `App.tsx` are located in various subdirectories of the `src` directory
+- No nested subdirectories of the `src` directory ... all subdirectories are peers
+
+A module can import from:
+
+- Any file (except `index.ts`) in its own directory
+- Or from the `index.ts` of a peer directory
+
+Therefore:
+
+- `index.ts` defines the public API of the modules in a directory
+- A directory can have private modules which are not exported via its `index.ts`
+
+React is used in the following directories only:
+
+- `ts_hooks`
+- `tsx_components`
+- `tsx_pages`
