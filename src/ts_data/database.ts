@@ -3,6 +3,7 @@ import { DBSchema, deleteDB, IDBPDatabase, openDB } from 'idb';
 import { Time } from './model';
 
 export type DbName = "production" | "test";
+export type SetError = (error: any) => void;
 
 interface Schema extends DBSchema {
   times: {

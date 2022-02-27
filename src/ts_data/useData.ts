@@ -1,7 +1,12 @@
 import React from 'react';
 
-import { Controller, Database, fetchDatabase, getTestResults, TestResult } from '../ts_data';
-import { useSetError } from './context';
+import { Controller } from './controller';
+import { Database, fetchDatabase, SetError } from './database';
+import { getTestResults, TestResult } from './tests';
+
+/*
+  functions which depend on useAsync
+*/
 
 type AsyncResult<T> = {
   data: T | undefined;
@@ -42,4 +47,27 @@ export function useController(): Controller | undefined {
   const { data: database, reload } = useDatabase();
   const setError = useSetError();
   return database ? new Controller(database, reload, setError) : undefined;
+}
+
+/*
+  functions related to SetError and AppContext
+*/
+
+export function useError(): [string, SetError] {
+  const [error, setError] = React.useState("");
+  const setAny: SetError = (e) => setError(e);
+  return [error, setAny];
+}
+
+type AppContextProps = {
+  setError: SetError;
+};
+
+export const AppContext = React.createContext<AppContextProps>({
+  setError: (error: string) => {},
+});
+
+export function useSetError(): SetError {
+  const appContext: AppContextProps = React.useContext(AppContext);
+  return appContext.setError;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import * as ReactRouter from 'react-router-dom';
 
-import { AppContext, useController, useError, useTestResults } from './ts_hooks';
+import { AppContext, useController, useError, useTestResults } from './ts_data';
 import * as Component from './tsx_components';
 import * as Page from './tsx_pages';
 

@@ -1,0 +1,27 @@
+digraph SRC {
+  "App.tsx" -> {"ts_data" "tsx_components" "tsx_pages"};
+
+  "tsx_pages" [shape=folder];
+  "tsx_components" [shape=folder];
+  "ts_ui" [shape=folder];
+  "ts_data" [shape=folder];
+  
+  "tsx_pages" -> {"Now.tsx" "Tests.tsx"};
+  "Now.tsx" -> {"ts_ui" "ts_data"};
+  "Tests.tsx" -> {"ts_data"};
+
+  "tsx_components" -> {"Error.tsx" "Topbar.tsx"};
+  "Error.tsx" -> {};
+  "Topbar.tsx" -> {"icons.ts"};
+  "icons.ts" -> {};
+  
+  "ts_ui" -> {"date.ts"};
+  "date.ts" -> {};
+  
+  "ts_data" -> {"controller.ts" "database.ts" "model.ts" "tests.ts" "useData.ts"};
+  "useData.ts" -> {"controller.ts" "database.ts" "tests.ts"};
+  "controller.ts" -> {"database.ts" "model.ts"};
+  "database.ts" -> {"model.ts"};
+  "model.ts" -> {};
+  "tests.ts" -> {"database.ts" "model.ts"};
+}

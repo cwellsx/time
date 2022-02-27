@@ -1,6 +1,5 @@
 import { editDatabase } from '.';
-import { SetError } from '../ts_hooks';
-import { Database } from './database';
+import { Database, SetError } from './database';
 import { isTimeStop, Time, TimeStop, What } from './model';
 
 export interface NowState {
