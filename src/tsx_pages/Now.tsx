@@ -14,7 +14,7 @@ class Displayed {
       this.started = false;
       this.time = "";
     } else {
-      this.started = last.type != "stop";
+      this.started = last.type !== "stop";
       this.time = `${this.started ? "Started" : "Stopped"} ${showWhen(last.when)}`;
     }
   }

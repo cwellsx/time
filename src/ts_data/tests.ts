@@ -18,12 +18,12 @@ function createTimes(year: number, nDays: number, nTimesPerDay: number): Time[] 
     const day = i % 20;
     for (let j = 0; j < nTimesPerDay; ++j) {
       const when = new Date(year, month, day, j + 1).valueOf();
-      if (j == 0) result.push({ type: "start", when: when });
-      else if (j == nTimesPerDay - 1) result.push({ type: "stop", when: when, note: "hello", what: [] });
+      if (j === 0) result.push({ type: "start", when: when });
+      else if (j === nTimesPerDay - 1) result.push({ type: "stop", when: when, note: "hello", what: [] });
       else result.push({ type: "next", when: when, note: "hello", what: [] });
     }
   }
-  assert(result.length == nDays * nTimesPerDay);
+  assert(result.length === nDays * nTimesPerDay);
   return result;
 }
 
@@ -42,7 +42,7 @@ const tests: Test[] = [
       const edit = await DB.editDatabase("test");
       for (let time of createTimes(2020, 1, 2)) {
         const pushed = await edit.addTime(time);
-        assert(pushed == time.when);
+        assert(pushed === time.when);
       }
     },
   },
@@ -50,14 +50,14 @@ const tests: Test[] = [
     title: "assert two times",
     run: async () => {
       const db = await DB.fetchDatabase("test");
-      assert(db.times.length == 2);
+      assert(db.times.length === 2);
       createTimes(2020, 1, 2).forEach((time, index) => {
         const found = db.times[index];
-        assert(found.when == time.when);
-        assert(found.type == time.type);
+        assert(found.when === time.when);
+        assert(found.type === time.type);
         if (isTimeStop(found)) {
           if (!isTimeStop(time)) assert(false);
-          else assert(found.note == time.note);
+          else assert(found.note === time.note);
         }
       });
     },
@@ -79,7 +79,7 @@ const tests: Test[] = [
     title: "read 4000 times",
     run: async () => {
       const db = await DB.fetchDatabase("test");
-      assert(db.times.length == 4002);
+      assert(db.times.length === 4002);
     },
   },
 ];

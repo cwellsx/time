@@ -7,6 +7,6 @@ export function showWhen(when: number): string {
   const it = new Date(when);
   const now = new Date();
   const today =
-    it.getFullYear() == now.getFullYear() && it.getMonth() == now.getMonth() && it.getDate() == now.getDate();
+    it.getFullYear() === now.getFullYear() && it.getMonth() === now.getMonth() && it.getDate() === now.getDate();
   return date.format(it, today ? shortFormat : longFormat);
 }

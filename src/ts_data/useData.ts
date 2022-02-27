@@ -28,15 +28,20 @@ function useAsync<T>(fetch: () => Promise<T>): AsyncResult<T> {
       }
     };
     invoke();
-  }, [version]);
+  }, [version, setError, fetch]);
 
   const reload = () => setVersion(version + 1);
 
   return { data: state, reload: reload };
 }
 
+// this must be at module scope, not a lambda, because it's in the array of dependencies of the useEffect function
+async function fetchProductionDatabase() {
+  return fetchDatabase("production");
+}
+
 function useDatabase(): AsyncResult<Database> {
-  return useAsync(async () => fetchDatabase("production"));
+  return useAsync(fetchProductionDatabase);
 }
 
 export function useTestResults(): TestResult[] | undefined {
