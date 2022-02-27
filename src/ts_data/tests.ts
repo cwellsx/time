@@ -1,5 +1,5 @@
 import * as DB from './database';
-import { Event, EventType } from './model';
+import { isTimeStop, Time } from './model';
 
 type Test = {
   title: string;
@@ -10,20 +10,20 @@ function assert(b: boolean) {
   if (!b) throw "assertion failed";
 }
 
-function createEvents(year: number, nDays: number, nEventsPerDay: number): Event[] {
-  assert(nDays <= 360 && nEventsPerDay <= 20);
-  const result: Event[] = [];
+function createTimes(year: number, nDays: number, nTimesPerDay: number): Time[] {
+  assert(nDays <= 360 && nTimesPerDay <= 20 && nTimesPerDay > 1);
+  const result: Time[] = [];
   for (let i = 0; i < nDays; ++i) {
     const month = Math.floor(i / 20);
     const day = i % 20;
-    for (let j = 0; j < nEventsPerDay; ++j) {
-      const eventType: EventType = j == 0 ? EventType.Start : j == nEventsPerDay - 1 ? EventType.Stop : EventType.Next;
-      const when = new Date(year, month, day, j + 1);
-      const event = new Event(when.valueOf(), [], "hello");
-      result.push(event);
+    for (let j = 0; j < nTimesPerDay; ++j) {
+      const when = new Date(year, month, day, j + 1).valueOf();
+      if (j == 0) result.push({ type: "start", when: when });
+      else if (j == nTimesPerDay - 1) result.push({ type: "stop", when: when, note: "hello", what: [] });
+      else result.push({ type: "next", when: when, note: "hello", what: [] });
     }
   }
-  assert(result.length == nDays * nEventsPerDay);
+  assert(result.length == nDays * nTimesPerDay);
   return result;
 }
 
@@ -37,45 +37,49 @@ const tests: Test[] = [
     run: async () => await DB.fetchDatabase("test"),
   },
   {
-    title: "save two events",
+    title: "save two times",
     run: async () => {
       const edit = await DB.editDatabase("test");
-      for (let event of createEvents(2020, 1, 2)) {
-        const pushed = await edit.addEvent(event);
-        assert(pushed == event.when);
+      for (let time of createTimes(2020, 1, 2)) {
+        const pushed = await edit.addTime(time);
+        assert(pushed == time.when);
       }
     },
   },
   {
-    title: "assert two events",
+    title: "assert two times",
     run: async () => {
       const db = await DB.fetchDatabase("test");
-      assert(db.events.length == 2);
-      createEvents(2020, 1, 2).forEach((event, index) => {
-        const found = db.events[index];
-        assert(found.when == event.when);
-        assert(found.note == event.note);
+      assert(db.times.length == 2);
+      createTimes(2020, 1, 2).forEach((time, index) => {
+        const found = db.times[index];
+        assert(found.when == time.when);
+        assert(found.type == time.type);
+        if (isTimeStop(found)) {
+          if (!isTimeStop(time)) assert(false);
+          else assert(found.note == time.note);
+        }
       });
     },
   },
   {
-    title: "save 4000 events",
+    title: "save 4000 times",
     run: async () => {
       const edit = await DB.editDatabase("test");
       if (false) {
         // this takes 20 seconds (5 msec each) because each is in its own transaction
-        await Promise.all(createEvents(2021, 200, 20).map(async (event) => await edit.addEvent(event)));
+        await Promise.all(createTimes(2021, 200, 20).map(async (time) => await edit.addTime(time)));
       } else {
         // this takes 600 msec, it's implemented using one transaction
-        await edit.addEvents(createEvents(2021, 200, 20));
+        await edit.addTimes(createTimes(2021, 200, 20));
       }
     },
   },
   {
-    title: "read 4000 events",
+    title: "read 4000 times",
     run: async () => {
       const db = await DB.fetchDatabase("test");
-      assert(db.events.length == 4002);
+      assert(db.times.length == 4002);
     },
   },
 ];

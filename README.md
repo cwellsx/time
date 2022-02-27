@@ -37,8 +37,8 @@ Use it to record what time you spend on tasks and types of activity.
 
 ### Use cases
 
-- A "period" is the timespan between two events
-- There are "events" for which the user can click a button:
+- A "period" is the timespan between two times
+- There are "times" for which the user can click a button:
   - Start -- begin a period
   - Stop -- end a period
   - Next -- switch from one period to another
@@ -200,7 +200,7 @@ The application is implemented using these APIs.
 ### Data stores
 
 - Only the most primitive, unprocessed data is persisted to the database:
-  - Timestamp events
+  - Times
   - Tags
   - User-specified settings
 - At application start-up, all data is loaded into application cache -- the performance test suggests that's OK

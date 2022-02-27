@@ -2,31 +2,25 @@ export function now(): number {
   return Date.now();
 }
 
-export enum EventType {
-  Start = "start",
-  Stop = "stop",
-  Next = "next",
-  Cancel = "cancel",
-}
-
-export class What {
+export interface What {
   readonly id: string;
   readonly type: string;
-
-  constructor(id: string, type: string) {
-    this.id = id;
-    this.type = type;
-  }
 }
 
-export class Event {
+export interface TimeStart {
   readonly when: number;
+  readonly type: "start";
+}
+
+export interface TimeStop {
+  readonly when: number;
+  readonly type: "stop" | "next";
   readonly what: What[];
   readonly note: string;
-
-  constructor(when: number, what: What[], note: string) {
-    this.when = when;
-    this.what = what;
-    this.note = note;
-  }
 }
+
+export function isTimeStop(time: Time): time is TimeStop {
+  return time.type !== "start";
+}
+
+export type Time = TimeStart | TimeStop;

@@ -1,20 +1,20 @@
 import { DBSchema, deleteDB, IDBPDatabase, openDB } from 'idb';
 
-import { Event } from './model';
+import { Time } from './model';
 
 export type DbName = "production" | "test";
 
 interface Schema extends DBSchema {
-  events: {
+  times: {
     key: number;
-    value: Event;
+    value: Time;
   };
 }
 
 async function open(dbName: DbName): Promise<IDBPDatabase<Schema>> {
   const db = await openDB<Schema>(dbName, 1, {
     upgrade(db, oldVersion, newVersion, transaction) {
-      db.createObjectStore("events", {
+      db.createObjectStore("times", {
         keyPath: "when",
       });
     },
@@ -23,10 +23,10 @@ async function open(dbName: DbName): Promise<IDBPDatabase<Schema>> {
 }
 
 export class Database {
-  constructor(events: Event[]) {
-    this.events = events;
+  constructor(times: Time[]) {
+    this.times = times;
   }
-  readonly events: Event[];
+  readonly times: Time[];
 }
 
 export class EditDatabase {
@@ -34,20 +34,20 @@ export class EditDatabase {
   constructor(db: IDBPDatabase<Schema>) {
     this.db = db;
   }
-  addEvent(event: Event): Promise<number> {
-    return this.db.add("events", event);
+  addTime(time: Time): Promise<number> {
+    return this.db.add("times", time);
   }
-  addEvents(events: Event[]): Promise<number[]> {
-    const tx = this.db.transaction("events", "readwrite");
-    const store = tx.objectStore("events");
-    return Promise.all(events.map(async (event) => store.add(event)));
+  addTimes(times: Time[]): Promise<number[]> {
+    const tx = this.db.transaction("times", "readwrite");
+    const store = tx.objectStore("times");
+    return Promise.all(times.map(async (time) => store.add(time)));
   }
 }
 
 export async function fetchDatabase(dbName: DbName): Promise<Database> {
   const db = await open(dbName);
-  const events = await db.getAll("events");
-  return new Database(events);
+  const times = await db.getAll("times");
+  return new Database(times);
 }
 
 export async function deleteDatabase(dbName: DbName): Promise<void> {

@@ -35,5 +35,5 @@ export function useTestResults(): TestResult[] | undefined {
 export function useController(): Controller | undefined {
   const { data: database, reload } = useDatabase();
 
-  return database ? new Controller(database) : undefined;
+  return database ? new Controller(database, reload) : undefined;
 }
