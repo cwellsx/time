@@ -1,3 +1,5 @@
+import { editDatabase } from '.';
+import { SetError } from '../ts_hooks';
 import { Database } from './database';
 import { isTimeStop, Time, TimeStop, What } from './model';
 
@@ -15,9 +17,11 @@ export interface NowState {
 
 export class Controller implements NowState {
   private readonly reload: () => void;
-  constructor(database: Database, reload: () => void) {
+  private readonly setError: SetError;
+  constructor(database: Database, reload: () => void, setError: SetError) {
     this.database = database;
     this.reload = reload;
+    this.setError = setError;
     const times = database.times;
     const length = times.length;
     const last = length ? times[length - 1] : undefined;
@@ -45,5 +49,16 @@ export class Controller implements NowState {
     readonly what: What[];
     readonly note: string;
   };
-  save(time: Time): void {}
+  save(time: Time): void {
+    editDatabase(this.database.dbName)
+      .then(async (edit) => {
+        try {
+          await edit.addTime(time);
+          this.reload();
+        } catch (e) {
+          this.setError(e);
+        }
+      })
+      .catch((error) => this.setError(error));
+  }
 }

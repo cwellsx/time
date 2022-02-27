@@ -29,7 +29,7 @@ const Now: React.FunctionComponent = () => {
   return (
     <React.Fragment>
       <h1>Now</h1>
-      <Page.Now text="Hello world" state={controller} />
+      <Page.Now state={controller} />
     </React.Fragment>
   );
 };

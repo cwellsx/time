@@ -196,6 +196,8 @@ The application is implemented using these APIs.
 - IndexedDB with usability
   - https://github.com/jakearchibald/idb
   - https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
+- date-and-time
+  - https://www.npmjs.com/package/date-and-time
 
 ### Data stores
 

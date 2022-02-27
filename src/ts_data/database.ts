@@ -23,9 +23,11 @@ async function open(dbName: DbName): Promise<IDBPDatabase<Schema>> {
 }
 
 export class Database {
-  constructor(times: Time[]) {
+  constructor(dbName: DbName, times: Time[]) {
+    this.dbName = dbName;
     this.times = times;
   }
+  readonly dbName: DbName;
   readonly times: Time[];
 }
 
@@ -47,7 +49,7 @@ export class EditDatabase {
 export async function fetchDatabase(dbName: DbName): Promise<Database> {
   const db = await open(dbName);
   const times = await db.getAll("times");
-  return new Database(times);
+  return new Database(dbName, times);
 }
 
 export async function deleteDatabase(dbName: DbName): Promise<void> {

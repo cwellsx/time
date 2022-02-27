@@ -7,7 +7,7 @@ type Test = {
 };
 
 function assert(b: boolean) {
-  if (!b) throw "assertion failed";
+  if (!b) throw new Error("assertion failed");
 }
 
 function createTimes(year: number, nDays: number, nTimesPerDay: number): Time[] {

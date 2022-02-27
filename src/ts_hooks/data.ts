@@ -20,7 +20,6 @@ function useAsync<T>(fetch: () => Promise<T>): AsyncResult<T> {
         setState(fetched);
       } catch (e) {
         setError(e + "");
-        //console.log(e);
       }
     };
     invoke();
@@ -41,5 +40,6 @@ export function useTestResults(): TestResult[] | undefined {
 
 export function useController(): Controller | undefined {
   const { data: database, reload } = useDatabase();
-  return database ? new Controller(database, reload) : undefined;
+  const setError = useSetError();
+  return database ? new Controller(database, reload, setError) : undefined;
 }
