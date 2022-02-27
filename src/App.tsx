@@ -1,21 +1,25 @@
 import React from 'react';
 import * as ReactRouter from 'react-router-dom';
 
-import { useController, useTestResults } from './ts_hooks';
+import { AppContext, useController, useError, useTestResults } from './ts_hooks';
 import * as Component from './tsx_components';
 import * as Page from './tsx_pages';
 
 //import './App.css';
 const App: React.FunctionComponent = () => {
+  const [error, setError] = useError();
   return (
-    <ReactRouter.BrowserRouter basename={process.env.PUBLIC_URL}>
-      <Component.Topbar />
-      <ReactRouter.Routes>
-        <ReactRouter.Route path="/" element={<Now />} />
-        <ReactRouter.Route path="/tests" element={<Tests />} />
-        <ReactRouter.Route path="*" element={<p>URL Not Found</p>} />
-      </ReactRouter.Routes>
-    </ReactRouter.BrowserRouter>
+    <AppContext.Provider value={{ setError }}>
+      <ReactRouter.BrowserRouter basename={process.env.PUBLIC_URL}>
+        <Component.Topbar />
+        <Component.Error error={error} />
+        <ReactRouter.Routes>
+          <ReactRouter.Route path="/" element={<Now />} />
+          <ReactRouter.Route path="/tests" element={<Tests />} />
+          <ReactRouter.Route path="*" element={<p>URL Not Found</p>} />
+        </ReactRouter.Routes>
+      </ReactRouter.BrowserRouter>
+    </AppContext.Provider>
   );
 };
 
