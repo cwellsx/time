@@ -1,7 +1,3 @@
-export function now(): number {
-  return Date.now();
-}
-
 export interface What {
   readonly id: string;
   readonly type: string;
@@ -24,3 +20,9 @@ export function isTimeStop(time: Time): time is TimeStop {
 }
 
 export type Time = TimeStart | TimeStop;
+
+export type Config = {
+  note?: string;
+};
+
+export const configVersion = 1;

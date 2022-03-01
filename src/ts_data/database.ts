@@ -1,6 +1,6 @@
 import { DBSchema, deleteDB, IDBPDatabase, openDB } from 'idb';
 
-import { Time } from './model';
+import { Config, configVersion, Time } from './model';
 
 export type DbName = "production" | "test";
 export type SetError = (error: any) => void;
@@ -10,32 +10,46 @@ interface Schema extends DBSchema {
     key: number;
     value: Time;
   };
+  config: {
+    key: number;
+    value: Config;
+  };
 }
 
 async function open(dbName: DbName): Promise<IDBPDatabase<Schema>> {
-  const db = await openDB<Schema>(dbName, 1, {
+  const db = await openDB<Schema>(dbName, 2, {
     upgrade(db, oldVersion, newVersion, transaction) {
-      db.createObjectStore("times", {
-        keyPath: "when",
-      });
+      if (oldVersion < 1) {
+        db.createObjectStore("times", {
+          keyPath: "when",
+        });
+      }
+      if (oldVersion < 2) {
+        db.createObjectStore("config");
+      }
     },
   });
   return db;
 }
 
 export class Database {
-  constructor(dbName: DbName, times: Time[]) {
+  constructor(dbName: DbName, times: Time[], config: Config | undefined) {
     this.dbName = dbName;
     this.times = times;
+    this.config = config;
   }
   readonly dbName: DbName;
   readonly times: Time[];
+  readonly config?: Config;
 }
 
 export class EditDatabase {
   private readonly db: IDBPDatabase<Schema>;
   constructor(db: IDBPDatabase<Schema>) {
     this.db = db;
+  }
+  putConfig(config: Config): Promise<number> {
+    return this.db.put("config", config, configVersion);
   }
   addTime(time: Time): Promise<number> {
     return this.db.add("times", time);
@@ -50,7 +64,8 @@ export class EditDatabase {
 export async function fetchDatabase(dbName: DbName): Promise<Database> {
   const db = await open(dbName);
   const times = await db.getAll("times");
-  return new Database(dbName, times);
+  const config = await db.get("config", configVersion);
+  return new Database(dbName, times, config);
 }
 
 export async function deleteDatabase(dbName: DbName): Promise<void> {

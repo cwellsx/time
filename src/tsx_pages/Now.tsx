@@ -27,15 +27,26 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
   const { time, started } = new Displayed(state);
 
   function onStart(event: React.MouseEvent<HTMLButtonElement>): void {
-    const time: TimeStart = { when: Date.now(), type: "start" };
-    state.save(time);
     event.preventDefault();
+    const time: TimeStart = { when: Date.now(), type: "start" };
+    state.saveTime(time);
+  }
+
+  function onComment(event: React.ChangeEvent<HTMLTextAreaElement>): void {
+    event.preventDefault();
+    const comment = event.target.value;
+    state.saveComment(comment);
   }
 
   return (
     <React.Fragment>
       {time ? <div className="time">{time}</div> : undefined}
       {!started ? <button onClick={onStart}>Start</button> : undefined}
+      <label>
+        Comment:
+        <br />
+        <textarea value={state.config?.note} onChange={onComment} />
+      </label>
     </React.Fragment>
   );
 };
