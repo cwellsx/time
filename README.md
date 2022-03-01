@@ -23,6 +23,7 @@ Use it to record what time you spend on tasks and types of activity.
   - [Source directories](#source-directories)
   - [Acyclic dependencies](#acyclic-dependencies)
   - [ESLint](#eslint)
+  - [import type](#import-type)
 
 ## Analysis
 
@@ -250,3 +251,9 @@ React hooks are also defined, in `use*.ts` files, in other directories.
 
 I currently don't see ESLint warnings while developing in Visual Studio using `npm start`.
 Instead the warnings are visible only when I build e.g. using `npm run build`.
+
+### import type
+
+I just use `import` and not `import type` --
+the latter would be added complexity
+(and perhaps with no benefit given there are no cyclic dependencies).
