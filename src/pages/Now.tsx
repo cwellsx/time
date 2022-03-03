@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
+import { NowState, TimeStart } from '../io';
 import { EditorTags, OutputTags, TagCount } from '../tags';
-import { NowState, TimeStart } from '../ts_data';
-import { showWhen } from '../ts_ui';
+import { showWhen } from './date';
 
 type NowProps = {
   state: NowState;

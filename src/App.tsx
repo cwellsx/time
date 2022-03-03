@@ -1,11 +1,12 @@
-import './css/App.css';
+import './App.css';
 
 import React from 'react';
 import * as ReactRouter from 'react-router-dom';
 
-import { AppContext, useController, useError, useTestResults } from './ts_data';
-import * as Component from './tsx_components';
-import * as Page from './tsx_pages';
+import { ErrorMessage } from './error';
+import { AppContext, useController, useError, useTestResults } from './io';
+import * as Page from './pages';
+import * as Component from './topbar';
 
 const App: React.FunctionComponent = () => {
   const [error, setError] = useError();
@@ -14,7 +15,7 @@ const App: React.FunctionComponent = () => {
       <ReactRouter.BrowserRouter basename={process.env.PUBLIC_URL}>
         <Component.Topbar />
         <div id="content">
-          <Component.Error error={error} />
+          <ErrorMessage errorMessage={error} />
           <ReactRouter.Routes>
             <ReactRouter.Route path="/" element={<Now />} />
             <ReactRouter.Route path="/tests" element={<Tests />} />

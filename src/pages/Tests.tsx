@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TestResult } from '../ts_data';
+import { TestResult } from '../io';
 
 type TestProps = {
   results: TestResult[];
