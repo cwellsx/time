@@ -1,5 +1,6 @@
-import React from "react";
-import "ui-assets/css/ErrorMessage.css";
+import './ErrorMessage.css';
+
+import React from 'react';
 
 /*
   Simple component to show an error message (or not if there isn't one)

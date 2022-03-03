@@ -23,6 +23,7 @@ export type Time = TimeStart | TimeStop;
 
 export type Config = {
   note?: string;
+  tags?: string[];
 };
 
-export const configVersion = 1;
+export const configVersion = 2;

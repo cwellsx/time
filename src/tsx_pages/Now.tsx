@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 
+import { EditorTags, OutputTags, TagCount } from '../tags';
 import { NowState, TimeStart } from '../ts_data';
 import { showWhen } from '../ts_ui';
 
@@ -23,6 +24,8 @@ class Displayed {
 }
 
 export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
+  const [isTagsValid, setIsTagsValid] = useState<boolean>(false);
+
   const state = props.state;
   const { time, started } = new Displayed(state);
 
@@ -38,6 +41,15 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     state.saveComment(comment);
   }
 
+  const setOutputTags = (outputTags: OutputTags): void => {
+    setIsTagsValid(outputTags.isValid);
+    state.saveTags(outputTags.tags);
+  };
+
+  const getAllTags = (): Promise<TagCount[]> => {
+    return state.getAllTags();
+  };
+
   return (
     <React.Fragment>
       {time ? <div className="time">{time}</div> : undefined}
@@ -45,7 +57,21 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
       <label>
         Comment:
         <br />
-        <textarea value={state.config?.note} onChange={onComment} />
+        <textarea value={state.config.note} onChange={onComment} />
+      </label>
+      <label>
+        Tags:
+        <br />
+        <EditorTags
+          inputTags={state.config.tags || []}
+          result={setOutputTags}
+          getAllTags={getAllTags}
+          minimum={true}
+          maximum={true}
+          canNewTag={false}
+          showValidationError={true}
+          hrefAllTags={"/tags"}
+        />
       </label>
     </React.Fragment>
   );

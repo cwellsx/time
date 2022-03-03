@@ -1,4 +1,5 @@
 import { Config, editDatabase } from '.';
+import { TagCount } from '../tags';
 import { Database, SetError } from './database';
 import { Time } from './model';
 
@@ -7,9 +8,11 @@ export interface NowState {
     type: "start" | "stop" | "next";
     when: number;
   };
-  readonly config?: Config;
+  readonly config: Config;
   saveTime(time: Time): void;
   saveComment(comment: string): void;
+  getAllTags(): Promise<TagCount[]>;
+  saveTags(tags: string[]): void;
 }
 
 export class Controller implements NowState {
@@ -25,7 +28,7 @@ export class Controller implements NowState {
     const last = length ? times[length - 1] : undefined;
     this.last = last ? { type: last.type, when: last.when } : undefined;
 
-    this.config = database.config;
+    this.config = database.config || {};
   }
 
   // private data
@@ -36,7 +39,9 @@ export class Controller implements NowState {
     type: "start" | "stop" | "next";
     when: number;
   };
-  readonly config?: Config;
+
+  readonly config: Config;
+
   saveTime(time: Time): void {
     editDatabase(this.database.dbName)
       .then(async (edit) => {
@@ -49,9 +54,25 @@ export class Controller implements NowState {
       })
       .catch((error) => this.setError(error));
   }
+
   saveComment(comment: string): void {
-    const config: Config = this.config || {};
+    const config: Config = { ...this.config };
     config.note = comment;
+    this.saveConfig(config);
+  }
+
+  getAllTags(): Promise<TagCount[]> {
+    const result: TagCount[] = this.database.tags.map<TagCount>((tag) => {
+      return { key: tag.key, summary: tag.summary, count: 1 };
+    });
+    return new Promise<TagCount[]>((resolve, reject) => {
+      resolve(result);
+    });
+  }
+
+  saveTags(tags: string[]): void {
+    const config: Config = { ...this.config };
+    config.tags = tags;
     this.saveConfig(config);
   }
 

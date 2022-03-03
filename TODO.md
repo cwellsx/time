@@ -1,0 +1,1 @@
+- Include [Single Page Apps for GitHub Pages](https://github.com/rafgraph/spa-github-pages)
