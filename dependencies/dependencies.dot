@@ -1,27 +1,46 @@
 digraph SRC {
-  "App.tsx" -> {"ts_data" "tsx_components" "tsx_pages"};
+  "App.tsx" -> {"error" "io" "pages" "topbar"};
 
-  "tsx_pages" [shape=folder];
-  "tsx_components" [shape=folder];
-  "ts_ui" [shape=folder];
-  "ts_data" [shape=folder];
+  "error" [shape=folder];
+  "io" [shape=folder];
+  "model" [shape=folder];
+  "pages" [shape=folder];
+  "states" [shape=folder];
+  "tags" [shape=folder];
+  "topbar" [shape=folder];
   
-  "tsx_pages" -> {"Now.tsx" "Tests.tsx"};
-  "Now.tsx" -> {"ts_ui" "ts_data"};
-  "Tests.tsx" -> {"ts_data"};
+  "error" -> {"ErrorMessage.tsx"};
+  "ErrorMessage.tsx" -> {};
 
-  "tsx_components" -> {"Error.tsx" "Topbar.tsx"};
-  "Error.tsx" -> {};
-  "Topbar.tsx" -> {"icons.ts"};
-  "icons.ts" -> {};
-  
-  "ts_ui" -> {"date.ts"};
+  "io" -> {"controller.ts" "ioHooks.ts" "tests.ts"};
+  "io" -> {"model" "states"} [style=dotted];
+  "controller.ts" -> {"database.ts" };
+  "database.ts" -> {};
+  "ioHooks.ts" -> {"controller.ts" "database.ts" "tests.ts"};
+  "tests.ts" -> {"database.ts"};
+
+  "model" -> {"config.ts" "testResult.ts" "time.ts", "tags"} [style=dotted];
+  "config.ts" -> {};
+  "testResult.ts" -> {};
+  "time.ts" -> {};
+
+  "pages" -> {"Now.tsx" "Tests.tsx"};
+  "pages" -> {"model" "states"} [style=dotted];
   "date.ts" -> {};
-  
-  "ts_data" -> {"controller.ts" "database.ts" "model.ts" "tests.ts" "useData.ts"};
-  "useData.ts" -> {"controller.ts" "database.ts" "tests.ts"};
-  "controller.ts" -> {"database.ts" "model.ts"};
-  "database.ts" -> {"model.ts"};
-  "model.ts" -> {};
-  "tests.ts" -> {"database.ts" "model.ts"};
+  "Now.tsx" -> {"date.ts" "tags"};
+  "Tests.tsx" -> {};
+
+  "states" -> {"nowState.ts"} [style=dotted];
+  "nowState.ts" -> {};
+
+  "tags" -> {"EditorTags.tsx"};
+  "tags" -> {"tagsTypes.ts"} [style=dotted];
+  "EditorTags.tsx" -> {"error" "selectTagsState.ts" "tagsHook.ts" "tagsIcons.ts"};
+  "tagsHook.ts" -> {"selectTagsState.ts"};
+  "tagsIcons.ts" -> {};
+  "tagsTypes.ts" -> {};
+
+  "topbar" -> {"TopBar.tsx"};
+  "TopBar.tsx" -> {"topbarIcons.ts"};
+  "topbarIcons.ts" -> {};
 }

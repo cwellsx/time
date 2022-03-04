@@ -1,5 +1,6 @@
 import * as DB from './database';
-import { isTimeStop, Time } from './model';
+
+import type { Time, TimeStop, TestResult } from "../model";
 
 type Test = {
   title: string;
@@ -8,6 +9,10 @@ type Test = {
 
 function assert(b: boolean) {
   if (!b) throw new Error("assertion failed");
+}
+
+function isTimeStop(time: Time): time is TimeStop {
+  return time.type !== "start";
 }
 
 function createTimes(year: number, nDays: number, nTimesPerDay: number): Time[] {
@@ -84,17 +89,6 @@ const tests: Test[] = [
   },
 ];
 
-export class TestResult {
-  constructor(title: string, msec: number, ok: boolean) {
-    this.title = title;
-    this.msec = msec;
-    this.ok = ok;
-  }
-  readonly title: string;
-  readonly msec: number;
-  readonly ok: boolean;
-}
-
 async function getResult(test: Test): Promise<TestResult> {
   let ok: boolean;
   const startTime = performance.now();
@@ -106,7 +100,7 @@ async function getResult(test: Test): Promise<TestResult> {
   }
   const endTime = performance.now();
   const msec = Math.round(endTime - startTime);
-  return new TestResult(test.title, msec, ok);
+  return { title: test.title, msec, ok };
 }
 
 export async function getTestResults(): Promise<TestResult[]> {

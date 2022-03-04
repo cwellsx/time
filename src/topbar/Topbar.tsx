@@ -3,7 +3,7 @@ import './Topbar.sass';
 import React from 'react';
 import * as ReactRouter from 'react-router-dom';
 
-import * as Icon from './icons';
+import * as Icon from './topbarIcons';
 
 export const Topbar: React.FunctionComponent = () => {
   return (

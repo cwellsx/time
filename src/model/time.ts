@@ -1,4 +1,4 @@
-export interface What {
+interface What {
   readonly id: string;
   readonly type: string;
 }
@@ -15,15 +15,8 @@ export interface TimeStop {
   readonly note: string;
 }
 
-export function isTimeStop(time: Time): time is TimeStop {
-  return time.type !== "start";
-}
+// export function isTimeStop(time: Time): time is TimeStop {
+//   return time.type !== "start";
+// }
 
 export type Time = TimeStart | TimeStop;
-
-export type Config = {
-  note?: string;
-  tags?: string[];
-};
-
-export const configVersion = 2;

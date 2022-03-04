@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { TagCount } from './modelTags';
-import { Action, Assert, initialState, reducer, RenderedState, TagDictionary, Validation } from './SelectTagsState';
+import { Action, Assert, initialState, reducer, RenderedState, TagDictionary, Validation } from './selectTagsState';
+
+import type { TagCount } from "./tagsTypes";
 
 export function useSelectTags(
   inputTags: string[],

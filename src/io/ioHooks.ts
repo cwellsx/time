@@ -2,7 +2,9 @@ import React from 'react';
 
 import { Controller } from './controller';
 import { Database, fetchDatabase, SetError } from './database';
-import { getTestResults, TestResult } from './tests';
+import { getTestResults } from './tests';
+
+import type { TestResult } from "../model";
 
 /*
   functions which depend on useAsync

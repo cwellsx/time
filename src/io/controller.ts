@@ -1,19 +1,7 @@
-import { Config, editDatabase } from '.';
-import { TagCount } from '../tags';
-import { Database, SetError } from './database';
-import { Time } from './model';
+import { Database, editDatabase, SetError } from './database';
 
-export interface NowState {
-  readonly last?: {
-    type: "start" | "stop" | "next";
-    when: number;
-  };
-  readonly config: Config;
-  saveTime(time: Time): void;
-  saveComment(comment: string): void;
-  getAllTags(): Promise<TagCount[]>;
-  saveTags(tags: string[]): void;
-}
+import type { Config, TagCount, Time } from "../model";
+import type { NowState } from "../states";
 
 export class Controller implements NowState {
   private readonly reload: () => void;

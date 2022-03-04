@@ -3,10 +3,11 @@ import './EditorTags.css';
 import React from 'react';
 
 import { ErrorMessage } from '../error';
-import { TagCount } from './modelTags';
-import { getOnSelectTags, log, ParentCallback, RenderedElement, Validation } from './SelectTagsState';
+import { getOnSelectTags, log, RenderedElement, Validation } from './selectTagsState';
+import { useSelectTags } from './tagsHook';
 import * as Icon from './tagsIcons';
-import { useSelectTags } from './useSelectTags';
+
+import type { ParentCallback, TagCount } from "./tagsTypes";
 
 // this is to display a little 'x' SVG -- a Close icon which is displayed on each tag -- clicking it will delete the tag
 // also to display a little '(!)' SVG -- an Error icon which is displayed in the element, if there's a validation error

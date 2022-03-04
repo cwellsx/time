@@ -1,4 +1,4 @@
-import { TagCount } from './modelTags';
+import type { TagCount, ParentCallback } from "./tagsTypes";
 
 // you could temporarily change this to enable logging, for debugging
 const isLogging = false;
@@ -20,13 +20,6 @@ export interface Validation {
   // the href used for the link to "popular tags" in the validation error message -- i.e. "/tags"
   hrefAllTags: string;
 }
-
-// the results are pushed back to the parent via this callback
-export interface OutputTags {
-  tags: string[];
-  isValid: boolean;
-}
-export type ParentCallback = (outputTags: OutputTags) => void;
 
 export type Assert = (assertion: boolean, message: string, extra?: () => object) => void;
 
