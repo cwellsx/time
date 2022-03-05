@@ -30,7 +30,6 @@ $fore-bright: rgb(214, 217, 220)
     margin: 0
     padding: 0
     float: right
-    // align-items: center
 
     li.icon
       display: flex
@@ -45,7 +44,7 @@ $fore-bright: rgb(214, 217, 220)
       /* color the SVGs by overriding their internal stylesheets */
       fill: $fore-normal
 
-    a
+    a > span
       color: $fore-normal
       vertical-align: bottom
 
@@ -64,8 +63,8 @@ $fore-bright: rgb(214, 217, 220)
         fill: $fore-bright
 
     a.active
-      color: $fore-bright
-      font-size: larger
+      span
+        color: $fore-bright
+        font-size: larger
       svg
         fill: $fore-bright
-

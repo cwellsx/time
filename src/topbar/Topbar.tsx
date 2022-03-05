@@ -1,4 +1,4 @@
-import './Topbar.sass';
+import './topbar.sass';
 
 import React from 'react';
 import * as ReactRouter from 'react-router-dom';
