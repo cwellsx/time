@@ -1,5 +1,7 @@
 import { DBSchema, deleteDB, IDBPDatabase, openDB } from 'idb';
 
+import { persisted } from './persist';
+
 import type { Config, Time, TagInfo } from "../model";
 export type DbName = "production" | "test";
 export type SetError = (error: any) => void;
@@ -54,18 +56,27 @@ async function open(dbName: DbName): Promise<IDBPDatabase<Schema>> {
 }
 
 export class Database {
-  constructor(dbName: DbName, times: Time[], tags: TagInfo[], tasks: TagInfo[], config: Config | undefined) {
+  constructor(
+    dbName: DbName,
+    times: Time[],
+    tags: TagInfo[],
+    tasks: TagInfo[],
+    config: Config | undefined,
+    persisted: boolean
+  ) {
     this.dbName = dbName;
     this.times = times;
     this.tags = tags;
     this.tasks = tasks;
     this.config = config;
+    this.persisted = persisted;
   }
   readonly dbName: DbName;
   readonly times: Time[];
   readonly tags: TagInfo[];
   readonly tasks: TagInfo[];
   readonly config?: Config;
+  readonly persisted: boolean;
 }
 
 export class EditDatabase {
@@ -92,7 +103,7 @@ export async function fetchDatabase(dbName: DbName): Promise<Database> {
   const config = await db.get("config", configVersion);
   const tags = await db.getAll("tags");
   const tasks = await db.getAll("tasks");
-  return new Database(dbName, times, tags, tasks, config);
+  return new Database(dbName, times, tags, tasks, config, await persisted());
 }
 
 export async function deleteDatabase(dbName: DbName): Promise<void> {

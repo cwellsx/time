@@ -14,24 +14,28 @@ digraph SRC {
 
   "io" -> {"controller.ts" "ioHooks.ts" "tests.ts"};
   "io" -> {"model" "states"} [style=dotted];
-  "controller.ts" -> {"database.ts" };
-  "database.ts" -> {};
-  "ioHooks.ts" -> {"controller.ts" "database.ts" "tests.ts"};
-  "tests.ts" -> {"database.ts"};
+  "controller.ts" -> {"persist.ts"};
+  "controller.ts" -> {"database.ts"} [style=dotted];
+  "database.ts" -> {"persist.ts"};
+  "ioHooks.ts" -> {"controller.ts" "database.ts" "persist.ts" "tests.ts"};
+  "tests.ts" -> {"database.ts" "persist.ts"};
+  "persist.ts" -> {}
 
   "model" -> {"config.ts" "testResult.ts" "time.ts", "tags"} [style=dotted];
   "config.ts" -> {};
   "testResult.ts" -> {};
   "time.ts" -> {};
 
-  "pages" -> {"Now.tsx" "Tests.tsx"};
+  "pages" -> {"Now.tsx" "Settings.tsx" "Tests.tsx"};
   "pages" -> {"model" "states"} [style=dotted];
   "date.ts" -> {};
   "Now.tsx" -> {"date.ts" "tags"};
+  "Settings.tsx" -> {};
   "Tests.tsx" -> {};
 
-  "states" -> {"nowState.ts"} [style=dotted];
+  "states" -> {"nowState.ts" "settingsState.ts"} [style=dotted];
   "nowState.ts" -> {};
+  "settingsState.ts" -> {};
 
   "tags" -> {"EditorTags.tsx"};
   "tags" -> {"tagsTypes.ts"} [style=dotted];

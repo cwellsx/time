@@ -1,7 +1,7 @@
 import * as DB from './database';
+import { persisted } from './persist';
 
 import type { Time, TimeStop, TestResult } from "../model";
-
 type Test = {
   title: string;
   run: () => Promise<any>;
@@ -85,6 +85,14 @@ const tests: Test[] = [
     run: async () => {
       const db = await DB.fetchDatabase("test");
       assert(db.times.length === 4002);
+    },
+  },
+  {
+    title: "persisted 100 times",
+    run: async () => {
+      for (let i = 0; i < 100; ++i) {
+        await persisted();
+      }
     },
   },
 ];

@@ -1,4 +1,4 @@
-import './App.css';
+import './App.sass';
 
 import React from 'react';
 import * as ReactRouter from 'react-router-dom';
@@ -18,6 +18,7 @@ const App: React.FunctionComponent = () => {
           <ErrorMessage errorMessage={error} />
           <ReactRouter.Routes>
             <ReactRouter.Route path="/" element={<Now />} />
+            <ReactRouter.Route path="/settings" element={<Settings />} />
             <ReactRouter.Route path="/tests" element={<Tests />} />
             <ReactRouter.Route path="*" element={<p>URL Not Found</p>} />
           </ReactRouter.Routes>
@@ -34,6 +35,17 @@ const Now: React.FunctionComponent = () => {
     <React.Fragment>
       <h1>Now</h1>
       <Page.Now state={controller} />
+    </React.Fragment>
+  );
+};
+
+const Settings: React.FunctionComponent = () => {
+  const controller = useController();
+  if (!controller) return <h1>Loading...</h1>;
+  return (
+    <React.Fragment>
+      <h1>Settings</h1>
+      <Page.Settings state={controller} />
     </React.Fragment>
   );
 };

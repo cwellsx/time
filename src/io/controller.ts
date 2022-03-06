@@ -1,13 +1,15 @@
-import { Database, editDatabase, SetError } from './database';
+import { persist } from './persist';
 
+import type { Database, EditDatabase, SetError } from "./database";
 import type { Config, TagCount, Time, TagInfo } from "../model";
-import type { NowState } from "../states";
-
-export class Controller implements NowState {
+import type { NowState, SettingsState } from "../states";
+export class Controller implements NowState, SettingsState {
+  private readonly editDatabase: () => Promise<EditDatabase>;
   private readonly reload: () => void;
   private readonly setError: SetError;
-  constructor(database: Database, reload: () => void, setError: SetError) {
+  constructor(database: Database, editDatabase: () => Promise<EditDatabase>, reload: () => void, setError: SetError) {
     this.database = database;
+    this.editDatabase = editDatabase;
     this.reload = reload;
     this.setError = setError;
 
@@ -17,6 +19,8 @@ export class Controller implements NowState {
     this.last = last ? { type: last.type, when: last.when } : undefined;
 
     this.config = database.config || {};
+
+    this.persisted = database.persisted;
   }
 
   // private data
@@ -31,7 +35,7 @@ export class Controller implements NowState {
   readonly config: Config;
 
   saveTime(time: Time): void {
-    editDatabase(this.database.dbName)
+    this.editDatabase()
       .then(async (edit) => {
         try {
           await edit.addTime(time);
@@ -79,7 +83,7 @@ export class Controller implements NowState {
   }
 
   private saveConfig(config: Config): void {
-    editDatabase(this.database.dbName)
+    this.editDatabase()
       .then(async (edit) => {
         try {
           await edit.putConfig(config);
@@ -88,6 +92,14 @@ export class Controller implements NowState {
           this.setError(e);
         }
       })
+      .catch((error) => this.setError(error));
+  }
+
+  // interface SettingsState
+  readonly persisted: boolean;
+  persist(): void {
+    persist()
+      .then(() => this.reload)
       .catch((error) => this.setError(error));
   }
 }

@@ -1,5 +1,3 @@
-import './now.sass';
-
 import React, { useState } from 'react';
 
 import { EditorTags, OutputTags, TagCount } from '../tags';
@@ -11,24 +9,6 @@ import type { NowState } from "../states";
 type NowProps = {
   state: NowState;
 };
-
-class Displayed {
-  constructor(state: NowState) {
-    const last = state.last;
-    if (!last) {
-      this.started = false;
-      this.time = "";
-      this.text = "";
-    } else {
-      this.started = last.type !== "stop";
-      this.text = this.started ? "Started" : "Stopped";
-      this.time = showWhen(last.when);
-    }
-  }
-  readonly started: boolean;
-  readonly text: string;
-  readonly time: string;
-}
 
 export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
   const [isTagsValid, setIsTagsValid] = useState<boolean>(false);
@@ -156,3 +136,21 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     </React.Fragment>
   );
 };
+
+class Displayed {
+  constructor(state: NowState) {
+    const last = state.last;
+    if (!last) {
+      this.started = false;
+      this.time = "";
+      this.text = "";
+    } else {
+      this.started = last.type !== "stop";
+      this.text = this.started ? "Started" : "Stopped";
+      this.time = showWhen(last.when);
+    }
+  }
+  readonly started: boolean;
+  readonly text: string;
+  readonly time: string;
+}

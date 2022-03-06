@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { Controller } from './controller';
-import { Database, fetchDatabase, SetError } from './database';
+import { Database, EditDatabase, editDatabase, fetchDatabase, SetError } from './database';
+import { persist } from './persist';
 import { getTestResults } from './tests';
 
 import type { TestResult } from "../model";
@@ -52,8 +53,18 @@ export function useTestResults(): TestResult[] | undefined {
 
 export function useController(): Controller | undefined {
   const { data: database, reload } = useDatabase();
+  const [once, setOnce] = React.useState<boolean>(false);
   const setError = useSetError();
-  return database ? new Controller(database, reload, setError) : undefined;
+  if (!database) return undefined;
+  const onEditDatabase = async (): Promise<EditDatabase> => {
+    // call the persist method as infrequently as possible, and not on load, because it may popup to the user
+    if (!database.persisted && !once) {
+      await persist();
+      setOnce(true);
+    }
+    return editDatabase(database.dbName);
+  };
+  return new Controller(database, onEditDatabase, reload, setError);
 }
 
 /*
