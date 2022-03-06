@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { EditorTags, OutputTags, TagCount } from '../tags';
 import { showWhen } from './date';
 
-import type { TimeStart } from "../model";
+import type { TimeStart, TimeStop } from "../model";
 import type { NowState } from "../states";
 
 type NowProps = {
@@ -32,13 +32,22 @@ class Displayed {
 
 export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
   const [isTagsValid, setIsTagsValid] = useState<boolean>(false);
+  const [isTaskValid, setIsTaskValid] = useState<boolean>(false);
 
   const state = props.state;
+  const config = state.config;
+
   const { text, time, started } = new Displayed(state);
 
   function onStart(event: React.MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
     const time: TimeStart = { when: Date.now(), type: "start" };
+    state.saveTime(time);
+  }
+
+  function onStop(event: React.MouseEvent<HTMLButtonElement>, type: "stop" | "next"): void {
+    event.preventDefault();
+    const time: TimeStop = { when: Date.now(), type, note: config.note, task: config.task, tags: config.tags };
     state.saveTime(time);
   }
 
@@ -57,6 +66,16 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     return state.getAllTags();
   };
 
+  const setOutputTask = (outputTask: OutputTags): void => {
+    setIsTagsValid(outputTask.isValid);
+    const task: string = outputTask.tags ? outputTask.tags[0] : "";
+    state.saveTask(task);
+  };
+
+  const getAllTasks = (): Promise<TagCount[]> => {
+    return state.getAllTasks();
+  };
+
   const timeText = !time ? undefined : (
     <React.Fragment>
       <div>
@@ -66,7 +85,7 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     </React.Fragment>
   );
 
-  const openButton = started ? undefined : (
+  const startButton = started ? undefined : (
     <React.Fragment>
       <div>
         <span></span>
@@ -77,18 +96,37 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     </React.Fragment>
   );
 
+  const stopButton = !started ? undefined : (
+    <React.Fragment>
+      <div>
+        <span></span>
+        <span>
+          <button onClick={(event) => onStop(event, "next")}>Next</button>
+          <button onClick={(event) => onStop(event, "stop")}>Stop</button>
+        </span>
+      </div>
+    </React.Fragment>
+  );
+
   const what = !started ? undefined : (
     <React.Fragment>
       <label>
-        <span>Comment:</span>
-        <div>
-          <textarea className="comment" value={state.config.note} onChange={onComment} />
-        </div>
+        <span>Task:</span>
+        <EditorTags
+          inputTags={config.task ? [config.task] : []}
+          result={setOutputTask}
+          getAllTags={getAllTasks}
+          minimum={true}
+          maximum={true}
+          canNewTag={false}
+          showValidationError={true}
+          hrefAllTags={"/tags"}
+        />
       </label>
       <label>
         <span>Tags:</span>
         <EditorTags
-          inputTags={state.config.tags || []}
+          inputTags={config.tags || []}
           result={setOutputTags}
           getAllTags={getAllTags}
           minimum={true}
@@ -98,6 +136,12 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
           hrefAllTags={"/tags"}
         />
       </label>
+      <label>
+        <span>Comment:</span>
+        <div>
+          <textarea className="comment" value={config.note} onChange={onComment} />
+        </div>
+      </label>
     </React.Fragment>
   );
 
@@ -105,8 +149,9 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     <React.Fragment>
       <div className="table">
         {timeText}
-        {openButton}
+        {startButton}
         {what}
+        {stopButton}
       </div>
     </React.Fragment>
   );

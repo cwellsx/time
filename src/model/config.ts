@@ -1,9 +1,5 @@
 export type Config = {
-  note?: string;
+  task?: string;
   tags?: string[];
+  note?: string;
 };
-
-// //export const configVersion = 2;
-// export const enum ConfigVersion {
-//   Current=2
-// }

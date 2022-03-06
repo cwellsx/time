@@ -21,10 +21,14 @@ interface Schema extends DBSchema {
     key: string;
     value: TagInfo;
   };
+  tasks: {
+    key: string;
+    value: TagInfo;
+  };
 }
 
 async function open(dbName: DbName): Promise<IDBPDatabase<Schema>> {
-  const db = await openDB<Schema>(dbName, 3, {
+  const db = await openDB<Schema>(dbName, 5, {
     upgrade(db, oldVersion, newVersion, transaction) {
       if (oldVersion < 1) {
         db.createObjectStore("times", {
@@ -39,21 +43,28 @@ async function open(dbName: DbName): Promise<IDBPDatabase<Schema>> {
           keyPath: "title",
         });
       }
+      if (oldVersion < 5) {
+        db.createObjectStore("tasks", {
+          keyPath: "title",
+        });
+      }
     },
   });
   return db;
 }
 
 export class Database {
-  constructor(dbName: DbName, times: Time[], tags: TagInfo[], config: Config | undefined) {
+  constructor(dbName: DbName, times: Time[], tags: TagInfo[], tasks: TagInfo[], config: Config | undefined) {
     this.dbName = dbName;
     this.times = times;
     this.tags = tags;
+    this.tasks = tasks;
     this.config = config;
   }
   readonly dbName: DbName;
   readonly times: Time[];
   readonly tags: TagInfo[];
+  readonly tasks: TagInfo[];
   readonly config?: Config;
 }
 
@@ -80,7 +91,8 @@ export async function fetchDatabase(dbName: DbName): Promise<Database> {
   const times = await db.getAll("times");
   const config = await db.get("config", configVersion);
   const tags = await db.getAll("tags");
-  return new Database(dbName, times, tags, config);
+  const tasks = await db.getAll("tasks");
+  return new Database(dbName, times, tags, tasks, config);
 }
 
 export async function deleteDatabase(dbName: DbName): Promise<void> {

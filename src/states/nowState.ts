@@ -8,6 +8,10 @@ export interface NowState {
   readonly config: Config;
   saveTime(time: Time): void;
   saveComment(comment: string): void;
+
   getAllTags(): Promise<TagCount[]>;
   saveTags(tags: string[]): void;
+
+  getAllTasks(): Promise<TagCount[]>;
+  saveTask(task: string): void;
 }

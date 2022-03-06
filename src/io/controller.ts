@@ -1,6 +1,6 @@
 import { Database, editDatabase, SetError } from './database';
 
-import type { Config, TagCount, Time } from "../model";
+import type { Config, TagCount, Time, TagInfo } from "../model";
 import type { NowState } from "../states";
 
 export class Controller implements NowState {
@@ -50,7 +50,15 @@ export class Controller implements NowState {
   }
 
   getAllTags(): Promise<TagCount[]> {
-    const result: TagCount[] = this.database.tags.map<TagCount>((tag) => {
+    return Controller.getAll(this.database.tags);
+  }
+
+  getAllTasks(): Promise<TagCount[]> {
+    return Controller.getAll(this.database.tasks);
+  }
+
+  private static getAll(tags: TagInfo[]): Promise<TagCount[]> {
+    const result: TagCount[] = tags.map<TagCount>((tag) => {
       return { key: tag.key, summary: tag.summary, count: 1 };
     });
     return new Promise<TagCount[]>((resolve, reject) => {
@@ -61,6 +69,12 @@ export class Controller implements NowState {
   saveTags(tags: string[]): void {
     const config: Config = { ...this.config };
     config.tags = tags;
+    this.saveConfig(config);
+  }
+
+  saveTask(task: string): void {
+    const config: Config = { ...this.config };
+    config.task = task;
     this.saveConfig(config);
   }
 
