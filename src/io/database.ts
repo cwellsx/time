@@ -95,6 +95,9 @@ export class EditDatabase {
     const store = tx.objectStore("times");
     return Promise.all(times.map(async (time) => store.add(time)));
   }
+  addWhat(what: "tags" | "tasks", tag: TagInfo): Promise<string> {
+    return this.db.add(what, tag);
+  }
 }
 
 export async function fetchDatabase(dbName: DbName): Promise<Database> {

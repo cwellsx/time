@@ -1,9 +1,10 @@
 import { persist } from './persist';
 
 import type { Database, EditDatabase, SetError } from "./database";
-import type { Config, TagCount, Time, TagInfo } from "../model";
-import type { NowState, SettingsState } from "../states";
-export class Controller implements NowState, SettingsState {
+import type { Config, TagCount, Time, TagInfo, WhatType } from "../model";
+import type { NowState, SettingsState, WhatState } from "../states";
+
+export class Controller implements NowState, SettingsState, WhatState {
   private readonly editDatabase: () => Promise<EditDatabase>;
   private readonly reload: () => void;
   private readonly setError: SetError;
@@ -54,14 +55,14 @@ export class Controller implements NowState, SettingsState {
   }
 
   getAllTags(): Promise<TagCount[]> {
-    return Controller.getAll(this.database.tags);
+    return Controller.getAllPromised(this.database.tags);
   }
 
   getAllTasks(): Promise<TagCount[]> {
-    return Controller.getAll(this.database.tasks);
+    return Controller.getAllPromised(this.database.tasks);
   }
 
-  private static getAll(tags: TagInfo[]): Promise<TagCount[]> {
+  private static getAllPromised(tags: TagInfo[]): Promise<TagCount[]> {
     const result: TagCount[] = tags.map<TagCount>((tag) => {
       return { key: tag.key, summary: tag.summary, count: 1 };
     });
@@ -101,5 +102,29 @@ export class Controller implements NowState, SettingsState {
     persist()
       .then(() => this.reload)
       .catch((error) => this.setError(error));
+  }
+
+  // interface WhatState
+  getAll(what: WhatType): Promise<TagCount[]> {
+    return what === "tags" ? this.getAllTags() : this.getAllTasks();
+  }
+
+  create(what: WhatType, tag: TagInfo): void {
+    this.editDatabase()
+      .then(async (edit) => {
+        try {
+          await edit.addWhat(what, tag);
+          this.reload();
+        } catch (e) {
+          this.setError(e);
+        }
+      })
+      .catch((error) => this.setError(error));
+  }
+
+  saveWhatType(whatType: WhatType): void {
+    const config: Config = { ...this.config };
+    config.whatType = whatType;
+    this.saveConfig(config);
   }
 }

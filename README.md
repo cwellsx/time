@@ -20,12 +20,12 @@ Use it to record what time you spend on tasks and types of activity.
   - [APIs](#apis)
   - [Data stores](#data-stores)
   - [ESLint](#eslint)
-  - [import type](#import-type)
 - [Source files](#source-files)
   - [Source directories](#source-directories)
   - [Directories are self-contained components](#directories-are-self-contained-components)
   - [Unique filenames](#unique-filenames)
   - [Acyclic dependencies](#acyclic-dependencies)
+  - [Icons](#icons)
 
 ## Analysis
 
@@ -224,12 +224,6 @@ written without a framework like Jest -- they're run if you navigate to the ./te
 I currently don't see ESLint warnings while developing in Visual Studio using `npm start`.
 Instead the warnings are visible only when I build e.g. using `npm run build`.
 
-### import type
-
-I just use `import` and not `import type` --
-the latter would be added complexity
-(and perhaps with no benefit given there are no cyclic dependencies).
-
 ## Source files
 
 ### Source directories
@@ -300,3 +294,7 @@ Some modules define only abstract types, which are referenced using `import type
 To simply the diagram, `dependencies.dot` does not show which modules import these,
 instead it shows which folders contain modules which import these.
 These are shown as dotted lines on the graph.
+
+### Icons
+
+The icons in the topbar are from https://fonts.google.com/icons

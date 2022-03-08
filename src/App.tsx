@@ -18,6 +18,7 @@ const App: React.FunctionComponent = () => {
           <ErrorMessage errorMessage={error} />
           <ReactRouter.Routes>
             <ReactRouter.Route path="/" element={<Now />} />
+            <ReactRouter.Route path="/what" element={<What />} />
             <ReactRouter.Route path="/settings" element={<Settings />} />
             <ReactRouter.Route path="/tests" element={<Tests />} />
             <ReactRouter.Route path="*" element={<p>URL Not Found</p>} />
@@ -35,6 +36,17 @@ const Now: React.FunctionComponent = () => {
     <React.Fragment>
       <h1>Now</h1>
       <Page.Now state={controller} />
+    </React.Fragment>
+  );
+};
+
+const What: React.FunctionComponent = () => {
+  const controller = useController();
+  if (!controller) return <h1>Loading...</h1>;
+  return (
+    <React.Fragment>
+      <h1>What</h1>
+      <Page.What state={controller} />
     </React.Fragment>
   );
 };
