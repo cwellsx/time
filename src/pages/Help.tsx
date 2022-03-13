@@ -1,4 +1,5 @@
 import React from "react";
+import ReactMarkdown from "react-markdown";
 
 // to make this work I had to add src/global.d.ts
 type HelpProps = {
@@ -7,5 +8,5 @@ type HelpProps = {
 
 export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
   const markdown = props.markdown;
-  return <div>{markdown}</div>;
+  return <ReactMarkdown>{markdown}</ReactMarkdown>;
 };
