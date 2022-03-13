@@ -46,7 +46,6 @@ h1
 
 h2
   font-weight: bold
-  font-style: italic
 
 .hidden
   display: none !important
@@ -136,8 +135,21 @@ input[type="submit"],
       &:not(:last-child)
         padding-right: 10px
 
-      /* &:not(:first-child)
-       padding-top: 1.5rem */
+  &.compact > :not(:last-child) > *
+    padding-bottom: 1rem
 
 .comment
   width: 100%
+
+table
+  width: 100%
+  border: 1px solid
+  border-collapse: collapse
+
+  th, td
+    border: 1px solid
+    padding: 0 10px
+
+    &:first-child
+      /* 20px is too narrow but the table column will expand to fit the text, I just want it as narrow as possible */
+      width: 20px

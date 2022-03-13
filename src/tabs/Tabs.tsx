@@ -1,7 +1,7 @@
-import './tabs.sass';
+import "./tabs.sass";
 
-import React from 'react';
-import * as ReactRouter from 'react-router-dom';
+import React from "react";
+import * as ReactRouter from "react-router-dom";
 
 export type TabLink = {
   text: string;
@@ -76,7 +76,7 @@ export const Tabs: React.FunctionComponent<TabLinkProps | TabActionProps> = (pro
           };
           const selected = index === props.selected;
           return (
-            <a onClick={onClick} title={tab.text} className={selected ? "selected" : undefined}>
+            <a onClick={onClick} title={tab.text} className={selected ? "selected" : undefined} key={index}>
               {tab.text}
             </a>
           );

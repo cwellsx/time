@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { EditorTags, OutputTags, TagCount } from '../tags';
-import { showWhen } from './date';
+import { EditorTags, OutputTags, TagCount } from "../tags";
+import { showWhen } from "./date";
 
 import type { TimeStart, TimeStop } from "../model";
 import type { NowState } from "../states";
@@ -57,35 +57,29 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
   };
 
   const timeText = !time ? undefined : (
-    <React.Fragment>
-      <div>
-        <span>{text}:</span>
-        <span>{time}</span>
-      </div>
-    </React.Fragment>
+    <div>
+      <span>{text}:</span>
+      <span>{time}</span>
+    </div>
   );
 
   const startButton = started ? undefined : (
-    <React.Fragment>
-      <div>
-        <span></span>
-        <span>
-          <button onClick={onStart}>Start</button>
-        </span>
-      </div>
-    </React.Fragment>
+    <div>
+      <span></span>
+      <span>
+        <button onClick={onStart}>Start</button>
+      </span>
+    </div>
   );
 
   const stopButton = !started ? undefined : (
-    <React.Fragment>
-      <div>
-        <span></span>
-        <span>
-          <button onClick={(event) => onStop(event, "next")}>Next</button>
-          <button onClick={(event) => onStop(event, "stop")}>Stop</button>
-        </span>
-      </div>
-    </React.Fragment>
+    <div>
+      <span></span>
+      <span>
+        <button onClick={(event) => onStop(event, "next")}>Next</button>
+        <button onClick={(event) => onStop(event, "stop")}>Stop</button>
+      </span>
+    </div>
   );
 
   const what = !started ? undefined : (

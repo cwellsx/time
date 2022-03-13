@@ -12,7 +12,6 @@ export interface TagCount extends Key {
 // }
 
 export interface TagInfo extends Key {
-  title: string;
   summary?: string;
   markdown?: string;
 }

@@ -106,8 +106,8 @@ export class Controller implements NowState, SettingsState, WhatState {
   }
 
   // interface WhatState
-  getAll(what: WhatType): Promise<TagCount[]> {
-    return what === "tags" ? this.getAllTags() : this.getAllTasks();
+  getAll(whatType: WhatType): TagInfo[] {
+    return whatType === "tags" ? this.database.tags : this.database.tasks;
   }
 
   create(what: WhatType, tag: TagInfo): void {

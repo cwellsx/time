@@ -5,9 +5,9 @@ import { persisted } from "./persist";
 import type { Config, Time, TagInfo } from "../model";
 export type DbName = "production" | "test";
 
-// we only store on COnfig instance in the table, not several,
+// we only store on Config instance in the table, not several,
 // so use this value as the key of that object in its table
-const configVersion = 2;
+const configVersion = 1;
 
 interface Schema extends DBSchema {
   times: {
@@ -29,24 +29,18 @@ interface Schema extends DBSchema {
 }
 
 async function open(dbName: DbName): Promise<IDBPDatabase<Schema>> {
-  const db = await openDB<Schema>(dbName, 5, {
+  const db = await openDB<Schema>(dbName, 1, {
     upgrade(db, oldVersion, newVersion, transaction) {
       if (oldVersion < 1) {
         db.createObjectStore("times", {
           keyPath: "when",
         });
-      }
-      if (oldVersion < 2) {
         db.createObjectStore("config");
-      }
-      if (oldVersion < 3) {
         db.createObjectStore("tags", {
-          keyPath: "title",
+          keyPath: "key",
         });
-      }
-      if (oldVersion < 5) {
         db.createObjectStore("tasks", {
-          keyPath: "title",
+          keyPath: "key",
         });
       }
     },
