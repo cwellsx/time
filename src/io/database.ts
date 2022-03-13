@@ -1,10 +1,9 @@
-import { DBSchema, deleteDB, IDBPDatabase, openDB } from 'idb';
+import { DBSchema, deleteDB, IDBPDatabase, openDB } from "idb";
 
-import { persisted } from './persist';
+import { persisted } from "./persist";
 
 import type { Config, Time, TagInfo } from "../model";
 export type DbName = "production" | "test";
-export type SetError = (error: any) => void;
 
 // we only store on COnfig instance in the table, not several,
 // so use this value as the key of that object in its table

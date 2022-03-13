@@ -1,9 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import { Controller } from './controller';
-import { Database, EditDatabase, editDatabase, fetchDatabase, SetError } from './database';
-import { persist } from './persist';
-import { getTestResults } from './tests';
+import { useSetError } from "../error";
+import { Controller } from "./controller";
+import { Database, EditDatabase, editDatabase, fetchDatabase } from "./database";
+import { persist } from "./persist";
+import { getTestResults } from "./tests";
 
 import type { TestResult } from "../model";
 
@@ -65,27 +66,4 @@ export function useController(): Controller | undefined {
     return editDatabase(database.dbName);
   };
   return new Controller(database, onEditDatabase, reload, setError);
-}
-
-/*
-  functions related to SetError and AppContext
-*/
-
-export function useError(): [string, SetError] {
-  const [error, setError] = React.useState("");
-  const setAny: SetError = (e) => setError(e);
-  return [error, setAny];
-}
-
-type AppContextProps = {
-  setError: SetError;
-};
-
-export const AppContext = React.createContext<AppContextProps>({
-  setError: (error: string) => {},
-});
-
-export function useSetError(): SetError {
-  const appContext: AppContextProps = React.useContext(AppContext);
-  return appContext.setError;
 }

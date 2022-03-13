@@ -1,6 +1,7 @@
-import { persist } from './persist';
+import { persist } from "./persist";
 
-import type { Database, EditDatabase, SetError } from "./database";
+import type { SetError } from "../error";
+import type { Database, EditDatabase } from "./database";
 import type { Config, TagCount, Time, TagInfo, WhatType } from "../model";
 import type { NowState, SettingsState, WhatState } from "../states";
 

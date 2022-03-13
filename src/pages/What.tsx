@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import { Tabs } from '../tabs';
+import { Tabs } from "../tabs";
 
 import type { WhatState } from "../states";
 import type { TabAction } from "../tabs";

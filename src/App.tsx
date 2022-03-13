@@ -1,12 +1,13 @@
-import './App.sass';
+import "./App.sass";
 
-import React from 'react';
-import * as ReactRouter from 'react-router-dom';
+import React from "react";
+import * as ReactRouter from "react-router-dom";
 
-import { ErrorMessage } from './error';
-import { AppContext, useController, useError, useTestResults } from './io';
-import * as Page from './pages';
-import * as Component from './topbar';
+import { AppContext, ErrorMessage, useError } from "./error";
+import { useHelp } from "./fetch";
+import { useController, useTestResults } from "./io";
+import * as Page from "./pages";
+import * as Component from "./topbar";
 
 const App: React.FunctionComponent = () => {
   const [error, setError] = useError();
@@ -20,6 +21,7 @@ const App: React.FunctionComponent = () => {
             <ReactRouter.Route path="/" element={<Now />} />
             <ReactRouter.Route path="/what" element={<What />} />
             <ReactRouter.Route path="/settings" element={<Settings />} />
+            <ReactRouter.Route path="/help" element={<Help />} />
             <ReactRouter.Route path="/tests" element={<Tests />} />
             <ReactRouter.Route path="*" element={<p>URL Not Found</p>} />
           </ReactRouter.Routes>
@@ -58,6 +60,17 @@ const Settings: React.FunctionComponent = () => {
     <React.Fragment>
       <h1>Settings</h1>
       <Page.Settings state={controller} />
+    </React.Fragment>
+  );
+};
+
+const Help: React.FunctionComponent = () => {
+  const markdown = useHelp();
+  if (!markdown) return <h1>Loading...</h1>;
+  return (
+    <React.Fragment>
+      <h1>Help</h1>
+      <Page.Help markdown={markdown} />
     </React.Fragment>
   );
 };
