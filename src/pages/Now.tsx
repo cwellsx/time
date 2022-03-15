@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { EditorTags, OutputTags, TagCount } from "../tags";
 import { showWhen } from "./date";
@@ -11,8 +11,8 @@ type NowProps = {
 };
 
 export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
-  const [isTagsValid, setIsTagsValid] = useState<boolean>(false);
-  const [isTaskValid, setIsTaskValid] = useState<boolean>(false);
+  const [isTagsValid, setIsTagsValid] = React.useState<boolean>(false);
+  const [isTaskValid, setIsTaskValid] = React.useState<boolean>(false);
 
   const state = props.state;
   const config = state.config;

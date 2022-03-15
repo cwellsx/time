@@ -3,6 +3,8 @@ import React from "react";
 import { useSetError } from "../error";
 import HelpMarkdownUrl from "./help.md";
 
+// to make `import from "*.md"` work I had to add src/global.d.ts
+
 export function useHelp(): string | undefined {
   const [markdown, setMarkdown] = React.useState<string | undefined>(undefined);
   const setError = useSetError();
