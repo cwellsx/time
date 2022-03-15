@@ -83,6 +83,25 @@ export class EditDatabase {
   addTime(time: Time): Promise<number> {
     return this.db.add("times", time);
   }
+  cancelLast(time: Time | undefined): Promise<void> {
+    if (!time) {
+      throw new Error("cancelLast -- !time");
+    }
+    switch (time.type) {
+      case "start":
+        return this.db.delete("times", time.when);
+      case "next":
+        const stop = { ...time };
+        stop.type = "stop";
+        const promise = this.db.put("times", stop);
+        // https://stackoverflow.com/a/32961289/49942
+        return promise.then(() => {});
+      case "stop":
+        throw new Error("cancelLast -- time.type=='stop'");
+      default:
+        throw new Error("cancelLast -- unhandled time.type");
+    }
+  }
   addTimes(times: Time[]): Promise<number[]> {
     const tx = this.db.transaction("times", "readwrite");
     const store = tx.objectStore("times");

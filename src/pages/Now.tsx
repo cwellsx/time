@@ -31,6 +31,11 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     state.saveTime(time);
   }
 
+  function onCancel(event: React.MouseEvent<HTMLButtonElement>): void {
+    event.preventDefault();
+    state.cancelLast();
+  }
+
   function onComment(event: React.ChangeEvent<HTMLTextAreaElement>): void {
     event.preventDefault();
     const comment = event.target.value;
@@ -78,6 +83,9 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
       <span>
         <button onClick={(event) => onStop(event, "next")}>Next</button>
         <button onClick={(event) => onStop(event, "stop")}>Stop</button>
+        <button onClick={(event) => onCancel(event)} className="right">
+          Cancel
+        </button>
       </span>
     </div>
   );

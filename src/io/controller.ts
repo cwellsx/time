@@ -49,6 +49,19 @@ export class Controller implements NowState, SettingsState, WhatState {
       .catch((error) => this.setError(error));
   }
 
+  cancelLast(): void {
+    this.editDatabase()
+      .then(async (edit) => {
+        try {
+          await edit.cancelLast(this.last);
+          this.reload();
+        } catch (e) {
+          this.setError(e);
+        }
+      })
+      .catch((error) => this.setError(error));
+  }
+
   saveComment(comment: string): void {
     const config: Config = { ...this.config };
     config.note = comment;

@@ -6,7 +6,10 @@ export interface NowState {
     when: number;
   };
   readonly config: Config;
+
   saveTime(time: Time): void;
+  cancelLast(): void;
+
   saveComment(comment: string): void;
 
   getAllTags(): Promise<TagCount[]>;
