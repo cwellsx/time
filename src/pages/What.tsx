@@ -49,7 +49,7 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
   function onSave(event: React.MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
     const tag: TagInfo = { key: key, summary: description };
-    state.create(whatType, tag);
+    state.createWhat(whatType, tag);
     setKey("");
     setDescription("");
   }
@@ -58,7 +58,7 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
   const newDescription = <input onChange={onNewDescription} value={description} />;
   const newButton = <button onClick={onSave}>Save</button>;
 
-  const all = state.getAll(whatType);
+  const all = state.getAllWhat(whatType);
   all.sort((x, y) => x.key.localeCompare(y.key));
   const showAll = !all.length ? undefined : (
     <React.Fragment>

@@ -2,13 +2,16 @@ import { persist } from "./persist";
 
 import type { SetError } from "../error";
 import type { Database, EditDatabase } from "./database";
-import type { Config, TagCount, Time, TagInfo, WhatType } from "../model";
-import type { NowState, SettingsState, WhatState } from "../states";
+import type { Config, Period, TagCount, TagInfo, Time, WhatType } from "../model";
+import type { HistoryState, NowState, SettingsState, WhatState } from "../states";
 
-export class Controller implements NowState, SettingsState, WhatState {
+export class Controller implements NowState, WhatState, HistoryState, SettingsState {
+  // private data
+  private readonly database: Database;
   private readonly editDatabase: () => Promise<EditDatabase>;
   private readonly reload: () => void;
   private readonly setError: SetError;
+
   constructor(database: Database, editDatabase: () => Promise<EditDatabase>, reload: () => void, setError: SetError) {
     this.database = database;
     this.editDatabase = editDatabase;
@@ -23,10 +26,31 @@ export class Controller implements NowState, SettingsState, WhatState {
     this.config = database.config || {};
 
     this.persisted = database.persisted;
-  }
 
-  // private data
-  private readonly database: Database;
+    this.periods = [];
+
+    if (length > 0) {
+      let prev: Time = database.times[0];
+      for (const time of database.times) {
+        switch (time.type) {
+          case "next":
+          case "stop":
+            if (prev.type === "stop") {
+              throw Error("period must start after stop");
+            }
+            const period: Period = {
+              start: prev.when,
+              stop: time.when,
+              task: time.task,
+              note: time.note,
+              tags: time.tags,
+            };
+            this.periods.push(period);
+        }
+        prev = time;
+      }
+    }
+  }
 
   // interface NowState
   readonly last?: {
@@ -119,11 +143,11 @@ export class Controller implements NowState, SettingsState, WhatState {
   }
 
   // interface WhatState
-  getAll(whatType: WhatType): TagInfo[] {
+  getAllWhat(whatType: WhatType): TagInfo[] {
     return whatType === "tags" ? this.database.tags : this.database.tasks;
   }
 
-  create(what: WhatType, tag: TagInfo): void {
+  createWhat(what: WhatType, tag: TagInfo): void {
     this.editDatabase()
       .then(async (edit) => {
         try {
@@ -141,4 +165,7 @@ export class Controller implements NowState, SettingsState, WhatState {
     config.whatType = whatType;
     this.saveConfig(config);
   }
+
+  // interface HistoryState
+  readonly periods: Period[];
 }

@@ -1,5 +1,6 @@
 export { Now } from "./Now";
-export { Settings } from "./Settings";
 export { What } from "./What";
+export { History } from "./History";
+export { Settings } from "./Settings";
 export { Help } from "./Help";
 export { Tests } from "./Tests";

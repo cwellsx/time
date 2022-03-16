@@ -114,10 +114,11 @@ export class EditDatabase {
 
 export async function fetchDatabase(dbName: DbName): Promise<Database> {
   const db = await open(dbName);
-  const times = await db.getAll("times");
-  const config = await db.get("config", configVersion);
-  const tags = await db.getAll("tags");
-  const tasks = await db.getAll("tasks");
+  const tx = db.transaction(["times", "config", "tags", "tasks"]);
+  const times = await tx.objectStore("times").getAll();
+  const config = await tx.objectStore("config").get(configVersion);
+  const tags = await tx.objectStore("tags").getAll();
+  const tasks = await tx.objectStore("tasks").getAll();
   return new Database(dbName, times, tags, tasks, config, await persisted());
 }
 

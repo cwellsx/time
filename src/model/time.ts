@@ -1,14 +1,13 @@
+import type { What } from "./what";
+
 export type TimeStart = {
   readonly when: number;
   readonly type: "start";
 };
 
-export type TimeStop = {
+export type TimeStop = What & {
   readonly when: number;
   readonly type: "stop" | "next";
-  readonly note?: string;
-  readonly tags?: string[];
-  readonly task?: string;
 };
 
 export type Time = TimeStart | TimeStop;

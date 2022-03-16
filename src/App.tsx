@@ -20,6 +20,7 @@ const App: React.FunctionComponent = () => {
           <ReactRouter.Routes>
             <ReactRouter.Route path="/" element={<Now />} />
             <ReactRouter.Route path="/what" element={<What />} />
+            <ReactRouter.Route path="/history" element={<History />} />
             <ReactRouter.Route path="/settings" element={<Settings />} />
             <ReactRouter.Route path="/help" element={<Help />} />
             <ReactRouter.Route path="/tests" element={<Tests />} />
@@ -49,6 +50,17 @@ const What: React.FunctionComponent = () => {
     <React.Fragment>
       <h1>What</h1>
       <Page.What state={controller} />
+    </React.Fragment>
+  );
+};
+
+const History: React.FunctionComponent = () => {
+  const controller = useController();
+  if (!controller) return <h1>Loading...</h1>;
+  return (
+    <React.Fragment>
+      <h1>History</h1>
+      <Page.History state={controller} />
     </React.Fragment>
   );
 };

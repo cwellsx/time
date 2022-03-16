@@ -28,25 +28,29 @@ digraph SRC {
   "tests.ts" -> {"database.ts" "persist.ts"};
   "persist.ts" -> {}
 
-  "model" -> {"config.ts" "testResult.ts" "time.ts", "tags", "whatType.ts"} [style=dotted];
+  "model" -> {"config.ts" "period.ts" "testResult.ts" "time.ts" "tags" "whatType.ts"} [style=dotted];
   "config.ts" -> {};
+  "period.ts" -> {"what.ts"};
   "testResult.ts" -> {};
-  "time.ts" -> {};
+  "time.ts" -> {"what.ts"};
+  "what.ts" -> {};
   "whatType.ts" -> {};
 
-  "pages" -> {"Now.tsx" "Settings.tsx" "What.tsx" "Help.tsx" "Tests.tsx"};
+  "pages" -> {"Now.tsx" "What.tsx" "History.tsx" "Settings.tsx" "Help.tsx" "Tests.tsx"};
   "pages" -> {"model" "states"} [style=dotted];
   "date.ts" -> {};
   "Now.tsx" -> {"date.ts" "tags"};
-  "Settings.tsx" -> {};
   "What.tsx" -> {"tabs"};
+  "History.tsx" -> {};
+  "Settings.tsx" -> {};
   "Help.tsx" -> {};
   "Tests.tsx" -> {};
 
-  "states" -> {"nowState.ts" "settingsState.ts" "whatState.ts"} [style=dotted];
+  "states" -> {"nowState.ts" "whatState.ts" "historyState.ts" "settingsState.ts"} [style=dotted];
   "nowState.ts" -> {};
-  "settingsState.ts" -> {};
   "whatState.ts" -> {};
+  "historyState.ts" -> {};
+  "settingsState.ts" -> {};
 
   "tabs" -> {"Tabs.tsx"};
   "Tabs.tsx" -> {};
