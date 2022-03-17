@@ -1,4 +1,4 @@
-import date from 'date-and-time';
+import date from "date-and-time";
 
 const shortFormat = date.compile("HH:mm");
 const longFormat = date.compile("HH:mm ddd, MMM DD");
