@@ -41,10 +41,11 @@ digraph SRC {
   "date.ts" -> {};
   "Now.tsx" -> {"date.ts" "tags"};
   "What.tsx" -> {"tabs"};
-  "History.tsx" -> {};
+  "History.tsx" -> {"sums.ts"};
   "Settings.tsx" -> {};
   "Help.tsx" -> {};
-  "Tests.tsx" -> {};
+  "Tests.tsx" -> {"weeks.ts" "sums.ts"};
+  "sums.ts" -> {"weeks.ts" "date.ts"};
 
   "states" -> {"nowState.ts" "whatState.ts" "historyState.ts" "settingsState.ts"} [style=dotted];
   "nowState.ts" -> {};

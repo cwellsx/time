@@ -6,7 +6,7 @@ import { Database, EditDatabase, editDatabase, fetchDatabase } from "./database"
 import { persist } from "./persist";
 import { getTestResults } from "./tests";
 
-import type { TestResult } from "../model";
+import type { TestResults } from "../model";
 
 /*
   functions which depend on useAsync
@@ -48,7 +48,7 @@ function useDatabase(): AsyncResult<Database> {
   return useAsync(fetchProductionDatabase);
 }
 
-export function useTestResults(): TestResult[] | undefined {
+export function useTestResults(): TestResults | undefined {
   return useAsync(getTestResults).data;
 }
 

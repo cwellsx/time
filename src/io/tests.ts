@@ -1,7 +1,7 @@
-import * as DB from './database';
-import { persisted } from './persist';
+import * as DB from "./database";
+import { persisted } from "./persist";
 
-import type { Time, TimeStop, TestResult } from "../model";
+import type { Time, TimeStop, TestResult, Period, TestResults } from "../model";
 type Test = {
   title: string;
   run: () => Promise<any>;
@@ -111,8 +111,10 @@ async function getResult(test: Test): Promise<TestResult> {
   return { title: test.title, msec, ok };
 }
 
-export async function getTestResults(): Promise<TestResult[]> {
+export async function getTestResults(): Promise<TestResults> {
   const results: TestResult[] = [];
   for (let test of tests) results.push(await getResult(test));
-  return results;
+  const db = await DB.fetchDatabase("test");
+  const periods: Period[] = DB.getPeriods(db.times);
+  return { results, periods };
 }

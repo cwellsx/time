@@ -88,12 +88,12 @@ const Help: React.FunctionComponent = () => {
 };
 
 const Tests: React.FunctionComponent = () => {
-  const results = useTestResults();
-  if (!results) return <h1>Loading...</h1>;
+  const testResults = useTestResults();
+  if (!testResults) return <h1>Loading...</h1>;
   return (
     <React.Fragment>
       <h1>Tests</h1>
-      <Page.Tests results={results} />
+      <Page.Tests testResults={testResults} />
     </React.Fragment>
   );
 };

@@ -1,14 +1,15 @@
 import React from "react";
 
+import { aggregate } from "./sums";
 import { Weeks } from "./weeks";
 
-import type { TestResult } from "../model";
+import type { TestResults, Period } from "../model";
 type TestProps = {
-  results: TestResult[];
+  testResults: TestResults;
 };
 
 export const Tests: React.FunctionComponent<TestProps> = (props: TestProps) => {
-  const results = props.results;
+  const { results, periods } = props.testResults;
   return (
     <>
       <ul>
@@ -19,6 +20,7 @@ export const Tests: React.FunctionComponent<TestProps> = (props: TestProps) => {
         })}
       </ul>
       <p>testDates: {testDates() ? "✅" : "❌"}</p>
+      <p>testSums: {testSums(periods) ? "✅" : "❌"}</p>
     </>
   );
 };
@@ -31,32 +33,32 @@ function testDates(): boolean {
   const weeks = new Weeks();
   try {
     {
-      const result = weeks.getWeek(new Date(2022, 0, 1));
+      const result = weeks.getWeekId(new Date(2022, 0, 1));
       assert(result.year === 2021);
       assert(result.week === 52);
     }
     {
-      const result = weeks.getWeek(new Date(2022, 0, 3));
+      const result = weeks.getWeekId(new Date(2022, 0, 3));
       assert(result.year === 2022);
       assert(result.week === 1);
     }
     {
-      const result = weeks.getWeek(new Date(2022, 11, 25));
+      const result = weeks.getWeekId(new Date(2022, 11, 25));
       assert(result.year === 2022);
       assert(result.week === 51);
     }
     {
-      const result = weeks.getWeek(new Date(2022, 11, 26));
+      const result = weeks.getWeekId(new Date(2022, 11, 26));
       assert(result.year === 2022);
       assert(result.week === 52);
     }
     {
-      const result = weeks.getWeek(new Date(2023, 0, 1));
+      const result = weeks.getWeekId(new Date(2023, 0, 1));
       assert(result.year === 2022);
       assert(result.week === 52);
     }
     {
-      const result = weeks.getWeek(new Date(2023, 0, 2));
+      const result = weeks.getWeekId(new Date(2023, 0, 2));
       assert(result.year === 2023);
       assert(result.week === 1);
     }
@@ -64,4 +66,9 @@ function testDates(): boolean {
   } catch {
     return false;
   }
+}
+
+function testSums(periods: Period[]): boolean {
+  const result = aggregate(periods);
+  return true;
 }

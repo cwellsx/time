@@ -2,7 +2,7 @@ import { DBSchema, deleteDB, IDBPDatabase, openDB } from "idb";
 
 import { persisted } from "./persist";
 
-import type { Config, Time, TagInfo } from "../model";
+import type { Config, Time, TagInfo, Period } from "../model";
 export type DbName = "production" | "test";
 
 // we only store on Config instance in the table, not several,
@@ -133,4 +133,31 @@ export async function deleteDatabase(dbName: DbName): Promise<void> {
 export async function editDatabase(dbName: DbName): Promise<EditDatabase> {
   const db = await open(dbName);
   return new EditDatabase(db);
+}
+
+export function getPeriods(times: Time[]): Period[] {
+  const result: Period[] = [];
+  const length = times.length;
+  if (length > 0) {
+    let prev: Time = times[0];
+    for (const time of times) {
+      switch (time.type) {
+        case "next":
+        case "stop":
+          if (prev.type === "stop") {
+            throw Error("period must start after stop");
+          }
+          const period: Period = {
+            start: prev.when,
+            stop: time.when,
+            task: time.task,
+            note: time.note,
+            tags: time.tags,
+          };
+          result.push(period);
+      }
+      prev = time;
+    }
+  }
+  return result;
 }

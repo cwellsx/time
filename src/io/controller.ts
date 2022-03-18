@@ -1,7 +1,7 @@
+import { Database, EditDatabase, getPeriods } from "./database";
 import { persist } from "./persist";
 
 import type { SetError } from "../error";
-import type { Database, EditDatabase } from "./database";
 import type { Config, Period, TagCount, TagInfo, Time, WhatType } from "../model";
 import type { HistoryState, NowState, SettingsState, WhatState } from "../states";
 
@@ -21,35 +21,11 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
     const times = database.times;
     const length = times.length;
     const last = length ? times[length - 1] : undefined;
+
     this.last = last ? { type: last.type, when: last.when } : undefined;
-
     this.config = database.config || {};
-
     this.persisted = database.persisted;
-
-    this.periods = [];
-
-    if (length > 0) {
-      let prev: Time = database.times[0];
-      for (const time of database.times) {
-        switch (time.type) {
-          case "next":
-          case "stop":
-            if (prev.type === "stop") {
-              throw Error("period must start after stop");
-            }
-            const period: Period = {
-              start: prev.when,
-              stop: time.when,
-              task: time.task,
-              note: time.note,
-              tags: time.tags,
-            };
-            this.periods.push(period);
-        }
-        prev = time;
-      }
-    }
+    this.periods = getPeriods(times);
   }
 
   // interface NowState

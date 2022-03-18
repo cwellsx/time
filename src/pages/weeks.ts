@@ -8,7 +8,7 @@ type WeeksOfYear = WeeksOfMonth[];
 export class Weeks {
   readonly weeks = new Map<number, WeeksOfYear>();
 
-  getWeek(date: Date): IsoWeek {
+  getWeekId(date: Date): IsoWeek {
     const year = date.getFullYear();
     const weeksOfYear = this.weeks.get(year) ?? this.getWeeksOfYear(year);
     const weeksOfMonth = weeksOfYear[date.getMonth()];
@@ -57,6 +57,11 @@ export class Weeks {
     if (!weeksOfYear) return undefined;
     return weeksOfYear[11][30];
   }
+}
+
+export function nextWeek(x: IsoWeek): IsoWeek {
+  const week = x.week + 1;
+  return week > (isLongYear(x.year) ? 53 : 52) ? { week: 1, year: x.year + 1 } : { week, year: x.year };
 }
 
 const daysPerMonth = [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
