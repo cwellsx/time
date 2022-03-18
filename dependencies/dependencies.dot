@@ -1,5 +1,6 @@
 digraph SRC {
-  "App.tsx" -> {"error" "fetch" "io" "pages" "topbar"};
+  "App.tsx" -> {"error" "fetch" "io" "pages" "topbar" "appContext.ts"};
+  "appContext.ts" -> {};
 
   "error" [shape=folder];
   "fetch" [shape=folder];
@@ -11,20 +12,19 @@ digraph SRC {
   "tags" [shape=folder];
   "topbar" [shape=folder];
   
-  "error" -> {"ErrorMessage.tsx" "errorHooks.ts"};
+  "error" -> {"ErrorMessage.tsx"};
   "ErrorMessage.tsx" -> {};
-  "errorHooks.ts" -> {};
 
   "fetch" -> {"fetchHooks.ts"};
-  "fetchHooks.ts" -> {"error" "help.md"}
+  "fetchHooks.ts" -> {"error" "help.md" "appContext.ts"}
   "help.md" -> {}
 
   "io" -> {"controller.ts" "ioHooks.ts" "tests.ts"};
   "io" -> {"model" "states"} [style=dotted];
-  "controller.ts" -> {"persist.ts"};
-  "controller.ts" -> {"database.ts"} [style=dotted];
+  "controller.ts" -> {"persist.ts" "database.ts"};
+  "controller.ts" -> {"appContext.ts"} [style=dotted];
   "database.ts" -> {"persist.ts"};
-  "ioHooks.ts" -> {"controller.ts" "database.ts" "persist.ts" "tests.ts" "error"};
+  "ioHooks.ts" -> {"controller.ts" "database.ts" "persist.ts" "tests.ts" "appContext.ts"};
   "tests.ts" -> {"database.ts" "persist.ts"};
   "persist.ts" -> {}
 
@@ -44,7 +44,7 @@ digraph SRC {
   "History.tsx" -> {"sums.ts"};
   "Settings.tsx" -> {};
   "Help.tsx" -> {};
-  "Tests.tsx" -> {"weeks.ts" "sums.ts"};
+  "Tests.tsx" -> {"weeks.ts" "sums.ts" "appContext.ts"};
   "sums.ts" -> {"weeks.ts" "date.ts"};
 
   "states" -> {"nowState.ts" "whatState.ts" "historyState.ts" "settingsState.ts"} [style=dotted];

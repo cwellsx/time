@@ -3,16 +3,17 @@ import "./App.sass";
 import React from "react";
 import * as ReactRouter from "react-router-dom";
 
-import { AppContext, ErrorMessage, useError } from "./error";
+import { AppContext, useContext } from "./appContext";
+import { ErrorMessage } from "./error";
 import { useHelp } from "./fetch";
 import { useController, useTestResults } from "./io";
 import * as Page from "./pages";
 import * as Component from "./topbar";
 
 const App: React.FunctionComponent = () => {
-  const [error, setError] = useError();
+  const [error, setError, testing, setTesting] = useContext();
   return (
-    <AppContext.Provider value={{ setError }}>
+    <AppContext.Provider value={{ setError, testing, setTesting }}>
       <ReactRouter.BrowserRouter basename={process.env.PUBLIC_URL}>
         <Component.Topbar />
         <div id="content">

@@ -1,7 +1,7 @@
 import { Database, EditDatabase, getPeriods } from "./database";
 import { persist } from "./persist";
 
-import type { SetError } from "../error";
+import type { SetError } from "../appContext";
 import type { Config, Period, TagCount, TagInfo, Time, WhatType } from "../model";
 import type { HistoryState, NowState, SettingsState, WhatState } from "../states";
 

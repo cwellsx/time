@@ -25,6 +25,7 @@ Use it to record what time you spend on tasks and types of activity.
   - [Directories are self-contained components](#directories-are-self-contained-components)
   - [Unique filenames](#unique-filenames)
   - [Acyclic dependencies](#acyclic-dependencies)
+  - [App context](#app-context)
   - [Icons](#icons)
 
 ## Analysis
@@ -294,6 +295,14 @@ Some modules define only abstract types, which are referenced using `import type
 To simply the diagram, `dependencies.dot` does not show which modules import these,
 instead it shows which folders contain modules which import these.
 These are shown as dotted lines on the graph.
+
+### App context
+
+The app context includes methods to set a global error message and to set the testing state.
+Instead of being defined using `React.AppContext` these methods could be passed from the App as parameters
+to the functions which use them.
+The `appContext.ts` is a hidden dependency -- though it's clearly visible on the `dependencies.png` diagram --
+but it makes the source code a bit tidier.
 
 ### Icons
 

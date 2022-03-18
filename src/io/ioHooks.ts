@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useSetError } from "../error";
+import { useSetError, useTesting } from "../appContext";
 import { Controller } from "./controller";
 import { Database, EditDatabase, editDatabase, fetchDatabase } from "./database";
 import { persist } from "./persist";
@@ -9,7 +9,12 @@ import { getTestResults } from "./tests";
 import type { TestResults } from "../model";
 
 /*
-  functions which depend on useAsync
+  useDatabase and useTestResults have a similar structure
+
+  in theory they could be implemented with a common subroutine which takes 'fetch' as a parameter
+  - but if so the fetch function must be defined at module scope and not be defined as a lambda,
+    because it's in the array of dependencies of the useEffect function
+  - and definining them as separate functions means they can easily start with different use-hook calls
 */
 
 type AsyncResult<T> = {
@@ -17,39 +22,46 @@ type AsyncResult<T> = {
   reload: () => void;
 };
 
-function useAsync<T>(fetch: () => Promise<T>): AsyncResult<T> {
-  const [state, setState] = React.useState<T | undefined>(undefined);
+function useDatabase(): AsyncResult<Database> {
+  const [state, setState] = React.useState<Database | undefined>(undefined);
   const [version, setVersion] = React.useState(0);
+  const testing = useTesting();
   const setError = useSetError();
 
   React.useEffect(() => {
     const invoke = async () => {
       try {
-        const fetched = await fetch();
+        const fetched = await fetchDatabase(!testing ? "production" : "test");
         setState(fetched);
       } catch (e) {
         setError(e + "");
       }
     };
     invoke();
-  }, [version, setError, fetch]);
+  }, [version, setError, testing]);
 
   const reload = () => setVersion(version + 1);
 
   return { data: state, reload: reload };
 }
 
-// this must be at module scope, not a lambda, because it's in the array of dependencies of the useEffect function
-async function fetchProductionDatabase() {
-  return fetchDatabase("production");
-}
-
-function useDatabase(): AsyncResult<Database> {
-  return useAsync(fetchProductionDatabase);
-}
-
 export function useTestResults(): TestResults | undefined {
-  return useAsync(getTestResults).data;
+  const [state, setState] = React.useState<TestResults | undefined>(undefined);
+  const setError = useSetError();
+
+  React.useEffect(() => {
+    const invoke = async () => {
+      try {
+        const fetched = await getTestResults();
+        setState(fetched);
+      } catch (e) {
+        setError(e + "");
+      }
+    };
+    invoke();
+  }, [setError]);
+
+  return state;
 }
 
 export function useController(): Controller | undefined {

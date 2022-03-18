@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useSetError } from "../error";
+import { useSetError } from "../appContext";
 import HelpMarkdownUrl from "./help.md";
 
 // to make `import from "*.md"` work I had to add src/global.d.ts

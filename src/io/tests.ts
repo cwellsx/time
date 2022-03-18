@@ -2,6 +2,7 @@ import * as DB from "./database";
 import { persisted } from "./persist";
 
 import type { Time, TimeStop, TestResult, Period, TestResults } from "../model";
+
 type Test = {
   title: string;
   run: () => Promise<any>;

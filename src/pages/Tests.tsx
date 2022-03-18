@@ -1,15 +1,22 @@
 import React from "react";
 
+import { useSetTesting, useTesting } from "../appContext";
 import { aggregate } from "./sums";
 import { Weeks } from "./weeks";
 
-import type { TestResults, Period } from "../model";
+import type { Period, TestResults } from "../model";
+
 type TestProps = {
   testResults: TestResults;
 };
 
 export const Tests: React.FunctionComponent<TestProps> = (props: TestProps) => {
   const { results, periods } = props.testResults;
+  const testing = useTesting();
+  const setTesting = useSetTesting();
+  const handleChange = () => {
+    setTesting(!testing);
+  };
   return (
     <>
       <ul>
@@ -21,6 +28,11 @@ export const Tests: React.FunctionComponent<TestProps> = (props: TestProps) => {
       </ul>
       <p>testDates: {testDates() ? "✅" : "❌"}</p>
       <p>testSums: {testSums(periods) ? "✅" : "❌"}</p>
+      <p>
+        <label>
+          <input type="checkbox" checked={testing} onChange={handleChange} /> Display the test database
+        </label>
+      </p>
     </>
   );
 };
