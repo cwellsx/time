@@ -26,7 +26,7 @@ export class Weeks {
         day = ++day % 7;
         if (isFirstDayOfWeek(day)) {
           week =
-            week.year != year
+            week.year !== year
               ? { week: 1, year }
               : month === 11 && date >= 29
               ? { week: 1, year: year + 1 }
@@ -66,6 +66,17 @@ export function nextWeek(x: IsoWeek): IsoWeek {
 
 const daysPerMonth = [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
+// 0..6 is Sunday..Saturday
+const enum Day {
+  Sunday = 0,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+}
+
 function getDaysInMonth(year: number, month: number) {
   const days = daysPerMonth[month];
   return days ? days : isLeapYear(year) ? 29 : 28;
@@ -79,18 +90,7 @@ function isLongYear(year: number): boolean {
   const jan1 = new Date(year, 0, 1);
   const day = jan1.getDay();
   // any year starting on Thursday and any leap year starting on Wednesday
-  return day == Day.Thursday || (day == Day.Wednesday && isLeapYear(year));
-}
-
-// 0..6 is Sunday..Saturday
-const enum Day {
-  Sunday = 0,
-  Monday,
-  Tuesday,
-  Wednesday,
-  Thursday,
-  Friday,
-  Saturday,
+  return day === Day.Thursday || (day === Day.Wednesday && isLeapYear(year));
 }
 
 function isFirstDayOfWeek(day: number): boolean {

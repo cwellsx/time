@@ -23,7 +23,7 @@ function createTimes(year: number, nDays: number, nTimesPerDay: number): Time[] 
     const month = Math.floor(i / 20);
     const day = i % 20;
     for (let j = 0; j < nTimesPerDay; ++j) {
-      const when = new Date(year, month, day, j + 1).valueOf();
+      const when = new Date(year, month, day, Math.floor((j + 1) / 2), (j + 1) % 2 ? 30 : 0).valueOf();
       if (j === 0) result.push({ type: "start", when: when });
       else if (j === nTimesPerDay - 1) result.push({ type: "stop", when: when, note: "hello" });
       else result.push({ type: "next", when: when, note: "hello" });

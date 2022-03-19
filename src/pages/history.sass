@@ -1,0 +1,29 @@
+table.history
+  border: none
+
+  td
+    border: none
+
+    &:first-child, &:nth-child(2)
+      /* 20px is too narrow but the table column will expand to fit the text, I just want it as narrow as possible */
+      width: 20px
+      white-space: nowrap
+
+    &:first-child
+      text-align: right
+      padding-left: 0
+
+    &:last-child
+      padding-right: 0
+
+  .week, .day
+
+    td:first-child, td:nth-child(2)
+      font-weight: bold
+
+  .week
+
+    td:first-child
+      font-size: 1.2rem
+      padding-top: 1.5rem
+      padding-bottom: 0.5rem

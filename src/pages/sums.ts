@@ -4,9 +4,11 @@ import { IsoWeek, nextWeek, Weeks } from "./weeks";
 import type { Period } from "../model";
 
 export interface IShow {
+  get_Key(): string;
   get_Id(): string;
   get_Text(): string[];
   get_Minutes(): number;
+  get_Class(): string;
 }
 
 class Span implements IShow {
@@ -18,23 +20,29 @@ class Span implements IShow {
     this.start = new Date(period.start);
     this.stop = new Date(period.stop);
   }
+  get_Key(): string {
+    return `${this.start.getTime()}`;
+  }
   get_Id(): string {
-    return `${showTime(this.start)}&ndash;${showTime(this.stop)}`;
+    return `${showTime(this.start)}–${showTime(this.stop)}`;
   }
   get_Text(): string[] {
     const result: string[] = [];
     if (this.period.note) result.push(this.period.note);
-    if (this.period.tags) result.push(this.period.tags.join());
-    if (this.period.task) result.push(this.period.task);
+    if (this.period.tags) result.push(`[${this.period.tags.join()}]`);
+    if (this.period.task) result.push(`# ${this.period.task}`);
     return result;
   }
   get_Minutes(): number {
     return (this.period.stop - this.period.start) / 60000;
   }
+  get_Class(): string {
+    return "span";
+  }
 }
 
 class Day implements IShow {
-  private readonly spans: Span[];
+  readonly spans: Span[];
   readonly date: Date;
   constructor(span: Span) {
     this.spans = [span];
@@ -45,6 +53,9 @@ class Day implements IShow {
     this.spans.push(span);
     return true;
   }
+  get_Key(): string {
+    return `${this.date.getFullYear()}-${this.date.getMonth() + 1}-${this.date.getDate()}`;
+  }
   get_Id(): string {
     return showDay(this.date);
   }
@@ -54,14 +65,20 @@ class Day implements IShow {
   get_Minutes(): number {
     return this.spans.reduce((x, y) => x + y.get_Minutes(), 0);
   }
+  get_Class(): string {
+    return "day";
+  }
 }
 
 class Week implements IShow {
   readonly weekId: IsoWeek;
-  private readonly days: Day[];
+  readonly days: Day[];
   constructor(day: Day | undefined, weekId: IsoWeek) {
     this.weekId = weekId;
     this.days = day ? [day] : [];
+  }
+  get_Key(): string {
+    return `${this.weekId.year}-w${this.weekId.week}`;
   }
   next(day: Day, weekId: IsoWeek): boolean {
     if (!isSameWeek(weekId, this.weekId)) return false;
@@ -77,14 +94,17 @@ class Week implements IShow {
   get_Minutes(): number {
     return this.days.reduce((x, y) => x + y.get_Minutes(), 0);
   }
+  get_Class(): string {
+    return "week";
+  }
 }
 
 function isSameDay(x: Date, y: Date): boolean {
-  return x.getFullYear() == y.getFullYear() && x.getMonth() == y.getMonth() && x.getDate() == y.getDate();
+  return x.getFullYear() === y.getFullYear() && x.getMonth() === y.getMonth() && x.getDate() === y.getDate();
 }
 
 function isSameWeek(x: IsoWeek, y: IsoWeek): boolean {
-  return x.week == y.week && x.year == y.year;
+  return x.week === y.week && x.year === y.year;
 }
 
 export function aggregate(periods: Period[]): IShow[] {
@@ -109,6 +129,21 @@ export function aggregate(periods: Period[]): IShow[] {
   for (const period of periods) {
     const span = new Span(period);
     if (!day || !day.next(span)) newDay(span);
+  }
+
+  return flatten(result);
+}
+
+function flatten(weeks: Week[]): IShow[] {
+  const result: IShow[] = [];
+  for (const week of weeks.reverse()) {
+    result.push(week);
+    for (const day of week.days) {
+      result.push(day);
+      for (const span of day.spans) {
+        result.push(span);
+      }
+    }
   }
   return result;
 }

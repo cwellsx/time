@@ -1,3 +1,5 @@
+import "./history.sass";
+
 import React from "react";
 
 import { aggregate } from "./sums";
@@ -12,6 +14,28 @@ type HistoryProps = {
 export const History: React.FunctionComponent<HistoryProps> = (props: HistoryProps) => {
   const state = props.state;
   const periods: Period[] = state.periods;
-  const weeks = aggregate(periods);
-  return <p>TBS</p>;
+  const rows = aggregate(periods);
+  return (
+    <table className="history">
+      <tbody>
+        {rows.map((show) => {
+          return (
+            <tr key={show.get_Key()} className={show.get_Class()}>
+              <td>{show.get_Id()}</td>
+              <td>{formatTime(show.get_Minutes())}</td>
+              <td>{show.get_Text()}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
 };
+
+function formatTime(minutes: number) {
+  // round to the nearest 5 minutes
+  minutes = Math.round(minutes / 5) * 5;
+  const hours = Math.floor(minutes / 60);
+  const padded = String(minutes % 60).padStart(2, "0");
+  return `${hours}:${padded}`;
+}
