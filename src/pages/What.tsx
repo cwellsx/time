@@ -86,7 +86,7 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
   const newDescriptionText = (
     <div>
       <span>Description:</span>
-      <span>{newDescription}</span>
+      <span className="description">{newDescription}</span>
     </div>
   );
 

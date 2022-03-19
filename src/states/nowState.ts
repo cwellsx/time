@@ -17,4 +17,7 @@ export interface NowState {
 
   getAllTasks(): Promise<TagCount[]>;
   saveTask(task: string): void;
+
+  hasTags(): boolean;
+  hasTask(): boolean;
 }

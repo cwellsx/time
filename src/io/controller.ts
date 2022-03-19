@@ -2,7 +2,7 @@ import { Database, EditDatabase, getPeriods } from "./database";
 import { persist } from "./persist";
 
 import type { SetError } from "../appContext";
-import type { Config, Period, TagCount, TagInfo, Time, WhatType } from "../model";
+import type { Config, Period, TagCount, TagInfo, Time, WhatType, RequiredType } from "../model";
 import type { HistoryState, NowState, SettingsState, WhatState } from "../states";
 
 export class Controller implements NowState, WhatState, HistoryState, SettingsState {
@@ -110,12 +110,29 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
       .catch((error) => this.setError(error));
   }
 
+  hasTags(): boolean {
+    return this.database.tags.length > 0;
+  }
+  hasTask(): boolean {
+    return this.database.tasks.length > 0;
+  }
+
   // interface SettingsState
   readonly persisted: boolean;
   persist(): void {
     persist()
       .then(() => this.reload)
       .catch((error) => this.setError(error));
+  }
+  setTagsRequired(value: RequiredType): void {
+    const config: Config = { ...this.config };
+    config.tagsRequired = value;
+    this.saveConfig(config);
+  }
+  setTaskRequired(value: RequiredType): void {
+    const config: Config = { ...this.config };
+    config.taskRequired = value;
+    this.saveConfig(config);
   }
 
   // interface WhatState

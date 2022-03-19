@@ -90,8 +90,11 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     </div>
   );
 
-  const what = !started ? undefined : (
-    <React.Fragment>
+  const isTaskRequired = config.taskRequired === "required";
+  const isTagsRequired = config.tagsRequired === "required";
+
+  const editTask =
+    !isTaskRequired && !state.hasTask() ? undefined : (
       <label>
         <span>Task:</span>
         <EditorTags
@@ -105,6 +108,10 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
           hrefAllTags={"/tags"}
         />
       </label>
+    );
+
+  const editTags =
+    !isTagsRequired && !state.hasTags() ? undefined : (
       <label>
         <span>Tags:</span>
         <EditorTags
@@ -118,6 +125,12 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
           hrefAllTags={"/tags"}
         />
       </label>
+    );
+
+  const what = !started ? undefined : (
+    <React.Fragment>
+      {editTask}
+      {editTags}
       <label>
         <span>Comment:</span>
         <div>
@@ -128,14 +141,12 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
   );
 
   return (
-    <React.Fragment>
-      <div className="table">
-        {timeText}
-        {startButton}
-        {what}
-        {stopButton}
-      </div>
-    </React.Fragment>
+    <div className="table">
+      {timeText}
+      {startButton}
+      {what}
+      {stopButton}
+    </div>
   );
 };
 
