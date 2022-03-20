@@ -1,6 +1,6 @@
 import React from "react";
 
-import { EditorTags, OutputTags, TagCount } from "../tags";
+import { EditorTags, OutputTags } from "../tags";
 import { showWhen } from "./date";
 
 import type { TimeStart, TimeStop } from "../model";
@@ -47,18 +47,10 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     state.saveTags(outputTags.tags);
   };
 
-  const getAllTags = (): Promise<TagCount[]> => {
-    return state.getAllTags();
-  };
-
   const setOutputTask = (outputTask: OutputTags): void => {
     setIsTagsValid(outputTask.isValid);
     const task: string = outputTask.tags ? outputTask.tags[0] : "";
     state.saveTask(task);
-  };
-
-  const getAllTasks = (): Promise<TagCount[]> => {
-    return state.getAllTasks();
   };
 
   const timeText = !time ? undefined : (
@@ -100,7 +92,7 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
         <EditorTags
           inputTags={config.task ? [config.task] : []}
           result={setOutputTask}
-          getAllTags={getAllTasks}
+          allTags={state.getAllTasks()}
           minimum={true}
           maximum={true}
           canNewTag={false}
@@ -117,7 +109,7 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
         <EditorTags
           inputTags={config.tags || []}
           result={setOutputTags}
-          getAllTags={getAllTags}
+          allTags={state.getAllTags()}
           minimum={true}
           maximum={true}
           canNewTag={false}

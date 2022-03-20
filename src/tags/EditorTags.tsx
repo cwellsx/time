@@ -1,11 +1,11 @@
-import './EditorTags.css';
+import "./EditorTags.css";
 
-import React from 'react';
+import React from "react";
 
-import { ErrorMessage } from '../error';
-import { getOnSelectTags, log, RenderedElement, Validation } from './selectTagsState';
-import { useSelectTags } from './tagsHook';
-import * as Icon from './tagsIcons';
+import { ErrorMessage } from "../error";
+import { getOnSelectTags, log, RenderedElement, Validation } from "./selectTagsState";
+import { useSelectTags } from "./tagsHook";
+import * as Icon from "./tagsIcons";
 
 import type { ParentCallback, TagCount } from "./tagsTypes";
 
@@ -19,14 +19,14 @@ interface EditorTagsProps extends Validation {
   inputTags: string[];
   // the results are pushed back to the parent via this callback
   result: ParentCallback;
-  // a function to fetch all existing tags from the server (for tag dictionary lookup)
-  getAllTags: () => Promise<TagCount[]>;
+  // all existing tags from the server (for tag dictionary lookup)
+  allTags: TagCount[];
 }
 
 export const EditorTags: React.FunctionComponent<EditorTagsProps> = (props) => {
-  const { inputTags, result, getAllTags } = props;
+  const { inputTags, result, allTags } = props;
   // get the state
-  const { state, dispatch, tagDictionary, assert, errorMessage } = useSelectTags(inputTags, getAllTags, props);
+  const { state, dispatch, tagDictionary, assert, errorMessage } = useSelectTags(inputTags, allTags, props);
   // get the event handlers
   const { onEditorClick, onDeleteTag, onTagClick, onChange, onKeyDown, onHintResult } = getOnSelectTags(
     assert,

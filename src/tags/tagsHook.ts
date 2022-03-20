@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import { Action, Assert, initialState, reducer, RenderedState, TagDictionary, Validation } from './selectTagsState';
+import { Action, Assert, initialState, reducer, RenderedState, TagDictionary, Validation } from "./selectTagsState";
 
 import type { TagCount } from "./tagsTypes";
 
 export function useSelectTags(
   inputTags: string[],
-  getAllTags: () => Promise<TagCount[]>,
+  allTags: TagCount[],
   validation: Validation
 ): {
   state: RenderedState;
@@ -42,25 +42,7 @@ export function useSelectTags(
   );
 
   // this is a dictionary of existing tags
-  const [tagDictionary, setTagDictionary] = React.useState<TagDictionary | undefined>(undefined);
-
-  // useEffect to fetch all the tags from the server exactly once
-  // React's elint rules demand that getAllTags be specified in the deps array, but the value of getAllTags
-  // (which we're being passed as a parameter) is utimately a function at module scope, so it won't vary
-  React.useEffect(() => {
-    // get tags from server
-    getAllTags()
-      .then((tags) => {
-        // use them to contruct a dictionary
-        const tagDictionary: TagDictionary = new TagDictionary(tags);
-        // save the dictionary in state
-        setTagDictionary(tagDictionary);
-      })
-      .catch((reason) => {
-        // alarm the user
-        setErrorMessage(`getAllTags() failed -- ${reason}`);
-      });
-  }, [getAllTags]);
+  const tagDictionary: TagDictionary = new TagDictionary(allTags);
 
   /*
     Event handlers

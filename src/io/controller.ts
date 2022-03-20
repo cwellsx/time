@@ -68,20 +68,17 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
     this.saveConfig(config);
   }
 
-  getAllTags(): Promise<TagCount[]> {
-    return Controller.getAllPromised(this.database.tags);
+  getAllTags(): TagCount[] {
+    return Controller.getAllTagCounts(this.database.tags);
   }
 
-  getAllTasks(): Promise<TagCount[]> {
-    return Controller.getAllPromised(this.database.tasks);
+  getAllTasks(): TagCount[] {
+    return Controller.getAllTagCounts(this.database.tasks);
   }
 
-  private static getAllPromised(tags: TagInfo[]): Promise<TagCount[]> {
-    const result: TagCount[] = tags.map<TagCount>((tag) => {
+  private static getAllTagCounts(tags: TagInfo[]): TagCount[] {
+    return tags.map<TagCount>((tag) => {
       return { key: tag.key, summary: tag.summary, count: 1 };
-    });
-    return new Promise<TagCount[]>((resolve, reject) => {
-      resolve(result);
     });
   }
 

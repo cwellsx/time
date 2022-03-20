@@ -12,10 +12,10 @@ export interface NowState {
 
   saveComment(comment: string): void;
 
-  getAllTags(): Promise<TagCount[]>;
+  getAllTags(): TagCount[];
   saveTags(tags: string[]): void;
 
-  getAllTasks(): Promise<TagCount[]>;
+  getAllTasks(): TagCount[];
   saveTask(task: string): void;
 
   hasTags(): boolean;

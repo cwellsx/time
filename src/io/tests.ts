@@ -1,7 +1,7 @@
 import * as DB from "./database";
 import { persisted } from "./persist";
 
-import type { Time, TimeStop, TestResult, Period, TestResults } from "../model";
+import type { Time, TimeStop, TestResult, Period, TestResults, TagInfo } from "../model";
 
 type Test = {
   title: string;
@@ -93,6 +93,20 @@ const tests: Test[] = [
     run: async () => {
       for (let i = 0; i < 100; ++i) {
         await persisted();
+      }
+    },
+  },
+  {
+    title: "create tags",
+    run: async () => {
+      const tags: TagInfo[] = [
+        { key: "coding", summary: "the art of programming" },
+        { key: "social", summary: "social media" },
+        { key: "bicycling" },
+      ];
+      const edit = await DB.editDatabase("test");
+      for (const tag of tags) {
+        await edit.addWhat("tags", tag);
       }
     },
   },
