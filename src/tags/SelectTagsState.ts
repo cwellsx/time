@@ -12,7 +12,7 @@ export interface Validation {
   // whether a minimum number of tags must be defined, e.g. 1
   minimum: boolean;
   // whether a maximum number of tags must be defined, e.g. 5
-  maximum: boolean;
+  maximum?: number;
   // whether the user can create new tags, or whether tags must match what's already in the dictionary
   canNewTag: boolean;
   // whether to show validation error messages -- they're hidden until the user first presses the form's submit button
@@ -826,8 +826,8 @@ function renderState(
     if (nWords < 1 && validation.minimum) {
       return "Please enter at least one tag;";
     }
-    if (nWords > 5 && validation.maximum) {
-      return "Please enter a maximum of five tags.";
+    if (validation.maximum !== undefined && nWords > 5) {
+      return `Please enter a maximum of ${nWords === 5 ? "five" : validation.maximum} tags.`;
     }
     if (!!invalid.length) {
       return invalid.length === 1

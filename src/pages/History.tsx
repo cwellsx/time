@@ -23,7 +23,7 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
             <tr key={show.get_Key()} className={show.get_Class()}>
               <td>{show.get_Id()}</td>
               <td>{formatTime(show.get_Minutes())}</td>
-              <td>{show.get_Text()}</td>
+              <td>{show.get_Text().join("\n")}</td>
             </tr>
           );
         })}

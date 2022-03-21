@@ -5,19 +5,16 @@ export interface NowState {
     type: "start" | "stop" | "next";
     when: number;
   };
+
   readonly config: Config;
 
   saveTime(time: Time): void;
   cancelLast(): void;
 
-  saveComment(comment: string): void;
+  saveComment(comment: string | undefined): void;
+  saveTags(tags: string[] | undefined): void;
+  saveTask(task: string | undefined): void;
 
   getAllTags(): TagCount[];
-  saveTags(tags: string[]): void;
-
   getAllTasks(): TagCount[];
-  saveTask(task: string): void;
-
-  hasTags(): boolean;
-  hasTask(): boolean;
 }

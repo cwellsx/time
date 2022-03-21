@@ -29,7 +29,7 @@ class Span implements IShow {
   get_Text(): string[] {
     const result: string[] = [];
     if (this.period.note) result.push(this.period.note);
-    if (this.period.tags) result.push(`[${this.period.tags.join()}]`);
+    if (this.period.tags && this.period.tags.length) result.push(`[${this.period.tags.join()}]`);
     if (this.period.task) result.push(`# ${this.period.task}`);
     return result;
   }

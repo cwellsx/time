@@ -62,9 +62,19 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
       .catch((error) => this.setError(error));
   }
 
-  saveComment(comment: string): void {
+  saveComment(comment: string | undefined): void {
     const config: Config = { ...this.config };
     config.note = comment;
+    this.saveConfig(config);
+  }
+  saveTags(tags: string[] | undefined): void {
+    const config: Config = { ...this.config };
+    config.tags = tags;
+    this.saveConfig(config);
+  }
+  saveTask(task: string | undefined): void {
+    const config: Config = { ...this.config };
+    config.task = task;
     this.saveConfig(config);
   }
 
@@ -82,18 +92,6 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
     });
   }
 
-  saveTags(tags: string[]): void {
-    const config: Config = { ...this.config };
-    config.tags = tags;
-    this.saveConfig(config);
-  }
-
-  saveTask(task: string): void {
-    const config: Config = { ...this.config };
-    config.task = task;
-    this.saveConfig(config);
-  }
-
   private saveConfig(config: Config): void {
     this.editDatabase()
       .then(async (edit) => {
@@ -105,13 +103,6 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
         }
       })
       .catch((error) => this.setError(error));
-  }
-
-  hasTags(): boolean {
-    return this.database.tags.length > 0;
-  }
-  hasTask(): boolean {
-    return this.database.tasks.length > 0;
   }
 
   // interface SettingsState
