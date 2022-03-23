@@ -1,13 +1,13 @@
-import "./EditorTags.css";
+import './EditorTags.css';
 
-import React from "react";
+import React from 'react';
 
-import { ErrorMessage } from "../error";
-import { getOnSelectTags, log, RenderedElement, Validation } from "./selectTagsState";
-import { useSelectTags } from "./tagsHook";
-import * as Icon from "./tagsIcons";
+import { ErrorMessage } from '../error';
+import { getOnSelectTags, log, RenderedElement, Validation } from './selectTagsState';
+import { useSelectTags } from './tagsHook';
+import * as Icon from './tagsIcons';
 
-import type { ParentCallback, TagCount } from "./tagsTypes";
+import type { OutputTags, ParentCallback, TagCount } from "./tagsTypes";
 
 // this is to display a little 'x' SVG -- a Close icon which is displayed on each tag -- clicking it will delete the tag
 // also to display a little '(!)' SVG -- an Error icon which is displayed in the element, if there's a validation error
@@ -25,13 +25,30 @@ interface EditorTagsProps extends Validation {
 
 export const EditorTags: React.FunctionComponent<EditorTagsProps> = (props) => {
   const { inputTags, parentCallback, allTags } = props;
+
   // get the state
   const { state, dispatch, tagDictionary, assert, errorMessage } = useSelectTags(inputTags, allTags, props);
+
+  // need to wrap the parentCallback in React.useEffect to avoid error
+  // "Cannot update a component (`...`) while rendering a different component"
+  // see e.g. https://stackoverflow.com/a/70317831/49942
+  const [outputIsValid, setOutputIsValid] = React.useState<boolean | undefined>(undefined);
+  const [outputTags, setOutputTags] = React.useState<string[]>([]);
+  React.useEffect(() => {
+    if (outputIsValid === undefined) return;
+    const output: OutputTags = { isValid: outputIsValid, tags: outputTags };
+    parentCallback(output);
+  }, [outputIsValid, outputTags]);
+  const onOutput: ParentCallback = (output: OutputTags): void => {
+    setOutputIsValid(output.isValid);
+    setOutputTags(output.tags);
+  };
+
   // get the event handlers
   const { onEditorClick, onDeleteTag, onTagClick, onChange, onKeyDown, onHintResult } = getOnSelectTags(
     assert,
     props,
-    parentCallback,
+    onOutput,
     dispatch,
     state,
     tagDictionary

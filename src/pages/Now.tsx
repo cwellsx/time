@@ -11,15 +11,12 @@ type NowProps = {
 };
 
 export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
-  const [isTagsValid, setIsTagsValid] = React.useState<boolean>(true);
-  const [isTaskValid, setIsTaskValid] = React.useState<boolean>(true);
-  const [showValidationError, setShowValidationError] = React.useState<boolean>(false);
-
   const state = props.state;
   const config = state.config;
 
-  const [task, setTask] = React.useState<string[]>(config.task ? [config.task] : []);
-  const [tags, setTags] = React.useState<string[]>(config.tags || []);
+  const [showValidationError, setShowValidationError] = React.useState<boolean>(false);
+  const [outputTask, setOutputTask] = React.useState<OutputTags | undefined>(undefined);
+  const [outputTags, setOutputTags] = React.useState<OutputTags | undefined>(undefined);
   const [note, setNote] = React.useState<string | undefined>(config.note);
 
   const { text, time, started } = new Displayed(state);
@@ -34,13 +31,17 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     state.saveTime(time);
   }
 
+  const getTags = (): string[] | undefined => (outputTags && outputTags.tags.length ? outputTags.tags : undefined);
+  const getTask = (): string | undefined => (outputTask && outputTask.tags.length ? outputTask.tags[0] : undefined);
+
   function onStop(event: React.MouseEvent<HTMLButtonElement>, type: "stop" | "next"): void {
     event.preventDefault();
-    if (!isTagsValid || !isTaskValid) {
+    const isInvalid = (output: OutputTags | undefined) => output && !output.isValid;
+    if (isInvalid(outputTask) || isInvalid(outputTags)) {
       setShowValidationError(true);
       return;
     }
-    const time: TimeStop = { when: Date.now(), type, note, task: config.task, tags: config.tags };
+    const time: TimeStop = { when: Date.now(), type, note, task: getTask(), tags: getTags() };
     state.saveTime(time);
   }
 
@@ -60,19 +61,16 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     state.saveComment(comment);
   }
 
-  const setOutputTags = (outputTags: OutputTags): void => {
-    console.log(`setOutputTags ${outputTags}`);
-    setIsTagsValid(outputTags.isValid);
-    setTags(outputTags.tags);
-    const tags = outputTags.tags.length ? outputTags.tags : undefined;
-    //state.saveTags(tags);
+  const onOutputTags = (outputTags: OutputTags): void => {
+    console.log("onOutputTags");
+    setOutputTags(outputTags);
+    state.saveTags(getTags());
   };
 
-  const setOutputTask = (outputTask: OutputTags): void => {
-    setIsTaskValid(outputTask.isValid);
-    setTask(outputTask.tags);
-    const task = outputTask.tags.length ? outputTask.tags[0] : undefined;
-    //state.saveTask(task);
+  const onOutputTask = (outputTask: OutputTags): void => {
+    console.log("onOutputTask");
+    setOutputTask(outputTask);
+    state.saveTask(getTask());
   };
 
   const timeText = !time ? undefined : (
@@ -114,8 +112,8 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
       <label>
         <span>Task:</span>
         <EditorTags
-          inputTags={[]}
-          parentCallback={setOutputTask}
+          inputTags={config.task ? [config.task] : []}
+          parentCallback={onOutputTask}
           allTags={allTasks}
           minimum={isTaskRequired}
           maximum={1}
@@ -131,8 +129,8 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
       <label>
         <span>Tags:</span>
         <EditorTags
-          inputTags={[]}
-          parentCallback={setOutputTags}
+          inputTags={config.tags ?? []}
+          parentCallback={onOutputTags}
           allTags={allTags}
           minimum={isTagsRequired}
           maximum={undefined}
@@ -142,8 +140,6 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
         />
       </label>
     );
-
-  console.log(`config.note ${config.note}`);
 
   const what = !started ? undefined : (
     <React.Fragment>
