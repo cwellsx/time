@@ -27,7 +27,7 @@ export type Assert = (assertion: boolean, message: string, extra?: () => object)
 interface Context {
   inputElement: InputElement;
   assert: Assert;
-  result: ParentCallback;
+  parentCallback: ParentCallback;
   tagDictionary?: TagDictionary;
   validation: Validation;
 }
@@ -223,7 +223,7 @@ class MutableState {
     // do a callback to the parent to say what the current tags are (excluding the empty <input> word if there is one)
     const tags: string[] = renderedState.elements.map((element) => element.word).filter((word) => !!word.length);
     const isValid = !renderedState.validationError.length;
-    this.context.result({ tags, isValid });
+    this.context.parentCallback({ tags, isValid });
     return renderedState;
   }
 
@@ -866,7 +866,7 @@ export function initialState(assert: Assert, inputTags: string[], validation: Va
 export function getOnSelectTags(
   assert: Assert,
   validation: Validation,
-  result: ParentCallback,
+  parentCallback: ParentCallback,
   dispatch: (action: Action) => void,
   state: RenderedState,
   tagDictionary?: TagDictionary
@@ -875,7 +875,7 @@ export function getOnSelectTags(
     return {
       inputElement: new InputElement(inputElement, assert),
       assert,
-      result,
+      parentCallback,
       tagDictionary,
       validation,
     };

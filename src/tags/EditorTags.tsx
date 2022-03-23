@@ -18,20 +18,20 @@ interface EditorTagsProps extends Validation {
   // the input/original tags to be edited (or an empty array if there are none)
   inputTags: string[];
   // the results are pushed back to the parent via this callback
-  result: ParentCallback;
+  parentCallback: ParentCallback;
   // all existing tags from the server (for tag dictionary lookup)
   allTags: TagCount[];
 }
 
 export const EditorTags: React.FunctionComponent<EditorTagsProps> = (props) => {
-  const { inputTags, result, allTags } = props;
+  const { inputTags, parentCallback, allTags } = props;
   // get the state
   const { state, dispatch, tagDictionary, assert, errorMessage } = useSelectTags(inputTags, allTags, props);
   // get the event handlers
   const { onEditorClick, onDeleteTag, onTagClick, onChange, onKeyDown, onHintResult } = getOnSelectTags(
     assert,
     props,
-    result,
+    parentCallback,
     dispatch,
     state,
     tagDictionary

@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-import { EditorTags, OutputTags } from "../tags";
-import { showWhen } from "./date";
+import { EditorTags, OutputTags } from '../tags';
+import { showWhen } from './date';
 
 import type { TimeStart, TimeStop } from "../model";
 import type { NowState } from "../states";
@@ -17,6 +17,10 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
 
   const state = props.state;
   const config = state.config;
+
+  const [task, setTask] = React.useState<string[]>(config.task ? [config.task] : []);
+  const [tags, setTags] = React.useState<string[]>(config.tags || []);
+  const [note, setNote] = React.useState<string | undefined>(config.note);
 
   const { text, time, started } = new Displayed(state);
 
@@ -36,7 +40,7 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
       setShowValidationError(true);
       return;
     }
-    const time: TimeStop = { when: Date.now(), type, note: config.note, task: config.task, tags: config.tags };
+    const time: TimeStop = { when: Date.now(), type, note, task: config.task, tags: config.tags };
     state.saveTime(time);
   }
 
@@ -50,21 +54,25 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
   */
 
   function onComment(event: React.ChangeEvent<HTMLTextAreaElement>): void {
-    event.preventDefault();
+    // event.preventDefault();
     const comment = event.target.value || undefined;
+    setNote(comment);
     state.saveComment(comment);
   }
 
   const setOutputTags = (outputTags: OutputTags): void => {
+    console.log(`setOutputTags ${outputTags}`);
     setIsTagsValid(outputTags.isValid);
+    setTags(outputTags.tags);
     const tags = outputTags.tags.length ? outputTags.tags : undefined;
-    state.saveTags(tags);
+    //state.saveTags(tags);
   };
 
   const setOutputTask = (outputTask: OutputTags): void => {
     setIsTaskValid(outputTask.isValid);
+    setTask(outputTask.tags);
     const task = outputTask.tags.length ? outputTask.tags[0] : undefined;
-    state.saveTask(task);
+    //state.saveTask(task);
   };
 
   const timeText = !time ? undefined : (
@@ -106,8 +114,8 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
       <label>
         <span>Task:</span>
         <EditorTags
-          inputTags={config.task ? [config.task] : []}
-          result={setOutputTask}
+          inputTags={[]}
+          parentCallback={setOutputTask}
           allTags={allTasks}
           minimum={isTaskRequired}
           maximum={1}
@@ -123,8 +131,8 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
       <label>
         <span>Tags:</span>
         <EditorTags
-          inputTags={config.tags || []}
-          result={setOutputTags}
+          inputTags={[]}
+          parentCallback={setOutputTags}
           allTags={allTags}
           minimum={isTagsRequired}
           maximum={undefined}
@@ -135,6 +143,8 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
       </label>
     );
 
+  console.log(`config.note ${config.note}`);
+
   const what = !started ? undefined : (
     <React.Fragment>
       {editTask}
@@ -142,7 +152,7 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
       <label>
         <span>Comment:</span>
         <div>
-          <textarea className="comment" value={config.note} onChange={onComment} />
+          <textarea className="comment" value={note} onChange={onComment} />
         </div>
       </label>
     </React.Fragment>

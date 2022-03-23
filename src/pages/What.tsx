@@ -1,8 +1,8 @@
-import "./what.sass";
+import './what.sass';
 
-import React from "react";
+import React from 'react';
 
-import { Tabs } from "../tabs";
+import { Tabs } from '../tabs';
 
 import type { WhatState } from "../states";
 import type { TabAction } from "../tabs";
@@ -17,11 +17,17 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
   const [description, setDescription] = React.useState("");
 
   const state = props.state;
-  const whatType: WhatType = state.config.whatType ?? "tags";
+
+  const [whatType, setWhatType] = React.useState<WhatType>(state.config.whatType ?? "tags");
+
+  const changeWhatType = (w: WhatType) => {
+    setWhatType(w);
+    state.saveWhatType(w);
+  };
 
   const tabActions: TabAction[] = [
-    { text: "Tags", action: () => state.saveWhatType("tags") },
-    { text: "Tasks", action: () => state.saveWhatType("tasks") },
+    { text: "Tags", action: () => changeWhatType("tags") },
+    { text: "Tasks", action: () => changeWhatType("tasks") },
   ];
 
   const [selectedTab, text] = ((whatType: WhatType) => {

@@ -21,6 +21,6 @@ export function useHelp(): string | undefined {
       }
     };
     invoke();
-  }, []);
+  }, [url, setError]);
   return markdown;
 }

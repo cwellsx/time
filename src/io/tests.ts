@@ -106,6 +106,7 @@ const tests: Test[] = [
       ];
       const edit = await DB.editDatabase("test");
       for (const tag of tags) {
+        // await edit.addWhat("tags", tag);
         await edit.addWhat("tags", tag);
       }
     },

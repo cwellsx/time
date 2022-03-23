@@ -1,5 +1,5 @@
-import { Database, EditDatabase, getPeriods } from "./database";
-import { persist } from "./persist";
+import { Database, EditDatabase, getPeriods } from './database';
+import { persist } from './persist';
 
 import type { SetError } from "../appContext";
 import type { Config, Period, TagCount, TagInfo, Time, WhatType, RequiredType } from "../model";
@@ -97,7 +97,6 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
       .then(async (edit) => {
         try {
           await edit.putConfig(config);
-          this.reload();
         } catch (e) {
           this.setError(e);
         }
