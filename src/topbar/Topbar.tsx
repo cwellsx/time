@@ -40,6 +40,12 @@ export const Topbar: React.FunctionComponent = () => {
               <span>Help</span>
             </ReactRouter.NavLink>
           </li>
+          <li className="icon">
+            <ReactRouter.NavLink to="/tests" title="Tests">
+              <Icon.Tests width="24" height="24" />
+              <span>Tests</span>
+            </ReactRouter.NavLink>
+          </li>
         </ul>
       </div>
     </div>
