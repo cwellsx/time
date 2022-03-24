@@ -3,7 +3,7 @@ import './EditorTags.css';
 import React from 'react';
 
 import { ErrorMessage } from '../error';
-import { getOnSelectTags, log, RenderedElement, Validation } from './selectTagsState';
+import { getOnSelectTags, getOutputTags, log, RenderedElement, Validation } from './selectTagsState';
 import { useSelectTags } from './tagsHook';
 import * as Icon from './tagsIcons';
 
@@ -32,16 +32,12 @@ export const EditorTags: React.FunctionComponent<EditorTagsProps> = (props) => {
   // need to wrap the parentCallback in React.useEffect to avoid error
   // "Cannot update a component (`...`) while rendering a different component"
   // see e.g. https://stackoverflow.com/a/70317831/49942
-  const [outputIsValid, setOutputIsValid] = React.useState<boolean | undefined>(undefined);
-  const [outputTags, setOutputTags] = React.useState<string[]>([]);
+  const [outputTags, setOutputTags] = React.useState<OutputTags>(getOutputTags(state));
   React.useEffect(() => {
-    if (outputIsValid === undefined) return;
-    const output: OutputTags = { isValid: outputIsValid, tags: outputTags };
-    parentCallback(output);
-  }, [outputIsValid, outputTags]);
+    parentCallback(outputTags);
+  }, [outputTags]);
   const onOutput: ParentCallback = (output: OutputTags): void => {
-    setOutputIsValid(output.isValid);
-    setOutputTags(output.tags);
+    setOutputTags(output);
   };
 
   // get the event handlers

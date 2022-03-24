@@ -62,13 +62,11 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
   }
 
   const onOutputTags = (outputTags: OutputTags): void => {
-    console.log("onOutputTags");
     setOutputTags(outputTags);
     state.saveTags(getTags());
   };
 
   const onOutputTask = (outputTask: OutputTags): void => {
-    console.log("onOutputTask");
     setOutputTask(outputTask);
     state.saveTask(getTask());
   };

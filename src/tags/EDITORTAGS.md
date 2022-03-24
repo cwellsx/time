@@ -70,9 +70,8 @@ the `<input>` control, then this component detects that and changes its selectio
 The implemented of this component is split into three modules:
 
 - [`EditorTags`](./EditorTags.tsx) defines the React elements
-- [`useSelectTags`](../hooks/useSelectTags.ts) registers the reducer for the component state; it also uses an
-  effect to fetch the list of all tags from the server
-- [`SelectTagsState`](./SelectTagsState.ts) defines the state, the reducer actions,
+- [`tagsHook`](./tagsHook.ts) registers the reducer for the component state
+- [`selectTagsState`](./selectTagsState.ts) defines the state, the reducer actions,
   the reducer itself, helper functions to initialise the state,
   and event handlers which delegate to reducer actions.
 
@@ -90,7 +89,7 @@ There's quite a bit of state (i.e. member data) associated with this component:
 - A `hints` array which lists the possible tags which might be a match for the input value
 - A `validationError` message if the current tags are invalid and deserve an error message
 
-```typescript
+```tsx
 // this is like the input data from which the RenderedState is calculated
 // these and other state elements are readonly so that event handlers must mutate MutableState instead
 interface State {

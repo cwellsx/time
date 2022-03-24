@@ -1,4 +1,4 @@
-import type { TagCount, ParentCallback } from "./tagsTypes";
+import type { TagCount, ParentCallback, OutputTags } from "./tagsTypes";
 
 // you could temporarily change this to enable logging, for debugging
 const isLogging = false;
@@ -221,9 +221,8 @@ class MutableState {
     const renderedState: RenderedState = renderState(state, assert, validation, inputElement, tagDictionary);
     logRenderedState("MutableState.getState returning", renderedState);
     // do a callback to the parent to say what the current tags are (excluding the empty <input> word if there is one)
-    const tags: string[] = renderedState.elements.map((element) => element.word).filter((word) => !!word.length);
-    const isValid = !renderedState.validationError.length;
-    this.context.parentCallback({ tags, isValid });
+    const outputTags = getOutputTags(renderedState);
+    this.context.parentCallback(outputTags);
     return renderedState;
   }
 
@@ -571,6 +570,12 @@ export function reducer(state: RenderedState, action: Action): RenderedState {
 /*
   Various helper functions
 */
+
+export function getOutputTags(renderedState: RenderedState): OutputTags {
+  const tags: string[] = renderedState.elements.map((element) => element.word).filter((word) => !!word.length);
+  const isValid = !renderedState.validationError.length;
+  return { tags, isValid };
+}
 
 // Helper function analogous to Array.splice -- string has built-in slice but no splice
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
