@@ -1,8 +1,9 @@
-import { DBSchema, deleteDB, IDBPDatabase, openDB } from "idb";
+import { DBSchema, deleteDB, IDBPDatabase, openDB } from 'idb';
 
-import { persisted } from "./persist";
+import { persisted } from './persist';
 
 import type { Config, Time, TagInfo, Period } from "../model";
+
 export type DbName = "production" | "test";
 
 // we only store on Config instance in the table, not several,
@@ -123,10 +124,13 @@ export async function fetchDatabase(dbName: DbName): Promise<Database> {
 }
 
 export async function deleteDatabase(dbName: DbName): Promise<void> {
+  console.log("deleteDatabase");
   try {
     await deleteDB(dbName);
+    console.log("deleteDatabase done");
   } catch (e) {
     console.error(e);
+    console.log("deleteDatabase error");
   }
 }
 

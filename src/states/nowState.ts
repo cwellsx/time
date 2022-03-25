@@ -1,11 +1,7 @@
 import type { Config, TagCount, Time } from "../model";
 
 export interface NowState {
-  readonly last?: {
-    type: "start" | "stop" | "next";
-    when: number;
-  };
-
+  readonly last: Time | undefined;
   readonly config: Config;
 
   saveTime(time: Time): void;

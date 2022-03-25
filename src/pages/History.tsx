@@ -1,8 +1,8 @@
-import "./history.sass";
+import './history.sass';
 
-import React from "react";
+import React from 'react';
 
-import { aggregate } from "./sums";
+import { aggregate } from './sums';
 
 import type { Period } from "../model";
 import type { HistoryState } from "../states";

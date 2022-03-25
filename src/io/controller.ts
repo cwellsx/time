@@ -20,20 +20,14 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
 
     const times = database.times;
     const length = times.length;
-    const last = length ? times[length - 1] : undefined;
-
-    this.last = last ? { type: last.type, when: last.when } : undefined;
+    this.last = length ? times[length - 1] : undefined;
     this.config = database.config || {};
     this.persisted = database.persisted;
     this.periods = getPeriods(times);
   }
 
   // interface NowState
-  readonly last?: {
-    type: "start" | "stop" | "next";
-    when: number;
-  };
-
+  readonly last: Time | undefined;
   readonly config: Config;
 
   saveTime(time: Time): void {
