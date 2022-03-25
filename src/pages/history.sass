@@ -17,6 +17,21 @@ table.history
       padding-right: 0
       white-space: pre-line
 
+    textarea
+      width: 100%
+
+  td.editable:hover
+    background-color: rgb(223, 230, 235)
+
+  td.editable:hover:after
+    content: ""
+    display: block
+    background: url("edit_note_black_24dp.svg") no-repeat
+    width: 20px
+    height: 20px
+    float: right
+    margin: 0 6px 0 0
+
   .week, .day
 
     td:first-child, td:nth-child(2)

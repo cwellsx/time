@@ -2,7 +2,7 @@ import { Database, EditDatabase, getPeriods } from './database';
 import { persist } from './persist';
 
 import type { SetError } from "../appContext";
-import type { Config, Period, TagCount, TagInfo, Time, WhatType, RequiredType } from "../model";
+import type { Config, Period, TagCount, TagInfo, Time, WhatType, RequiredType, What, TimeStop } from "../model";
 import type { HistoryState, NowState, SettingsState, WhatState } from "../states";
 
 export class Controller implements NowState, WhatState, HistoryState, SettingsState {
@@ -13,6 +13,7 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   private readonly setError: SetError;
 
   constructor(database: Database, editDatabase: () => Promise<EditDatabase>, reload: () => void, setError: SetError) {
+    console.log("controller");
     this.database = database;
     this.editDatabase = editDatabase;
     this.reload = reload;
@@ -115,6 +116,11 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
     config.taskRequired = value;
     this.saveConfig(config);
   }
+  setHistoryEditable(value: boolean): void {
+    const config: Config = { ...this.config };
+    config.historyEditable = value;
+    this.saveConfig(config);
+  }
 
   // interface WhatState
   getAllWhat(whatType: WhatType): TagInfo[] {
@@ -142,4 +148,28 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
 
   // interface HistoryState
   readonly periods: Period[];
+  editHistory(when: number, what: What): void {
+    const found = this.database.times.find((it) => it.when === when);
+    if (!found) {
+      this.setError("editHistory -- specified time not found");
+      return;
+    }
+    const type = found.type;
+    if (type === "start") {
+      this.setError("editHistory -- specified time unexpected type");
+      return;
+    }
+    const stop: TimeStop = { when, type, note: what.note, tags: what.tags, task: what.task };
+
+    this.editDatabase()
+      .then(async (edit) => {
+        try {
+          await edit.editHistory(stop);
+          this.reload();
+        } catch (e) {
+          this.setError(e);
+        }
+      })
+      .catch((error) => this.setError(error));
+  }
 }

@@ -8,4 +8,5 @@ export interface SettingsState {
   persist(): void;
   setTagsRequired: SetRequiredType;
   setTaskRequired: SetRequiredType;
+  setHistoryEditable(value: boolean): void;
 }

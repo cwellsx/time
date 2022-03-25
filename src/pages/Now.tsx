@@ -93,7 +93,7 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
       <span>
         <button onClick={(event) => onStop(event, "next")}>Next</button>
         <button onClick={(event) => onStop(event, "stop")}>Stop</button>
-        <button onClick={(event) => onCancel(event)} className="right">
+        <button onClick={onCancel} className="right">
           Cancel
         </button>
       </span>

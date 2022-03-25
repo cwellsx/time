@@ -1,5 +1,7 @@
-import type { Period } from "../model";
+import type { Period, Config, What } from "../model";
 
 export interface HistoryState {
   readonly periods: Period[];
+  readonly config: Config;
+  editHistory(when: number, what: What): void;
 }

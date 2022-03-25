@@ -1,5 +1,5 @@
-import { showDay, showTime } from "./date";
-import { IsoWeek, nextWeek, Weeks } from "./weeks";
+import { showDay, showTime } from './date';
+import { IsoWeek, nextWeek, Weeks } from './weeks';
 
 import type { Period } from "../model";
 
@@ -9,6 +9,7 @@ export interface IShow {
   get_Text(): string[];
   get_Minutes(): number;
   get_Class(): string;
+  get_Stop(): number | undefined;
 }
 
 class Span implements IShow {
@@ -39,6 +40,9 @@ class Span implements IShow {
   get_Class(): string {
     return "span";
   }
+  get_Stop(): number | undefined {
+    return this.period.stop;
+  }
 }
 
 class Day implements IShow {
@@ -68,6 +72,9 @@ class Day implements IShow {
   get_Class(): string {
     return "day";
   }
+  get_Stop(): number | undefined {
+    return undefined;
+  }
 }
 
 class Week implements IShow {
@@ -96,6 +103,9 @@ class Week implements IShow {
   }
   get_Class(): string {
     return "week";
+  }
+  get_Stop(): number | undefined {
+    return undefined;
   }
 }
 

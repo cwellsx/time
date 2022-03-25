@@ -13,6 +13,7 @@ export const Settings: React.FunctionComponent<SettingsProps> = (props: Settings
 
   const [tagsRequired, setTagsRequired] = React.useState<string>(config.tagsRequired ?? "optional");
   const [taskRequired, setTaskRequired] = React.useState<string>(config.taskRequired ?? "optional");
+  const [historyEditable, setHistoryEditable] = React.useState<boolean>(config.historyEditable ?? false);
 
   function onRetryPersist(event: React.MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
@@ -56,6 +57,14 @@ export const Settings: React.FunctionComponent<SettingsProps> = (props: Settings
     state.setTaskRequired(value);
   };
 
+  const onHistoryEditable: React.ChangeEventHandler<HTMLInputElement> = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const checked = event.target.checked;
+    setHistoryEditable(checked);
+    state.setHistoryEditable(checked);
+  };
+
   return (
     <>
       <h2>Database</h2>
@@ -69,6 +78,12 @@ export const Settings: React.FunctionComponent<SettingsProps> = (props: Settings
         <div>
           <span>Tasks:</span>
           <span>{getOptions(taskRequired, onTaskRequired)}</span>
+        </div>
+        <div>
+          <span>History:</span>
+          <label>
+            <input type="checkbox" checked={historyEditable} onChange={onHistoryEditable} /> Editable
+          </label>
         </div>
       </div>
     </>

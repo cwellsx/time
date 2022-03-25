@@ -28,7 +28,7 @@ digraph SRC {
   "tests.ts" -> {"database.ts" "persist.ts"};
   "persist.ts" -> {}
 
-  "model" -> {"config.ts" "period.ts" "testResult.ts" "time.ts" "tags" "whatType.ts"} [style=dotted];
+  "model" -> {"config.ts" "period.ts" "testResult.ts" "time.ts" "tags" "whatType.ts" "what.ts"} [style=dotted];
   "config.ts" -> {};
   "period.ts" -> {"what.ts"};
   "testResult.ts" -> {};

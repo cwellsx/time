@@ -2,7 +2,7 @@ import { DBSchema, deleteDB, IDBPDatabase, openDB } from 'idb';
 
 import { persisted } from './persist';
 
-import type { Config, Time, TagInfo, Period } from "../model";
+import type { Config, Time, TagInfo, Period, TimeStop, What } from "../model";
 
 export type DbName = "production" | "test";
 
@@ -110,6 +110,9 @@ export class EditDatabase {
   }
   addWhat(what: "tags" | "tasks", tag: TagInfo): Promise<string> {
     return this.db.add(what, tag);
+  }
+  editHistory(timeStop: TimeStop): Promise<number> {
+    return this.db.put("times", timeStop);
   }
 }
 
