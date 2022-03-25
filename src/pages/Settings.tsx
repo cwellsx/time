@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 import type { RequiredType } from "../model";
 import type { SettingsState, SetRequiredType } from "../states";
@@ -10,6 +10,9 @@ type SettingsProps = {
 export const Settings: React.FunctionComponent<SettingsProps> = (props: SettingsProps) => {
   const state = props.state;
   const config = state.config;
+
+  const [tagsRequired, setTagsRequired] = React.useState<string>(config.tagsRequired ?? "optional");
+  const [taskRequired, setTaskRequired] = React.useState<string>(config.taskRequired ?? "optional");
 
   function onRetryPersist(event: React.MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
@@ -29,11 +32,7 @@ export const Settings: React.FunctionComponent<SettingsProps> = (props: Settings
     </React.Fragment>
   );
 
-  function getOptions(value: string | undefined, setValue: SetRequiredType) {
-    const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setValue(event.target.value as RequiredType);
-    };
-    value = value ?? "optional";
+  function getOptions(value: string, onChange: React.ChangeEventHandler<HTMLInputElement>) {
     return (
       <>
         <label>
@@ -46,10 +45,14 @@ export const Settings: React.FunctionComponent<SettingsProps> = (props: Settings
     );
   }
 
-  const setTagsRequired: SetRequiredType = (value: RequiredType) => {
+  const onTagsRequired: React.ChangeEventHandler<HTMLInputElement> = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value as RequiredType;
+    setTagsRequired(value);
     state.setTagsRequired(value);
   };
-  const setTaskRequired: SetRequiredType = (value: RequiredType) => {
+  const onTaskRequired: React.ChangeEventHandler<HTMLInputElement> = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value as RequiredType;
+    setTaskRequired(value);
     state.setTaskRequired(value);
   };
 
@@ -61,11 +64,11 @@ export const Settings: React.FunctionComponent<SettingsProps> = (props: Settings
       <div className="table">
         <div>
           <span>Tags:</span>
-          <span>{getOptions(config.tagsRequired, setTagsRequired)}</span>
+          <span>{getOptions(tagsRequired, onTagsRequired)}</span>
         </div>
         <div>
           <span>Tasks:</span>
-          <span>{getOptions(config.taskRequired, setTaskRequired)}</span>
+          <span>{getOptions(taskRequired, onTaskRequired)}</span>
         </div>
       </div>
     </>
