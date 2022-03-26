@@ -106,6 +106,9 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
       .then(() => this.reload)
       .catch((error) => this.setError(error));
   }
+  getDatabaseAsJson(): string {
+    return JSON.stringify(this.database, null, 2);
+  }
   setTagsRequired(value: RequiredType): void {
     const config: Config = { ...this.config };
     config.tagsRequired = value;

@@ -1,7 +1,10 @@
 import React from 'react';
 
+import { useSetError } from '../appContext';
+import { showIsoDay } from './date';
+
 import type { RequiredType } from "../model";
-import type { SettingsState, SetRequiredType } from "../states";
+import type { SettingsState } from "../states";
 
 type SettingsProps = {
   state: SettingsState;
@@ -14,24 +17,35 @@ export const Settings: React.FunctionComponent<SettingsProps> = (props: Settings
   const [tagsRequired, setTagsRequired] = React.useState<string>(config.tagsRequired ?? "optional");
   const [taskRequired, setTaskRequired] = React.useState<string>(config.taskRequired ?? "optional");
   const [historyEditable, setHistoryEditable] = React.useState<boolean>(config.historyEditable ?? false);
+  const setError = useSetError();
 
   function onRetryPersist(event: React.MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
     state.persist();
   }
 
-  const persistButton = <button onClick={onRetryPersist}>Retry</button>;
-
-  const persisted = (
-    <React.Fragment>
-      <div>
-        <span>Persisted:</span>
-        <span>
-          {state.persisted ? "✅" : <React.Fragment>❌ {persistButton}</React.Fragment>} {}
-        </span>
-      </div>
-    </React.Fragment>
-  );
+  async function onExport(event: React.MouseEvent<HTMLButtonElement>): Promise<void> {
+    event.preventDefault();
+    try {
+      const options: SaveFilePickerOptions = {
+        suggestedName: `time-${showIsoDay(new Date())}.json`,
+        types: [
+          {
+            description: "Text Files",
+            accept: {
+              "text/plain": [".txt"],
+            },
+          },
+        ],
+      };
+      const fileHandle = await window.showSaveFilePicker(options);
+      const writeable = await fileHandle.createWritable();
+      writeable.write(state.getDatabaseAsJson());
+      writeable.close();
+    } catch (e) {
+      setError(e);
+    }
+  }
 
   function getOptions(value: string, onChange: React.ChangeEventHandler<HTMLInputElement>) {
     return (
@@ -68,7 +82,27 @@ export const Settings: React.FunctionComponent<SettingsProps> = (props: Settings
   return (
     <>
       <h2>Database</h2>
-      <div className="table">{persisted}</div>
+      <div className="table">
+        <div>
+          <span>Persisted:</span>
+          <span>
+            {state.persisted ? (
+              "✅"
+            ) : (
+              <>
+                ❌ <button onClick={onRetryPersist}>Retry</button>
+              </>
+            )}{" "}
+            {}
+          </span>
+        </div>
+        <div>
+          <span>Exported:</span>
+          <span>
+            <button onClick={onExport}>Save As</button>
+          </span>
+        </div>
+      </div>
       <h2>Options</h2>
       <div className="table">
         <div>

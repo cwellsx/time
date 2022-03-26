@@ -1,4 +1,6 @@
-import date from "date-and-time";
+import date from 'date-and-time';
+
+// see https://github.com/knowledgecode/date-and-time
 
 const shortFormat = date.compile("HH:mm");
 const longFormat = date.compile("HH:mm ddd, MMM DD");
@@ -19,4 +21,10 @@ export function showDay(it: Date): string {
 
 export function showTime(it: Date): string {
   return date.format(it, shortFormat);
+}
+
+const isoDayFormat = date.compile("YYYY-MM-DD");
+
+export function showIsoDay(it: Date): string {
+  return date.format(it, isoDayFormat);
 }

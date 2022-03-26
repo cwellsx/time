@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 /*
   functions related to SetError and AppContext
@@ -10,7 +10,7 @@ export type SetError = (error: any) => void;
 export function useContext(): [string, SetError, boolean, SetTesting] {
   const [error, setError] = React.useState("");
   const [testing, setTesting] = React.useState(false);
-  const setAny: SetError = (e) => setError(e);
+  const setAny: SetError = (e) => setError(e.toString());
   return [error, setAny, testing, setTesting];
 }
 

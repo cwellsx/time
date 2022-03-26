@@ -128,7 +128,35 @@ For this application I expect to use these:
 
 - IndexedDB -- for storing periods and tags
 - StorageManager -- to guarantee that storage is persistent
-- ? -- for export and import
+
+According to this article --
+[The File System Access API: simplifying access to local files](https://web.dev/file-system-access/) --
+there are several APIs:
+
+- The [File System Access API](https://wicg.github.io/file-system-access/) (formerly known as Native File System API
+  and prior to that it was called Writeable Files API)
+
+  https://caniuse.com/native-filesystem-api says that Chrome (also Edge and Safari)
+  "currently support basic functionality and will be adding more of the API in the future."
+
+  Firefox doesn't support it, neither does Android.
+
+  Android may be able to use native file system APIs if it's installed as a local application (using React Native).
+
+- The File System Access API, despite the similar name, is distinct from the
+  [FileSystem](https://developer.mozilla.org/en-US/docs/Web/API/FileSystem) interface
+  exposed by the [File and Directory Entries API](https://wicg.github.io/entries-api/#api-domfilesystem)
+
+  https://caniuse.com/filesystem says that Chrome (also Edge and Safari) support this with the `webkit` prefix, however,
+  "The File API: Directories and System specification is no longer being maintained and support may be dropped in future
+  versions."
+
+- It is likewise distinct from the
+  deprecated [File API: Directories and System specification](https://www.w3.org/TR/file-system-api/)
+
+  I think this supports reading and not writing.
+
+So the non-deprecated API is the "File System Access API".
 
 ### User interface
 
