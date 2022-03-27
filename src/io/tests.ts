@@ -1,5 +1,5 @@
-import * as DB from "./database";
-import { persisted } from "./persist";
+import * as DB from './database';
+import { persisted } from './persist';
 
 import type { Time, TimeStop, TestResult, Period, TestResults, TagInfo } from "../model";
 
@@ -104,10 +104,20 @@ const tests: Test[] = [
         { key: "social", summary: "social media" },
         { key: "bicycling" },
       ];
+      const tasks: TagInfo[] = [
+        { key: "task-142", summary: "This is a sample task with a fairly long description but not very long" },
+        {
+          key: "task-143",
+          summary:
+            "This is a sample task with a really long description, almost ridiculously long, certainly longer than I'd ever really expect to see used in practice",
+        },
+      ];
       const edit = await DB.editDatabase("test");
       for (const tag of tags) {
-        // await edit.addWhat("tags", tag);
         await edit.addWhat("tags", tag);
+      }
+      for (const task of tasks) {
+        await edit.addWhat("tasks", task);
       }
     },
   },

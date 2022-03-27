@@ -55,6 +55,7 @@ export const EditorTags: React.FunctionComponent<EditorTagsProps> = (props) => {
   */
 
   const inputRef = React.createRef<HTMLInputElement>();
+  const divRef = React.createRef<HTMLDivElement>();
 
   /*
     Event handlers (which dispatch to the reducer)
@@ -169,19 +170,19 @@ export const EditorTags: React.FunctionComponent<EditorTagsProps> = (props) => {
         width={10}
         onKeyDown={handleKeyDown}
         onChange={handleChange}
-        onFocus={(e) => handleFocus(e, true)}
-        onBlur={(e) => handleFocus(e, false)}
+        onFocus={(e) => handleFocus(e, true, divRef)}
+        onBlur={(e) => handleFocus(e, false, divRef)}
       />
     );
   }
 
   return (
-    <div id="tag-both">
+    <div className="tag-both" ref={divRef}>
       <div className={className} onClickCapture={handleEditorClick}>
         {state.elements.map(getElement)}
         {icon}
       </div>
-      <ShowHints hints={state.hints} inputValue={state.inputValue} result={handleHintResult} />
+      <ShowHints hints={state.hints} inputValue={state.inputValue} result={handleHintResult} divRef={divRef} />
       <ErrorMessage errorMessage={errorMessage} />
       {validationError}
     </div>
@@ -201,9 +202,11 @@ interface ShowHintsProps {
   inputValue: string;
   // callback of tag selected from list of hints if user clicks on it
   result: (outputTag: string) => void;
+  // reference to the div reference that contains the input and the hints
+  divRef: React.RefObject<HTMLDivElement>;
 }
 const ShowHints: React.FunctionComponent<ShowHintsProps> = (props) => {
-  const { hints, inputValue, result } = props;
+  const { hints, inputValue, result, divRef } = props;
   if (!inputValue.length) {
     return <div className="tag-hints hidden"></div>;
   }
@@ -211,7 +214,9 @@ const ShowHints: React.FunctionComponent<ShowHintsProps> = (props) => {
     <div className="tag-hints">
       {!hints.length
         ? "No results found."
-        : hints.map((hint) => <ShowHint hint={hint} inputValue={inputValue} result={result} key={hint.key} />)}
+        : hints.map((hint) => (
+            <ShowHint hint={hint} inputValue={inputValue} result={result} key={hint.key} divRef={divRef} />
+          ))}
     </div>
   );
 };
@@ -223,9 +228,11 @@ interface ShowHintProps {
   inputValue: string;
   // callback of tag selected from list of hints if user clicks on it
   result: (outputTag: string) => void;
+  // reference to the div reference that contains the input and the hints
+  divRef: React.RefObject<HTMLDivElement>;
 }
 const ShowHint: React.FunctionComponent<ShowHintProps> = (props) => {
-  const { hint, inputValue, result } = props;
+  const { hint, inputValue, result, divRef } = props;
 
   function getTag(key: string) {
     const index = key.indexOf(inputValue);
@@ -272,8 +279,8 @@ const ShowHint: React.FunctionComponent<ShowHintProps> = (props) => {
         if (e.key === "Enter") result(hint.key);
         e.preventDefault();
       }}
-      onFocus={(e) => handleFocus(e, true)}
-      onBlur={(e) => handleFocus(e, false)}
+      onFocus={(e) => handleFocus(e, true, divRef)}
+      onBlur={(e) => handleFocus(e, false, divRef)}
     >
       {tag}
       {count}
@@ -284,7 +291,7 @@ const ShowHint: React.FunctionComponent<ShowHintProps> = (props) => {
 };
 
 // see [Simulating `:focus-within`](./EDITORTAGS.md#simulating-focus-within)
-function handleFocus(e: React.FocusEvent<HTMLElement>, hasFocus: boolean) {
+function handleFocus(e: React.FocusEvent<HTMLElement>, hasFocus: boolean, divRef: React.RefObject<HTMLDivElement>) {
   function isElement(related: EventTarget | HTMLElement): related is HTMLElement {
     return (related as HTMLElement).tagName !== undefined;
   }
@@ -310,7 +317,7 @@ function handleFocus(e: React.FocusEvent<HTMLElement>, hasFocus: boolean) {
   // calculate it
   hasFocus = hasFocus || relatedClass === "hint";
   // write the result
-  const div = document.getElementById("tag-both")!;
+  const div = divRef.current!;
   if (hasFocus) {
     div.className = "focussed";
   } else {

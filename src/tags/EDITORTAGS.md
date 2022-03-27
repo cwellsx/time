@@ -39,7 +39,7 @@ function getElement(element: RenderedElement, index: number): React.ReactElement
 }
 
 return (
-  <div id="tag-both">
+  <div className="tag-both" ref={divRef}>
     <div className={className} onClickCapture={handleEditorClick}>
       {state.elements.map(getElement)}
       {icon}
@@ -179,19 +179,21 @@ but it's write-only -- i.e. it's up-to-date (and a opy of what was written into 
 
 ## Simulating `:focus-within`
 
-There are a couple of effects in [`EditorTags.css`](./EditorTags.css) for example ...
+There are a couple of effects in [`EditorTags.css`](./EditorTags.css)
+where is would be convenient to use `:focus-within`
+for example like this:
 
 ```css
 .tag-hints {
-  visibility: hidden;
+  display: none;
 }
 
 .tag-both:focus-within .tag-hints {
-  visibility: visible;
+  display: grid;
 }
 ```
 
-... where is would be convenient to use `:focus-within`. However that's not supported by some browsers (e.g. Edge).
+However `:focus-within` is not supported by some browsers (e.g. Edge).
 Although the "Create React App" setup include `postcss` modules, they're not configurable --
 "[You cannot customize postcss rules](https://github.com/facebook/create-react-app/issues/5749#issuecomment-436852753)"
 -- and the default configuration doesn't enable support for `postcss-focus-within`.
