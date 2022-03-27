@@ -130,3 +130,7 @@
 .tag-hints > .hint > .more-info > a {
   display: block;
 }
+
+.hidden {
+  display: none !important;
+}

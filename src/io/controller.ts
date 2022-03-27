@@ -129,7 +129,6 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   getAllWhat(whatType: WhatType): TagInfo[] {
     return whatType === "tags" ? this.database.tags : this.database.tasks;
   }
-
   createWhat(what: WhatType, tag: TagInfo): void {
     this.editDatabase()
       .then(async (edit) => {
@@ -142,11 +141,15 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
       })
       .catch((error) => this.setError(error));
   }
-
   saveWhatType(whatType: WhatType): void {
     const config: Config = { ...this.config };
     config.whatType = whatType;
     this.saveConfig(config);
+  }
+  keyAlreadyExists(whatType: WhatType, key: string): boolean {
+    const all = this.getAllWhat(whatType);
+    const found = all.find((it) => it.key === key);
+    return !!found;
   }
 
   // interface HistoryState

@@ -2,6 +2,7 @@ import './what.sass';
 
 import React from 'react';
 
+import { ErrorMessage } from '../error';
 import { Tabs } from '../tabs';
 
 import type { WhatState } from "../states";
@@ -19,6 +20,7 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
   const state = props.state;
 
   const [whatType, setWhatType] = React.useState<WhatType>(state.config.whatType ?? "tags");
+  const [validationErrorMessage, setValidationErrorMessage] = React.useState<string | undefined>(undefined);
 
   const changeWhatType = (w: WhatType) => {
     setWhatType(w);
@@ -40,10 +42,29 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
     }
   })(whatType);
 
+  function setAndValidateKey(key: string) {
+    key = key.trim();
+
+    let message: string | undefined;
+    const what = whatType === "tasks" ? "Task" : "Tag";
+    if (!key) {
+      message = undefined;
+    } else if (key.indexOf(" ") != -1) {
+      message = `${what} ID cannot contain whitespace ' ' (use a hyphen '-' instead).`;
+    } else if (state.keyAlreadyExists(whatType, key)) {
+      message = `Duplicate (this ${what} ID is already defined).`;
+    } else {
+      message = undefined;
+    }
+
+    setValidationErrorMessage(message);
+    setKey(key);
+  }
+
   function onNewKey(event: React.ChangeEvent<HTMLInputElement>): void {
     event.preventDefault();
     const key = event.target.value;
-    setKey(key);
+    setAndValidateKey(key);
   }
 
   const workItemTypes = [
@@ -74,7 +95,7 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
     if (whatType === "tasks") {
       const split = extractKey(description);
       if (split) {
-        setKey(split[0]);
+        setAndValidateKey(split[0]);
         setDescription(split[1]);
         return;
       }
@@ -86,7 +107,7 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
     event.preventDefault();
     const tag: TagInfo = { key: key, summary: description };
     state.createWhat(whatType, tag);
-    setKey("");
+    setAndValidateKey("");
     setDescription("");
   }
 
@@ -115,7 +136,10 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
   const newKeyText = (
     <div>
       <span>New {text}:</span>
-      <span>{newKey}</span>
+      <span>
+        {newKey}
+        <ErrorMessage errorMessage={validationErrorMessage} />
+      </span>
     </div>
   );
 
@@ -139,7 +163,7 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
       <div className="table compact">
         {newKeyText}
         {newDescriptionText}
-        {!key ? undefined : newButtonText}
+        {!key || validationErrorMessage ? undefined : newButtonText}
       </div>
       {showAll}
     </React.Fragment>

@@ -1,7 +1,7 @@
 import type { TagCount, ParentCallback, OutputTags } from "./tagsTypes";
 
 // you could temporarily change this to enable logging, for debugging
-const isLogging = false;
+const isLogging = true;
 
 /*
   Type definitions

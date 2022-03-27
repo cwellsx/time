@@ -5,4 +5,5 @@ export interface WhatState {
   getAllWhat(whatType: WhatType): TagInfo[];
   createWhat(whatType: WhatType, tag: TagInfo): void;
   saveWhatType(whatType: WhatType): void;
+  keyAlreadyExists(whatType: WhatType, key: string): boolean;
 }
