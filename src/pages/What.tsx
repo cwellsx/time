@@ -46,10 +46,40 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
     setKey(key);
   }
 
+  const workItemTypes = [
+    ["Task", "task"],
+    ["Bug", "bug"],
+    ["PR", "pr"],
+    ["Pull Request", "pr"],
+  ];
+
+  function extractKey(description: string): [string, string] | undefined {
+    for (const [text, prefix] of workItemTypes) {
+      // "Task 42: This is a string to be tested"
+      const regexp = new RegExp(`^${text}\\s*\\d+[:]?\\s*`, "i");
+      const match = description.match(regexp);
+      if (!match) continue;
+      const length = match[0].length;
+      const first = description.substring(0, length);
+      const id = first.match(/\d+/);
+      if (!id) throw new Error("unexpected");
+      return [`${prefix}-${id[0]}`, description.substring(length)];
+    }
+    return undefined;
+  }
+
   function onNewDescription(event: React.ChangeEvent<HTMLInputElement>): void {
     event.preventDefault();
-    const key = event.target.value;
-    setDescription(key);
+    const description = event.target.value;
+    if (whatType === "tasks") {
+      const split = extractKey(description);
+      if (split) {
+        setKey(split[0]);
+        setDescription(split[1]);
+        return;
+      }
+    }
+    setDescription(description);
   }
 
   function onSave(event: React.MouseEvent<HTMLButtonElement>): void {
