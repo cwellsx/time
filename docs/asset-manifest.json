@@ -1,13 +1,23 @@
 {
   "files": {
-    "main.css": "/time/static/css/main.ba17183d.css",
-    "main.js": "/time/static/js/main.1145bdd0.js",
+    "main.css": "/time/static/css/main.ee694cd4.css",
+    "main.js": "/time/static/js/main.2b59a6e3.js",
     "static/js/27.0bb379e3.chunk.js": "/time/static/js/27.0bb379e3.chunk.js",
-    "static/media/logo.svg": "/time/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
-    "index.html": "/time/index.html"
+    "static/media/settings_black_24dp.svg": "/time/static/media/settings_black_24dp.f00ed6226d32e4231168a0f9c158cb4e.svg",
+    "index.html": "/time/index.html",
+    "static/media/question_mark_black_24dp.svg": "/time/static/media/question_mark_black_24dp.83fae7e589529094ef9688baa44500b3.svg",
+    "static/media/science_black_24dp.svg": "/time/static/media/science_black_24dp.81a4e67b9b6a4acb5e4c28c5efc7b314.svg",
+    "static/media/edit_note_black_24dp.svg": "/time/static/media/edit_note_black_24dp.6a0701c552f43513a156.svg",
+    "static/media/history_black_24dp.svg": "/time/static/media/history_black_24dp.ec9a8f03314c034ea90f10083ee23c81.svg",
+    "static/media/schedule_black_24dp.svg": "/time/static/media/schedule_black_24dp.e8fa88a9d0540161fd1313284121705f.svg",
+    "static/media/outline-info-24px.svg": "/time/static/media/outline-info-24px.8bfd8780a4d01ba6b676cec3f8761a7c.svg",
+    "static/media/description_black_24dp.svg": "/time/static/media/description_black_24dp.4403be57147502c8134908bff6f29371.svg",
+    "static/media/outline-close-24px.svg": "/time/static/media/outline-close-24px.2c0e4ee3844db5949dbc14e2208bfc5e.svg",
+    "static/media/outline-error-24px.svg": "/time/static/media/outline-error-24px.3bb67f155055c78cdcc3a25d2e9df4ac.svg",
+    "static/media/help.md": "/time/static/media/help.2cc95f33c4adcb02ac94.md"
   },
   "entrypoints": [
-    "static/css/main.ba17183d.css",
-    "static/js/main.1145bdd0.js"
+    "static/css/main.ee694cd4.css",
+    "static/js/main.2b59a6e3.js"
   ]
 }
