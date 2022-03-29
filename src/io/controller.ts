@@ -5,12 +5,22 @@ import type { SetError } from "../appContext";
 import type { Config, Period, TagCount, TagInfo, Time, WhatType, RequiredType, What, TimeStop } from "../model";
 import type { HistoryState, NowState, SettingsState, WhatState } from "../states";
 
+interface Tasks {
+  [index: string]:
+    | {
+        tagInfo: TagInfo;
+        usedDate: number;
+      }
+    | undefined;
+}
+
 export class Controller implements NowState, WhatState, HistoryState, SettingsState {
   // private data
   private readonly database: Database;
   private readonly editDatabase: () => Promise<EditDatabase>;
   private readonly reload: () => void;
   private readonly setError: SetError;
+  private readonly tasks: Tasks;
 
   constructor(database: Database, editDatabase: () => Promise<EditDatabase>, reload: () => void, setError: SetError) {
     console.log("controller");
@@ -25,6 +35,19 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
     this.config = database.config || {};
     this.persisted = database.persisted;
     this.periods = getPeriods(times);
+
+    this.tasks = {};
+    for (const task of database.tasks) this.tasks[task.key] = { tagInfo: task, usedDate: 0 };
+
+    for (const time of times) {
+      if (time.type != "start") {
+        const task = time.task;
+        if (task) {
+          const found = this.tasks[task];
+          if (found) found.usedDate = time.when;
+        }
+      }
+    }
   }
 
   // interface NowState
@@ -177,5 +200,9 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
         }
       })
       .catch((error) => this.setError(error));
+  }
+  getTaskDescription(task: string): string | undefined {
+    const found = this.tasks[task];
+    return found ? found.tagInfo.summary : undefined;
   }
 }

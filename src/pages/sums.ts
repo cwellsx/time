@@ -1,15 +1,15 @@
 import { showDay, showTime } from './date';
 import { IsoWeek, nextWeek, Weeks } from './weeks';
 
-import type { Period } from "../model";
+import type { Period, What } from "../model";
 
 export interface IShow {
-  get_Key(): string;
-  get_Id(): string;
-  get_Text(): string[];
-  get_Minutes(): number;
-  get_Class(): string;
-  get_Stop(): number | undefined;
+  getKey(): string;
+  getId(): string;
+  getWhat(): What | undefined;
+  getMinutes(): number;
+  getClass(): string;
+  getStop(): number | undefined;
 }
 
 class Span implements IShow {
@@ -21,26 +21,22 @@ class Span implements IShow {
     this.start = new Date(period.start);
     this.stop = new Date(period.stop);
   }
-  get_Key(): string {
+  getKey(): string {
     return `${this.start.getTime()}`;
   }
-  get_Id(): string {
+  getId(): string {
     return `${showTime(this.start)}–${showTime(this.stop)}`;
   }
-  get_Text(): string[] {
-    const result: string[] = [];
-    if (this.period.note) result.push(this.period.note);
-    if (this.period.tags && this.period.tags.length) result.push(`[${this.period.tags.join()}]`);
-    if (this.period.task) result.push(`# ${this.period.task}`);
-    return result;
+  getWhat(): What | undefined {
+    return this.period;
   }
-  get_Minutes(): number {
+  getMinutes(): number {
     return (this.period.stop - this.period.start) / 60000;
   }
-  get_Class(): string {
+  getClass(): string {
     return "span";
   }
-  get_Stop(): number | undefined {
+  getStop(): number | undefined {
     return this.period.stop;
   }
 }
@@ -57,22 +53,22 @@ class Day implements IShow {
     this.spans.push(span);
     return true;
   }
-  get_Key(): string {
+  getKey(): string {
     return `${this.date.getFullYear()}-${this.date.getMonth() + 1}-${this.date.getDate()}`;
   }
-  get_Id(): string {
+  getId(): string {
     return showDay(this.date);
   }
-  get_Text(): string[] {
-    return [];
+  getWhat(): What | undefined {
+    return undefined;
   }
-  get_Minutes(): number {
-    return this.spans.reduce((x, y) => x + y.get_Minutes(), 0);
+  getMinutes(): number {
+    return this.spans.reduce((x, y) => x + y.getMinutes(), 0);
   }
-  get_Class(): string {
+  getClass(): string {
     return "day";
   }
-  get_Stop(): number | undefined {
+  getStop(): number | undefined {
     return undefined;
   }
 }
@@ -84,7 +80,7 @@ class Week implements IShow {
     this.weekId = weekId;
     this.days = day ? [day] : [];
   }
-  get_Key(): string {
+  getKey(): string {
     return `${this.weekId.year}-w${this.weekId.week}`;
   }
   next(day: Day, weekId: IsoWeek): boolean {
@@ -92,19 +88,19 @@ class Week implements IShow {
     this.days.push(day);
     return true;
   }
-  get_Id(): string {
+  getId(): string {
     return `Week ${this.weekId.week}`;
   }
-  get_Text(): string[] {
-    return [];
+  getWhat(): What | undefined {
+    return undefined;
   }
-  get_Minutes(): number {
-    return this.days.reduce((x, y) => x + y.get_Minutes(), 0);
+  getMinutes(): number {
+    return this.days.reduce((x, y) => x + y.getMinutes(), 0);
   }
-  get_Class(): string {
+  getClass(): string {
     return "week";
   }
-  get_Stop(): number | undefined {
+  getStop(): number | undefined {
     return undefined;
   }
 }

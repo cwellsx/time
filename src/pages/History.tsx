@@ -45,13 +45,38 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
     setEditingTime(undefined);
   }
 
+  function getText(what: What | undefined) {
+    if (!what) return undefined;
+    const result: string[] = [];
+    if (what.note) result.push(what.note);
+    if (what.tags && what.tags.length) result.push(`[${what.tags.join()}]`);
+    let html = undefined;
+    if (what.task) {
+      const description = state.getTaskDescription(what.task);
+      //const text = description?``
+      result.push(`# `);
+      html = description ? (
+        <abbr title={description}>{what.task}</abbr>
+      ) : (
+        <span className="missingTask">{what.task}</span>
+      );
+    }
+    const text = result.join("\n");
+    return (
+      <>
+        {text}
+        {html}
+      </>
+    );
+  }
+
   return (
     <table className="history" onClick={onClick}>
       <tbody>
         {rows.map((show) => {
-          const editable = state.config.historyEditable && show.get_Class() === "span";
-          const text = show.get_Text().join("\n");
-          const time = show.get_Stop();
+          const editable = state.config.historyEditable && show.getClass() === "span";
+          const text = getText(show.getWhat());
+          const time = show.getStop();
           const editing = editable && time && time === editingTime;
           const saveButton = editing && editingText !== text ? <button onClick={onSave}>Save</button> : undefined;
           const rows = editingText?.split("\n").length;
@@ -65,9 +90,9 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
           );
           const className = editable && !editing ? "editable" : undefined;
           return (
-            <tr key={show.get_Key()} className={show.get_Class()} data-time={time}>
-              <td>{show.get_Id()}</td>
-              <td>{formatTime(show.get_Minutes())}</td>
+            <tr key={show.getKey()} className={show.getClass()} data-time={time}>
+              <td>{show.getId()}</td>
+              <td>{formatTime(show.getMinutes())}</td>
               <td className={className}>{showText}</td>
             </tr>
           );
