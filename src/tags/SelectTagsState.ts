@@ -349,7 +349,7 @@ export class TagDictionary {
       return [];
     }
     // don't want what we already have i.e. what matches other tags
-    const unwanted: string[] = elements.filter((x) => x.type === "tag").map((x) => x.word);
+    let unwanted: string[] = elements.filter((x) => x.type === "tag").map((x) => x.word);
     // we'll select tags in the following priority:
     // 1. Tags where the inputValue matches the beginning of the tag
     // 2. If #1 returns too many tags, then prefer tags with a higher count because they're the more popular/more likely
@@ -364,6 +364,7 @@ export class TagDictionary {
       return found.slice(0, max);
     };
     const found = findTags(true, maxHints);
+    unwanted = unwanted.concat(found.map((it) => it.key));
     return found.length === maxHints ? found : found.concat(findTags(false, maxHints - found.length));
   }
   exists(inputValue: string): boolean {
