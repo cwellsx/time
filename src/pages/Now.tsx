@@ -31,8 +31,10 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     state.saveTime(time);
   }
 
-  const getTags = (): string[] | undefined => (outputTags && outputTags.tags.length ? outputTags.tags : undefined);
-  const getTask = (): string | undefined => (outputTask && outputTask.tags.length ? outputTask.tags[0] : undefined);
+  const getTags = (outputTags: OutputTags | undefined): string[] | undefined =>
+    outputTags && outputTags.tags.length ? outputTags.tags : undefined;
+  const getTask = (outputTask: OutputTags | undefined): string | undefined =>
+    outputTask && outputTask.tags.length ? outputTask.tags[0] : undefined;
 
   function onStop(event: React.MouseEvent<HTMLButtonElement>, type: "stop" | "next"): void {
     event.preventDefault();
@@ -41,7 +43,7 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
       setShowValidationError(true);
       return;
     }
-    const time: TimeStop = { when: Date.now(), type, note, task: getTask(), tags: getTags() };
+    const time: TimeStop = { when: Date.now(), type, note, task: getTask(outputTask), tags: getTags(outputTags) };
     state.saveTime(time);
   }
 
@@ -63,12 +65,13 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
 
   const onOutputTags = (outputTags: OutputTags): void => {
     setOutputTags(outputTags);
-    state.saveTags(getTags());
+    state.saveTags(getTags(outputTags));
   };
 
   const onOutputTask = (outputTask: OutputTags): void => {
     setOutputTask(outputTask);
-    state.saveTask(getTask());
+    state.saveTask(getTask(outputTask));
+    console.log(`onOutputTask(${outputTask.tags})`);
   };
 
   const timeText = !time ? undefined : (

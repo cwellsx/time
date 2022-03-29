@@ -45,7 +45,7 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
     setEditingTime(undefined);
   }
 
-  function getText(what: What | undefined) {
+  function getText(what: What | undefined): JSX.Element | undefined {
     if (!what) return undefined;
     const result: string[] = [];
     if (what.note) result.push(what.note);
