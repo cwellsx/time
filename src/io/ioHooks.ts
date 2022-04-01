@@ -27,15 +27,14 @@ function useDatabase(): AsyncResult<Database> {
   const [version, setVersion] = React.useState(0);
   const testing = useTesting();
   const setError = useSetError();
-  const componentMounted = React.useRef(true); // https://stackoverflow.com/a/66891949/49942
 
   React.useEffect(() => {
+    let disposed = false;
     const invoke = async () => {
       try {
         const fetched = await fetchDatabase(!testing ? "production" : "test");
-        if (componentMounted.current) {
-          setState(fetched);
-        }
+        if (disposed) return;
+        setState(fetched);
       } catch (e) {
         setError(e + "");
       }
@@ -43,7 +42,7 @@ function useDatabase(): AsyncResult<Database> {
     invoke();
 
     return () => {
-      componentMounted.current = false;
+      disposed = true;
     };
   }, [version, setError, testing]);
 
@@ -57,15 +56,20 @@ export function useTestResults(): TestResults | undefined {
   const setError = useSetError();
 
   React.useEffect(() => {
+    let disposed = false;
     const invoke = async () => {
       try {
         const fetched = await getTestResults();
+        if (disposed) return;
         setState(fetched);
       } catch (e) {
         setError(e + "");
       }
     };
     invoke();
+    return () => {
+      disposed = true;
+    };
   }, [setError]);
 
   return state;
