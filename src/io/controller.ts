@@ -81,19 +81,16 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   }
 
   saveComment(comment: string | undefined): void {
-    const config: Config = { ...this.config };
-    config.note = comment;
-    this.saveConfig(config);
+    this.config.note = comment;
+    this.saveConfig(this.config);
   }
   saveTags(tags: string[] | undefined): void {
-    const config: Config = { ...this.config };
-    config.tags = tags;
-    this.saveConfig(config);
+    this.config.tags = tags;
+    this.saveConfig(this.config);
   }
   saveTask(task: string | undefined): void {
-    const config: Config = { ...this.config };
-    config.task = task;
-    this.saveConfig(config);
+    this.config.task = task;
+    this.saveConfig(this.config);
   }
 
   getAllTags(): TagCount[] {
@@ -133,19 +130,16 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
     return JSON.stringify(this.database, null, 2);
   }
   setTagsRequired(value: RequiredType): void {
-    const config: Config = { ...this.config };
-    config.tagsRequired = value;
-    this.saveConfig(config);
+    this.config.tagsRequired = value;
+    this.saveConfig(this.config);
   }
   setTaskRequired(value: RequiredType): void {
-    const config: Config = { ...this.config };
-    config.taskRequired = value;
-    this.saveConfig(config);
+    this.config.taskRequired = value;
+    this.saveConfig(this.config);
   }
   setHistoryEditable(value: boolean): void {
-    const config: Config = { ...this.config };
-    config.historyEditable = value;
-    this.saveConfig(config);
+    this.config.historyEditable = value;
+    this.saveConfig(this.config);
   }
 
   // interface WhatState
@@ -165,9 +159,8 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
       .catch((error) => this.setError(error));
   }
   saveWhatType(whatType: WhatType): void {
-    const config: Config = { ...this.config };
-    config.whatType = whatType;
-    this.saveConfig(config);
+    this.config.whatType = whatType;
+    this.saveConfig(this.config);
   }
   keyAlreadyExists(whatType: WhatType, key: string): boolean {
     const all = this.getAllWhat(whatType);
