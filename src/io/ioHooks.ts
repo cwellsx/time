@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 
-import { useSetError, useTesting } from "../appContext";
-import { Controller } from "./controller";
-import { Database, EditDatabase, editDatabase, fetchDatabase } from "./database";
-import { persist } from "./persist";
-import { getTestResults } from "./tests";
+import { useSetError, useTesting } from '../appContext';
+import { Controller } from './controller';
+import { Database, EditDatabase, editDatabase, fetchDatabase } from './database';
+import { persist } from './persist';
+import { getTestResults } from './tests';
 
 import type { TestResults } from "../model";
 
@@ -27,17 +27,24 @@ function useDatabase(): AsyncResult<Database> {
   const [version, setVersion] = React.useState(0);
   const testing = useTesting();
   const setError = useSetError();
+  const componentMounted = React.useRef(true); // https://stackoverflow.com/a/66891949/49942
 
   React.useEffect(() => {
     const invoke = async () => {
       try {
         const fetched = await fetchDatabase(!testing ? "production" : "test");
-        setState(fetched);
+        if (componentMounted.current) {
+          setState(fetched);
+        }
       } catch (e) {
         setError(e + "");
       }
     };
     invoke();
+
+    return () => {
+      componentMounted.current = false;
+    };
   }, [version, setError, testing]);
 
   const reload = () => setVersion(version + 1);
