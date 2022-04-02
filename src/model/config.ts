@@ -1,12 +1,10 @@
-import { WhatType } from './whatType';
+import type { WhatType } from "./whatType";
+import type { What } from "./what";
 
 export type RequiredType = "required" | "optional";
 
-export type Config = {
-  // cached values from the Now page
-  task?: string;
-  tags?: string[];
-  note?: string;
+// the What properties are cached values from the Now page
+export type Config = What & {
   // which tab is active on the What page
   whatType?: WhatType;
   // settings

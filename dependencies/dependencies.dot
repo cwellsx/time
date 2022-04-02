@@ -47,7 +47,7 @@ digraph SRC {
   "Tests.tsx" -> {"weeks.ts" "sums.ts" "appContext.ts"};
   "sums.ts" -> {"weeks.ts" "date.ts"};
 
-  "states" -> {"nowState.ts" "whatState.ts" "historyState.ts" "settingsState.ts"} [style=dotted];
+  "states" -> {"nowState.ts" "whatState.ts" "historyState.ts" "settingsState.ts" "model"} [style=dotted];
   "nowState.ts" -> {};
   "whatState.ts" -> {};
   "historyState.ts" -> {};

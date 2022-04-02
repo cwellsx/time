@@ -1,1 +1,2 @@
 - Include [Single Page Apps for GitHub Pages](https://github.com/rafgraph/spa-github-pages)
+- Cancel database loading if useEffect is cleaned up

@@ -66,7 +66,12 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
       })
       .catch((error) => this.setError(error));
   }
-
+  saveWhat(what: What): void {
+    this.config.note = what.note;
+    this.config.tags = what.tags;
+    this.config.task = what.task;
+    this.saveConfig(this.config);
+  }
   cancelLast(): void {
     this.editDatabase()
       .then(async (edit) => {
@@ -79,44 +84,11 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
       })
       .catch((error) => this.setError(error));
   }
-
-  saveComment(comment: string | undefined): void {
-    this.config.note = comment;
-    this.saveConfig(this.config);
-  }
-  saveTags(tags: string[] | undefined): void {
-    this.config.tags = tags;
-    this.saveConfig(this.config);
-  }
-  saveTask(task: string | undefined): void {
-    this.config.task = task;
-    this.saveConfig(this.config);
-  }
-
   getAllTags(): TagCount[] {
     return Controller.getAllTagCounts(this.database.tags);
   }
-
   getAllTasks(): TagCount[] {
     return Controller.getAllTagCounts(this.database.tasks);
-  }
-
-  private static getAllTagCounts(tags: TagInfo[]): TagCount[] {
-    return tags.map<TagCount>((tag) => {
-      return { key: tag.key, summary: tag.summary, count: 1 };
-    });
-  }
-
-  private saveConfig(config: Config): void {
-    this.editDatabase()
-      .then(async (edit) => {
-        try {
-          await edit.putConfig(config);
-        } catch (e) {
-          this.setError(e);
-        }
-      })
-      .catch((error) => this.setError(error));
   }
 
   // interface SettingsState
@@ -197,5 +169,24 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   getTaskDescription(task: string): string | undefined {
     const found = this.tasks[task];
     return found ? found.tagInfo.summary : undefined;
+  }
+
+  // private
+  private static getAllTagCounts(tags: TagInfo[]): TagCount[] {
+    return tags.map<TagCount>((tag) => {
+      return { key: tag.key, summary: tag.summary, count: 1 };
+    });
+  }
+
+  private saveConfig(config: Config): void {
+    this.editDatabase()
+      .then(async (edit) => {
+        try {
+          await edit.putConfig(config);
+        } catch (e) {
+          this.setError(e);
+        }
+      })
+      .catch((error) => this.setError(error));
   }
 }

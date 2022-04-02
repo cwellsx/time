@@ -3,7 +3,7 @@ import React from 'react';
 import { EditorTags, OutputTags } from '../tags';
 import { showWhen } from './date';
 
-import type { TimeStart, TimeStop } from "../model";
+import type { TimeStart, TimeStop, What } from "../model";
 import type { NowState } from "../states";
 
 type NowProps = {
@@ -60,18 +60,23 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     // event.preventDefault();
     const comment = event.target.value || undefined;
     setNote(comment);
-    state.saveComment(comment);
+    const what: What = config;
+    what.note = comment;
+    state.saveWhat(what);
   }
 
   const onOutputTags = (outputTags: OutputTags): void => {
     setOutputTags(outputTags);
-    state.saveTags(getTags(outputTags));
+    const what: What = config;
+    what.tags = getTags(outputTags);
+    state.saveWhat(what);
   };
 
   const onOutputTask = (outputTask: OutputTags): void => {
     setOutputTask(outputTask);
-    state.saveTask(getTask(outputTask));
-    console.log(`onOutputTask(${outputTask.tags})`);
+    const what: What = config;
+    what.task = getTask(outputTask);
+    state.saveWhat(what);
   };
 
   const timeText = !time ? undefined : (

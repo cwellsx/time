@@ -1,15 +1,12 @@
-import type { Config, TagCount, Time } from "../model";
+import type { Config, TagCount, Time, What } from "../model";
 
 export interface NowState {
   readonly last: Time | undefined;
   readonly config: Config;
 
   saveTime(time: Time): void;
+  saveWhat(what: What): void;
   cancelLast(): void;
-
-  saveComment(comment: string | undefined): void;
-  saveTags(tags: string[] | undefined): void;
-  saveTask(task: string | undefined): void;
 
   getAllTags(): TagCount[];
   getAllTasks(): TagCount[];
