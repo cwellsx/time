@@ -39,19 +39,21 @@ digraph SRC {
   "pages" -> {"Now.tsx" "What.tsx" "History.tsx" "Settings.tsx" "Help.tsx" "Tests.tsx"};
   "pages" -> {"model" "states"} [style=dotted];
   "date.ts" -> {};
-  "Now.tsx" -> {"date.ts" "tags"};
+  "Now.tsx" -> {"date.ts" "EditWhat.tsx"};
   "What.tsx" -> {"tabs"};
   "History.tsx" -> {"sums.ts"};
   "Settings.tsx" -> {};
   "Help.tsx" -> {};
   "Tests.tsx" -> {"weeks.ts" "sums.ts" "appContext.ts"};
   "sums.ts" -> {"weeks.ts" "date.ts"};
+  "EditWhat.tsx" -> {"tags"};
 
-  "states" -> {"nowState.ts" "whatState.ts" "historyState.ts" "settingsState.ts" "model"} [style=dotted];
-  "nowState.ts" -> {};
+  "states" -> {"nowState.ts" "whatState.ts" "historyState.ts" "settingsState.ts" "editTagsState.ts" "model"} [style=dotted];
+  "nowState.ts" -> {"editTagsState.ts"} [style=dotted];
   "whatState.ts" -> {};
-  "historyState.ts" -> {};
+  "historyState.ts" -> {"editTagsState.ts"} [style=dotted];
   "settingsState.ts" -> {};
+  "editTagsState.ts" -> {};
 
   "tabs" -> {"Tabs.tsx"};
   "Tabs.tsx" -> {};

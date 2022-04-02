@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { EditTags, OutputTags } from '../tags';
 import { showWhen } from './date';
+import { EditWhat, WhatIsValid } from './EditWhat';
 
-import type { TimeStart, TimeStop, What } from "../model";
+import type { TimeStart, TimeStop } from "../model";
 import type { NowState } from "../states";
 
 type NowProps = {
@@ -14,16 +14,11 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
   const state = props.state;
   const config = state.config;
 
+  //const [whatIsValid, setWhatIsValid] = React.useState<WhatIsValid>({ what: {}, isValid: false });
+  const whatIsValidRef = React.useRef<WhatIsValid>({ what: {}, isValid: false });
   const [showValidationError, setShowValidationError] = React.useState<boolean>(false);
-  const [outputTask, setOutputTask] = React.useState<OutputTags | undefined>(undefined);
-  const [outputTags, setOutputTags] = React.useState<OutputTags | undefined>(undefined);
-  const [note, setNote] = React.useState<string | undefined>(config.note);
 
   const { text, time, started } = new Displayed(state);
-
-  /*
-    on start, stop, and cancel
-  */
 
   function onStart(event: React.MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
@@ -31,19 +26,15 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     state.saveTime(time);
   }
 
-  const getTags = (outputTags: OutputTags | undefined): string[] | undefined =>
-    outputTags && outputTags.tags.length ? outputTags.tags : undefined;
-  const getTask = (outputTask: OutputTags | undefined): string | undefined =>
-    outputTask && outputTask.tags.length ? outputTask.tags[0] : undefined;
-
   function onStop(event: React.MouseEvent<HTMLButtonElement>, type: "stop" | "next"): void {
     event.preventDefault();
-    const isInvalid = (output: OutputTags | undefined) => output && !output.isValid;
-    if (isInvalid(outputTask) || isInvalid(outputTags)) {
+    const whatIsValid = whatIsValidRef.current;
+    if (!whatIsValid.isValid) {
       setShowValidationError(true);
       return;
     }
-    const time: TimeStop = { when: Date.now(), type, note, task: getTask(outputTask), tags: getTags(outputTags) };
+    const { note, task, tags } = whatIsValid.what;
+    const time: TimeStop = { when: Date.now(), type, note, task, tags };
     state.saveTime(time);
   }
 
@@ -52,32 +43,11 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     state.cancelLast();
   }
 
-  /*
-    on note, tags, and task
-  */
-
-  function onComment(event: React.ChangeEvent<HTMLTextAreaElement>): void {
-    // event.preventDefault();
-    const comment = event.target.value || undefined;
-    setNote(comment);
-    const what: What = config;
-    what.note = comment;
-    state.saveWhat(what);
+  function onWhatIsValid(whatIsValid: WhatIsValid): void {
+    //setWhatIsValid(whatIsValid);
+    whatIsValidRef.current = whatIsValid;
+    state.saveWhat(whatIsValid.what);
   }
-
-  const onOutputTags = (outputTags: OutputTags): void => {
-    setOutputTags(outputTags);
-    const what: What = config;
-    what.tags = getTags(outputTags);
-    state.saveWhat(what);
-  };
-
-  const onOutputTask = (outputTask: OutputTags): void => {
-    setOutputTask(outputTask);
-    const what: What = config;
-    what.task = getTask(outputTask);
-    state.saveWhat(what);
-  };
 
   const timeText = !time ? undefined : (
     <div>
@@ -108,56 +78,8 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     </div>
   );
 
-  const isTaskRequired = config.taskRequired === "required";
-  const isTagsRequired = config.tagsRequired === "required";
-  const allTasks = state.getAllTasks();
-  const allTags = state.getAllTags();
-
-  const editTask =
-    !isTaskRequired && !allTasks.length ? undefined : (
-      <label>
-        <span>Task:</span>
-        <EditTags
-          inputTags={config.task ? [config.task] : []}
-          parentCallback={onOutputTask}
-          allTags={allTasks}
-          minimum={isTaskRequired}
-          maximum={1}
-          canNewTag={false}
-          showValidationError={showValidationError}
-          hrefAllTags={"/tags"}
-        />
-      </label>
-    );
-
-  const editTags =
-    !isTagsRequired && !allTags.length ? undefined : (
-      <label>
-        <span>Tags:</span>
-        <EditTags
-          inputTags={config.tags ?? []}
-          parentCallback={onOutputTags}
-          allTags={allTags}
-          minimum={isTagsRequired}
-          maximum={undefined}
-          canNewTag={false}
-          showValidationError={showValidationError}
-          hrefAllTags={"/tags"}
-        />
-      </label>
-    );
-
   const what = !started ? undefined : (
-    <React.Fragment>
-      {editTask}
-      {editTags}
-      <label>
-        <span>Comment:</span>
-        <div>
-          <textarea className="comment" value={note} onChange={onComment} />
-        </div>
-      </label>
-    </React.Fragment>
+    <EditWhat state={state} showValidationError={showValidationError} what={config} parentCallback={onWhatIsValid} />
   );
 
   return (

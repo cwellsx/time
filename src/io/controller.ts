@@ -84,12 +84,6 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
       })
       .catch((error) => this.setError(error));
   }
-  getAllTags(): TagCount[] {
-    return Controller.getAllTagCounts(this.database.tags);
-  }
-  getAllTasks(): TagCount[] {
-    return Controller.getAllTagCounts(this.database.tasks);
-  }
 
   // interface SettingsState
   readonly persisted: boolean;
@@ -169,6 +163,14 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   getTaskDescription(task: string): string | undefined {
     const found = this.tasks[task];
     return found ? found.tagInfo.summary : undefined;
+  }
+
+  // EditWhatState
+  getAllTags(): TagCount[] {
+    return Controller.getAllTagCounts(this.database.tags);
+  }
+  getAllTasks(): TagCount[] {
+    return Controller.getAllTagCounts(this.database.tasks);
   }
 
   // private
