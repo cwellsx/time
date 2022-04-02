@@ -28,7 +28,7 @@ interface Context {
   inputElement: InputElement;
   assert: Assert;
   parentCallback: ParentCallback;
-  tagDictionary?: TagDictionary;
+  tagDictionary: TagDictionary;
   validation: Validation;
 }
 
@@ -218,7 +218,7 @@ class MutableState {
   getState(): RenderedState {
     const state: State = { buffer: this.buffer, selection: this.selection };
     const { assert, inputElement, tagDictionary, validation } = this.context;
-    const renderedState: RenderedState = renderState(state, assert, validation, inputElement, tagDictionary);
+    const renderedState: RenderedState = renderState(state, assert, validation, tagDictionary, inputElement);
     logRenderedState("MutableState.getState returning", renderedState);
     // do a callback to the parent to say what the current tags are (excluding the empty <input> word if there is one)
     const outputTags = getOutputTags(renderedState);
@@ -720,8 +720,8 @@ function renderState(
   state: State,
   assert: Assert,
   validation: Validation,
-  inputElement?: InputElement,
-  tagDictionary?: TagDictionary
+  tagDictionary: TagDictionary,
+  inputElement?: InputElement
 ): RenderedState {
   const elements: RenderedElement[] = [];
   let editing: number | undefined = undefined;
@@ -735,7 +735,7 @@ function renderState(
   }
 
   function addElement(type: "tag" | "input", word: string): void {
-    const isValid: boolean = !word.length || validation.canNewTag || (!!tagDictionary && tagDictionary.exists(word));
+    const isValid: boolean = !word.length || validation.canNewTag || tagDictionary.exists(word);
     elements.push({ type, word, isValid });
   }
 
@@ -855,7 +855,12 @@ function renderState(
 }
 
 // this function calculates the initial state, calculated from props and used to initialize useState
-export function initialState(assert: Assert, inputTags: string[], validation: Validation): RenderedState {
+export function initialState(
+  assert: Assert,
+  inputTags: string[],
+  validation: Validation,
+  tagDictionary: TagDictionary
+): RenderedState {
   assert(!inputTags.some((found) => found !== found.trim()), "input tags not trimmed", () => {
     return { inputTags };
   });
@@ -864,7 +869,7 @@ export function initialState(assert: Assert, inputTags: string[], validation: Va
   const state: State = { buffer, selection: { start, end: start } };
 
   log("initialState starting", { inputTags });
-  const renderedState: RenderedState = renderState(state, assert, validation);
+  const renderedState: RenderedState = renderState(state, assert, validation, tagDictionary);
   logRenderedState("initialState returning", renderedState);
   return renderedState;
 }
@@ -875,7 +880,7 @@ export function getOnSelectTags(
   parentCallback: ParentCallback,
   dispatch: (action: Action) => void,
   state: RenderedState,
-  tagDictionary?: TagDictionary
+  tagDictionary: TagDictionary
 ) {
   function getContext(inputElement: HTMLInputElement): Context {
     return {

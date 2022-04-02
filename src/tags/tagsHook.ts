@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { Action, Assert, initialState, reducer, RenderedState, TagDictionary, Validation } from "./selectTagsState";
+import { Action, Assert, initialState, reducer, RenderedState, TagDictionary, Validation } from './selectTagsState';
 
 import type { TagCount } from "./tagsTypes";
 
@@ -11,7 +11,7 @@ export function useSelectTags(
 ): {
   state: RenderedState;
   dispatch: React.Dispatch<Action>;
-  tagDictionary: TagDictionary | undefined;
+  tagDictionary: TagDictionary;
   assert: Assert;
   errorMessage: string | undefined;
 } {
@@ -35,14 +35,14 @@ export function useSelectTags(
     }
   }
 
+  // this is a dictionary of existing tags
+  const tagDictionary: TagDictionary = new TagDictionary(allTags);
+
   // see ./EDITOR.md and the definition of the RenderedState interface for a description of this state
   // also https://fettblog.eu/typescript-react/hooks/#usereducer says that type is infered from signature of reducer
   const [state, dispatch] = React.useReducer(reducer, inputTags, (inputTags) =>
-    initialState(assert, inputTags, validation)
+    initialState(assert, inputTags, validation, tagDictionary)
   );
-
-  // this is a dictionary of existing tags
-  const tagDictionary: TagDictionary = new TagDictionary(allTags);
 
   /*
     Event handlers
