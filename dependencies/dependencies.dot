@@ -56,9 +56,9 @@ digraph SRC {
   "tabs" -> {"Tabs.tsx"};
   "Tabs.tsx" -> {};
 
-  "tags" -> {"EditorTags.tsx"};
+  "tags" -> {"EditTags.tsx"};
   "tags" -> {"tagsTypes.ts"} [style=dotted];
-  "EditorTags.tsx" -> {"error" "selectTagsState.ts" "tagsHook.ts" "tagsIcons.ts"};
+  "EditTags.tsx" -> {"error" "selectTagsState.ts" "tagsHook.ts" "tagsIcons.ts"};
   "tagsHook.ts" -> {"selectTagsState.ts"};
   "tagsIcons.ts" -> {};
   "tagsTypes.ts" -> {};

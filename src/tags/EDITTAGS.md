@@ -1,4 +1,4 @@
-# `EditorTags`
+# `EditTags`
 
 This component lets you edit and select the tags associated with a topic.
 
@@ -69,7 +69,7 @@ the `<input>` control, then this component detects that and changes its selectio
 
 The implemented of this component is split into three modules:
 
-- [`EditorTags`](./EditorTags.tsx) defines the React elements
+- [`EditTags`](./EditTags.tsx) defines the React elements
 - [`tagsHook`](./tagsHook.ts) registers the reducer for the component state
 - [`selectTagsState`](./selectTagsState.ts) defines the state, the reducer actions,
   the reducer itself, helper functions to initialise the state,
@@ -179,7 +179,7 @@ but it's write-only -- i.e. it's up-to-date (and a opy of what was written into 
 
 ## Simulating `:focus-within`
 
-There are a couple of effects in [`EditorTags.css`](./EditorTags.css)
+There are a couple of effects in [`EditTags.css`](./EditTags.css)
 where is would be convenient to use `:focus-within`
 for example like this:
 

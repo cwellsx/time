@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { EditorTags, OutputTags } from '../tags';
+import { EditTags, OutputTags } from '../tags';
 import { showWhen } from './date';
 
 import type { TimeStart, TimeStop, What } from "../model";
@@ -117,7 +117,7 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     !isTaskRequired && !allTasks.length ? undefined : (
       <label>
         <span>Task:</span>
-        <EditorTags
+        <EditTags
           inputTags={config.task ? [config.task] : []}
           parentCallback={onOutputTask}
           allTags={allTasks}
@@ -134,7 +134,7 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     !isTagsRequired && !allTags.length ? undefined : (
       <label>
         <span>Tags:</span>
-        <EditorTags
+        <EditTags
           inputTags={config.tags ?? []}
           parentCallback={onOutputTags}
           allTags={allTags}

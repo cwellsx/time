@@ -1,4 +1,4 @@
-import './EditorTags.css';
+import './EditTags.css';
 
 import React from 'react';
 
@@ -13,8 +13,8 @@ import type { OutputTags, ParentCallback, TagCount } from "./tagsTypes";
 // also to display a little '(!)' SVG -- an Error icon which is displayed in the element, if there's a validation error
 // this simply displays red text if non-empty text is passed to its errorMessage property
 
-// this defines the properties which you pass to the EditorTags functional component
-interface EditorTagsProps extends Validation {
+// this defines the properties which you pass to the EditTags functional component
+interface EditTagsProps extends Validation {
   // the input/original tags to be edited (or an empty array if there are none)
   inputTags: string[];
   // the results are pushed back to the parent via this callback
@@ -23,7 +23,7 @@ interface EditorTagsProps extends Validation {
   allTags: TagCount[];
 }
 
-export const EditorTags: React.FunctionComponent<EditorTagsProps> = (props) => {
+export const EditTags: React.FunctionComponent<EditTagsProps> = (props) => {
   const { inputTags, parentCallback, allTags } = props;
 
   // get the state
