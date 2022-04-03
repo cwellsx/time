@@ -120,7 +120,7 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
   const showAll = !all.length ? undefined : (
     <React.Fragment>
       <h2>Current {text}s</h2>
-      <table>
+      <table className="whats">
         <tbody>
           {all.map((tagInfo) => (
             <tr key={tagInfo.key}>
