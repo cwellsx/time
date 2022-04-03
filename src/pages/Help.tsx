@@ -1,13 +1,16 @@
-import React from "react";
-import ReactMarkdown from "react-markdown";
-import { HeadingProps } from "react-markdown/lib/ast-to-react";
+import raw from 'raw.macro';
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import { HeadingProps } from 'react-markdown/lib/ast-to-react';
+
+const markdown = raw("../fetch/help.md");
 
 type HelpProps = {
   markdown: string;
 };
 
 export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
-  const markdown = props.markdown;
+  // const markdown = props.markdown;
 
   // [Headings are missing anchors / ids](https://github.com/remarkjs/react-markdown/issues/69)
   function HeadingRenderer(props: React.PropsWithChildren<HeadingProps>) {
