@@ -52,36 +52,35 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
 
   function getText(what: What | undefined): JSX.Element | undefined {
     if (!what) return undefined;
-    const result: string[] = [];
-    if (what.note) result.push(what.note);
-    if (what.tags && what.tags.length) result.push(`[${what.tags.join()}]`);
-    let html = undefined;
+    let task: JSX.Element | undefined;
     if (what.task) {
       const description = state.getTaskDescription(what.task);
-      result.push(`# `);
-      html = description ? (
-        <abbr title={description}>{what.task}</abbr>
+      task = description ? (
+        <>
+          # <abbr title={description}>{what.task}</abbr>
+        </>
       ) : (
-        <span className="missingTask">{what.task}</span>
+        <>
+          # <span className="missingTask">{what.task}</span>
+        </>
       );
-    }
-    const text = result.join("\n");
+    } else task = undefined;
+    const tags = what.tags && what.tags.length ? `[${what.tags.join()}]` : undefined;
+    const note = what.note;
+    const space1 = task && (tags || note) ? " " : undefined;
+    const space2 = tags && note ? " " : undefined;
     return (
       <>
-        {text}
-        {html}
+        {task}
+        {space1}
+        {tags}
+        {space2}
+        {note}
       </>
     );
   }
 
-  function whatsEqual(x: What, y: What): boolean {
-    const tagsEquals = !x.tags
-      ? !y.tags
-      : x.tags.length === y.tags?.length && x.tags.every((it, index) => (it = y.tags![index]));
-    return x.note === y.note && x.task === y.task && tagsEquals;
-  }
-
-  function getEdit(period: Period) {
+  function getEdit(period: Period): JSX.Element {
     const saveButton = whatsEqual(editingPeriod!, whatIsValid.what) ? undefined : (
       <button onClick={onSave}>Save</button>
     );
@@ -129,4 +128,11 @@ function formatTime(minutes: number) {
   const hours = Math.floor(minutes / 60);
   const padded = String(minutes % 60).padStart(2, "0");
   return `${hours}:${padded}`;
+}
+
+function whatsEqual(x: What, y: What): boolean {
+  const tagsEquals = !x.tags
+    ? !y.tags
+    : x.tags.length === y.tags?.length && x.tags.every((it, index) => (it = y.tags![index]));
+  return x.note === y.note && x.task === y.task && tagsEquals;
 }
