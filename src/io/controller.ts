@@ -14,6 +14,15 @@ interface Tasks {
     | undefined;
 }
 
+interface Tags {
+  [index: string]:
+    | {
+        tagInfo: TagInfo;
+        count: number;
+      }
+    | undefined;
+}
+
 export class Controller implements NowState, WhatState, HistoryState, SettingsState {
   // private data
   private readonly database: Database;
@@ -21,6 +30,7 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   private readonly reload: () => void;
   private readonly setError: SetError;
   private readonly tasks: Tasks;
+  private readonly tags: Tags;
 
   constructor(database: Database, editDatabase: () => Promise<EditDatabase>, reload: () => void, setError: SetError) {
     console.log("controller");
@@ -38,6 +48,8 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
 
     this.tasks = {};
     for (const task of database.tasks) this.tasks[task.key] = { tagInfo: task, usedDate: 0 };
+    this.tags = {};
+    for (const tag of database.tags) this.tags[tag.key] = { tagInfo: tag, count: 0 };
 
     for (const time of times) {
       if (time.type != "start") {
@@ -45,6 +57,13 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
         if (task) {
           const found = this.tasks[task];
           if (found) found.usedDate = time.when;
+        }
+        const tags = time.tags;
+        if (tags) {
+          for (const tag of tags) {
+            const found = this.tags[tag];
+            if (found) ++found.count;
+          }
         }
       }
     }
@@ -132,6 +151,15 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
     const all = this.getAllWhat(whatType);
     const found = all.find((it) => it.key === key);
     return !!found;
+  }
+  keyIsReferenced(whatType: WhatType, key: string): boolean {
+    if (whatType === "tags") {
+      const found = this.tags[key];
+      return !!found && found.count > 0;
+    } else {
+      const found = this.tasks[key];
+      return !!found && found.usedDate > 0;
+    }
   }
 
   // interface HistoryState

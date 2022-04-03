@@ -1,6 +1,7 @@
 import './what.sass';
 
 import React from 'react';
+import * as ReactRouter from 'react-router-dom';
 
 import { ErrorMessage } from '../error';
 import { Tabs } from '../tabs';
@@ -122,12 +123,18 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
       <h2>Current {text}s</h2>
       <table className="whats">
         <tbody>
-          {all.map((tagInfo) => (
-            <tr key={tagInfo.key}>
-              <td>{tagInfo.key}</td>
-              <td>{tagInfo.summary}</td>
-            </tr>
-          ))}
+          {all.map((tagInfo) => {
+            const referenced = state.keyIsReferenced(whatType, tagInfo.key);
+            const urlKey = whatType === "tags" ? "tag" : "task";
+            const url = `/history?${urlKey}=${tagInfo.key}`;
+            const key = !referenced ? tagInfo.key : <ReactRouter.NavLink to={url}>{tagInfo.key}</ReactRouter.NavLink>;
+            return (
+              <tr key={tagInfo.key}>
+                <td>{key}</td>
+                <td>{tagInfo.summary}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </React.Fragment>

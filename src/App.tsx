@@ -1,14 +1,14 @@
-import "./App.sass";
+import './App.sass';
 
-import React from "react";
-import * as ReactRouter from "react-router-dom";
+import React from 'react';
+import * as ReactRouter from 'react-router-dom';
 
-import { AppContext, useContext } from "./appContext";
-import { ErrorMessage } from "./error";
-import { useHelp } from "./fetch";
-import { useController, useTestResults } from "./io";
-import * as Page from "./pages";
-import * as Component from "./topbar";
+import { AppContext, useContext } from './appContext';
+import { ErrorMessage } from './error';
+import { useHelp } from './fetch';
+import { useController, useTestResults } from './io';
+import * as Page from './pages';
+import * as Component from './topbar';
 
 const App: React.FunctionComponent = () => {
   const [error, setError, testing, setTesting] = useContext();
@@ -34,6 +34,7 @@ const App: React.FunctionComponent = () => {
 };
 
 const Now: React.FunctionComponent = () => {
+  console.log("Now");
   const controller = useController();
   if (!controller) return <h1>Loading...</h1>;
   return (
@@ -45,6 +46,7 @@ const Now: React.FunctionComponent = () => {
 };
 
 const What: React.FunctionComponent = () => {
+  console.log("What");
   const controller = useController();
   if (!controller) return <h1>Loading...</h1>;
   return (
@@ -56,12 +58,16 @@ const What: React.FunctionComponent = () => {
 };
 
 const History: React.FunctionComponent = () => {
+  console.log("History");
   const controller = useController();
+  const [searchParams] = ReactRouter.useSearchParams();
   if (!controller) return <h1>Loading...</h1>;
+  const task = searchParams.get("task") ?? undefined;
+  const tag = searchParams.get("tag") ?? undefined;
   return (
     <React.Fragment>
       <h1>History</h1>
-      <Page.History state={controller} />
+      <Page.History state={controller} task={task} tag={tag} />
     </React.Fragment>
   );
 };

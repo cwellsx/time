@@ -6,4 +6,5 @@ export interface WhatState {
   createWhat(whatType: WhatType, tag: TagInfo): void;
   saveWhatType(whatType: WhatType): void;
   keyAlreadyExists(whatType: WhatType, key: string): boolean;
+  keyIsReferenced(whatType: WhatType, key: string): boolean;
 }

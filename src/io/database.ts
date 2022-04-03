@@ -117,6 +117,7 @@ export class EditDatabase {
 }
 
 export async function fetchDatabase(dbName: DbName): Promise<Database> {
+  console.log("fetchDatabase");
   const db = await open(dbName);
   const tx = db.transaction(["times", "config", "tags", "tasks"]);
   const times = await tx.objectStore("times").getAll();

@@ -7,15 +7,28 @@ import { aggregate } from './sums';
 
 import type { Period, What } from "../model";
 import type { HistoryState } from "../states";
-
 type HistoryProps = {
   state: HistoryState;
+  task: string | undefined;
+  tag: string | undefined;
 };
+
+type PeriodFilter = (it: Period) => boolean;
 
 export const History: React.FunctionComponent<HistoryProps> = (props: HistoryProps) => {
   const state = props.state;
+  const task = props.task;
+  const tag = props.tag;
   const periods: Period[] = state.periods;
-  const rows = aggregate(periods);
+
+  const filter: PeriodFilter | undefined = task
+    ? (it: Period) => !!it.task && it.task === task
+    : tag
+    ? (it: Period) => !!it.tags && it.tags.some((it2) => it2 === tag)
+    : undefined;
+  const filtered = filter ? periods.filter(filter) : periods;
+
+  const rows = aggregate(filtered);
 
   const [editingPeriod, setEditingPeriod] = React.useState<Period | undefined>(undefined);
   // unlike Now.tsx this is useState instead of userRef because on edit callback we want to re-render the Save button
