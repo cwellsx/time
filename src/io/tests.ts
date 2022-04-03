@@ -24,9 +24,12 @@ function createTimes(year: number, nDays: number, nTimesPerDay: number): Time[] 
     const day = i % 20;
     for (let j = 0; j < nTimesPerDay; ++j) {
       const when = new Date(year, month, day, Math.floor((j + 1) / 2), (j + 1) % 2 ? 30 : 0).valueOf();
+      const note = j % 2 ? "hello" : undefined;
+      const task = Math.floor(j / 2) % 2 ? "task-142" : undefined;
+      const tags = Math.floor(j / 4) % 2 ? ["coding"] : undefined;
       if (j === 0) result.push({ type: "start", when: when });
-      else if (j === nTimesPerDay - 1) result.push({ type: "stop", when: when, note: "hello" });
-      else result.push({ type: "next", when: when, note: "hello" });
+      else if (j === nTimesPerDay - 1) result.push({ type: "stop", when, note, task, tags });
+      else result.push({ type: "next", when, note, task, tags });
     }
   }
   assert(result.length === nDays * nTimesPerDay);
@@ -41,6 +44,31 @@ const tests: Test[] = [
   {
     title: "fetchDatabase",
     run: async () => await DB.fetchDatabase("test"),
+  },
+  {
+    title: "create tags",
+    run: async () => {
+      const tags: TagInfo[] = [
+        { key: "coding", summary: "the art of programming" },
+        { key: "social", summary: "social media" },
+        { key: "bicycling" },
+      ];
+      const tasks: TagInfo[] = [
+        { key: "task-142", summary: "This is a sample task with a fairly long description but not very long" },
+        {
+          key: "task-143",
+          summary:
+            "This is a sample task with a really long description, almost ridiculously long, certainly longer than I'd ever really expect to see used in practice",
+        },
+      ];
+      const edit = await DB.editDatabase("test");
+      for (const tag of tags) {
+        await edit.addWhat("tags", tag);
+      }
+      for (const task of tasks) {
+        await edit.addWhat("tasks", task);
+      }
+    },
   },
   {
     title: "save two times",
@@ -93,31 +121,6 @@ const tests: Test[] = [
     run: async () => {
       for (let i = 0; i < 100; ++i) {
         await persisted();
-      }
-    },
-  },
-  {
-    title: "create tags",
-    run: async () => {
-      const tags: TagInfo[] = [
-        { key: "coding", summary: "the art of programming" },
-        { key: "social", summary: "social media" },
-        { key: "bicycling" },
-      ];
-      const tasks: TagInfo[] = [
-        { key: "task-142", summary: "This is a sample task with a fairly long description but not very long" },
-        {
-          key: "task-143",
-          summary:
-            "This is a sample task with a really long description, almost ridiculously long, certainly longer than I'd ever really expect to see used in practice",
-        },
-      ];
-      const edit = await DB.editDatabase("test");
-      for (const tag of tags) {
-        await edit.addWhat("tags", tag);
-      }
-      for (const task of tasks) {
-        await edit.addWhat("tasks", task);
       }
     },
   },

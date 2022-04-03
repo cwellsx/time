@@ -2,6 +2,7 @@ import './history.sass';
 
 import React from 'react';
 
+import { EditWhat, WhatIsValid } from './EditWhat';
 import { aggregate } from './sums';
 
 import type { Period, What } from "../model";
@@ -16,8 +17,10 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
   const periods: Period[] = state.periods;
   const rows = aggregate(periods);
 
-  const [editingTime, setEditingTime] = React.useState<number | undefined>(undefined);
-  const [editingText, setEditingText] = React.useState<string | undefined>(undefined);
+  const [editingPeriod, setEditingPeriod] = React.useState<Period | undefined>(undefined);
+  // unlike Now.tsx this is useState instead of userRef because on edit callback we want to re-render the Save button
+  const [whatIsValid, setWhatIsValid] = React.useState<WhatIsValid>({ what: {}, isValid: false });
+  const [showValidationError, setShowValidationError] = React.useState<boolean>(false);
 
   const onClick: React.MouseEventHandler<HTMLTableElement> = (event: React.MouseEvent<HTMLTableElement>) => {
     if (!state.config.historyEditable) return;
@@ -25,24 +28,26 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
     const el = target as HTMLElement;
     if (el.tagName !== "TD" || el.className !== "editable") return;
     const row = el.parentElement;
-    const time = row?.getAttribute("data-time");
-    if (!time) return;
-    const text = el.textContent ?? undefined;
-    setEditingTime(+time);
-    setEditingText(text);
+    const timeString = row?.getAttribute("data-time");
+    if (!timeString) return;
+    const time = +timeString;
+    const period: Period | undefined = rows
+      .map<Period | undefined>((it) => it.getPeriod())
+      .find((it) => it && it.stop === time);
+    setEditingPeriod(period);
+    setWhatIsValid({ what: period!, isValid: true });
+    setShowValidationError(false);
   };
 
-  function onEdit(event: React.ChangeEvent<HTMLTextAreaElement>): void {
-    // event.preventDefault();
-    const text = event.target.value || undefined;
-    setEditingText(text);
-  }
-
   function onSave(event: React.MouseEvent<HTMLButtonElement>): void {
-    if (!editingTime) return;
-    const what: What = { note: editingText };
-    state.editHistory(editingTime, what);
-    setEditingTime(undefined);
+    if (!editingPeriod) return;
+    if (!whatIsValid.isValid) {
+      setShowValidationError(true);
+      return;
+    }
+    const what: What = whatIsValid.what;
+    state.editHistory(editingPeriod.stop, what);
+    setEditingPeriod(undefined);
   }
 
   function getText(what: What | undefined): JSX.Element | undefined {
@@ -53,7 +58,6 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
     let html = undefined;
     if (what.task) {
       const description = state.getTaskDescription(what.task);
-      //const text = description?``
       result.push(`# `);
       html = description ? (
         <abbr title={description}>{what.task}</abbr>
@@ -70,24 +74,41 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
     );
   }
 
+  function whatsEqual(x: What, y: What): boolean {
+    const tagsEquals = !x.tags
+      ? !y.tags
+      : x.tags.length === y.tags?.length && x.tags.every((it, index) => (it = y.tags![index]));
+    return x.note === y.note && x.task === y.task && tagsEquals;
+  }
+
+  function getEdit(period: Period) {
+    const saveButton = whatsEqual(editingPeriod!, whatIsValid.what) ? undefined : (
+      <button onClick={onSave}>Save</button>
+    );
+    return (
+      <>
+        <div className="table">
+          <EditWhat
+            state={state}
+            showValidationError={showValidationError}
+            what={period}
+            parentCallback={setWhatIsValid}
+          />
+        </div>
+        {saveButton}
+      </>
+    );
+  }
+
   return (
     <table className="history" onClick={onClick}>
       <tbody>
         {rows.map((show) => {
+          const period: Period | undefined = show.getPeriod();
+          const editing: boolean = !!editingPeriod && period?.stop === editingPeriod.stop;
+          const showText = !editing ? getText(period) : getEdit(period!);
+          const time = period?.stop;
           const editable = state.config.historyEditable && show.getClass() === "span";
-          const text = getText(show.getWhat());
-          const time = show.getStop();
-          const editing = editable && time && time === editingTime;
-          const saveButton = editing && editingText !== text ? <button onClick={onSave}>Save</button> : undefined;
-          const rows = editingText?.split("\n").length;
-          const showText = !editing ? (
-            text
-          ) : (
-            <>
-              <textarea value={editingText} onChange={onEdit} rows={rows} />
-              {saveButton}
-            </>
-          );
           const className = editable && !editing ? "editable" : undefined;
           return (
             <tr key={show.getKey()} className={show.getClass()} data-time={time}>

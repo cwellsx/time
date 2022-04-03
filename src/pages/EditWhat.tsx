@@ -24,15 +24,13 @@ type EditWhatProps = {
 
 export const EditWhat: React.FunctionComponent<EditWhatProps> = (props: EditWhatProps) => {
   const state = props.state;
-  const [initial] = React.useState<What>(props.what);
-  // const [outputTask, setOutputTask] = React.useState<OutputTags | undefined>(undefined);
-  // const [outputTags, setOutputTags] = React.useState<OutputTags | undefined>(undefined);
-  // const [note, setNote] = React.useState<string | undefined>(initial.note);
+  const what: What = { note: props.what.note, task: props.what.task, tags: props.what.tags };
+
   const outputTaskRef = React.useRef<OutputTags | undefined>(undefined);
   const outputTagsRef = React.useRef<OutputTags | undefined>(undefined);
-  const noteRef = React.useRef<string | undefined>(initial.note);
+  const noteRef = React.useRef<string | undefined>(what.note);
 
-  if (isLogging) console.log(`EditWhat what=${JSON.stringify(props.what)} initial=${JSON.stringify(initial)}`);
+  if (isLogging) console.log(`EditWhat what=${JSON.stringify(what)}`);
 
   function callback(): void {
     const note: string | undefined = noteRef.current;
@@ -82,7 +80,7 @@ export const EditWhat: React.FunctionComponent<EditWhatProps> = (props: EditWhat
     <label>
       <span>Task:</span>
       <EditTags
-        inputTags={initial.task ? [initial.task] : []}
+        inputTags={what.task ? [what.task] : []}
         parentCallback={onOutputTask}
         allTags={allTasks}
         minimum={isTaskRequired}
@@ -98,7 +96,7 @@ export const EditWhat: React.FunctionComponent<EditWhatProps> = (props: EditWhat
     <label>
       <span>Tags:</span>
       <EditTags
-        inputTags={initial.tags ?? []}
+        inputTags={what.tags ?? []}
         parentCallback={onOutputTags}
         allTags={allTags}
         minimum={isTagsRequired}
@@ -117,7 +115,7 @@ export const EditWhat: React.FunctionComponent<EditWhatProps> = (props: EditWhat
       <label>
         <span>Comment:</span>
         <div>
-          <textarea className="comment" defaultValue={initial.note} onChange={onComment} />
+          <textarea className="comment" defaultValue={what.note} onChange={onComment} />
         </div>
       </label>
     </React.Fragment>

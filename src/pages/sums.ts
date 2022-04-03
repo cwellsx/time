@@ -6,10 +6,9 @@ import type { Period, What } from "../model";
 export interface IShow {
   getKey(): string;
   getId(): string;
-  getWhat(): What | undefined;
+  getPeriod(): Period | undefined;
   getMinutes(): number;
   getClass(): string;
-  getStop(): number | undefined;
 }
 
 class Span implements IShow {
@@ -27,7 +26,7 @@ class Span implements IShow {
   getId(): string {
     return `${showTime(this.start)}–${showTime(this.stop)}`;
   }
-  getWhat(): What | undefined {
+  getPeriod(): Period | undefined {
     return this.period;
   }
   getMinutes(): number {
@@ -35,9 +34,6 @@ class Span implements IShow {
   }
   getClass(): string {
     return "span";
-  }
-  getStop(): number | undefined {
-    return this.period.stop;
   }
 }
 
@@ -59,7 +55,7 @@ class Day implements IShow {
   getId(): string {
     return showDay(this.date);
   }
-  getWhat(): What | undefined {
+  getPeriod(): Period | undefined {
     return undefined;
   }
   getMinutes(): number {
@@ -67,9 +63,6 @@ class Day implements IShow {
   }
   getClass(): string {
     return "day";
-  }
-  getStop(): number | undefined {
-    return undefined;
   }
 }
 
@@ -91,7 +84,7 @@ class Week implements IShow {
   getId(): string {
     return `Week ${this.weekId.week}`;
   }
-  getWhat(): What | undefined {
+  getPeriod(): Period | undefined {
     return undefined;
   }
   getMinutes(): number {
@@ -99,9 +92,6 @@ class Week implements IShow {
   }
   getClass(): string {
     return "week";
-  }
-  getStop(): number | undefined {
-    return undefined;
   }
 }
 

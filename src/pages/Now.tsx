@@ -14,7 +14,6 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
   const state = props.state;
   const config = state.config;
 
-  //const [whatIsValid, setWhatIsValid] = React.useState<WhatIsValid>({ what: {}, isValid: false });
   const whatIsValidRef = React.useRef<WhatIsValid>({ what: {}, isValid: false });
   const [showValidationError, setShowValidationError] = React.useState<boolean>(false);
 
@@ -44,7 +43,6 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
   }
 
   function onWhatIsValid(whatIsValid: WhatIsValid): void {
-    //setWhatIsValid(whatIsValid);
     whatIsValidRef.current = whatIsValid;
     state.saveWhat(whatIsValid.what);
   }
