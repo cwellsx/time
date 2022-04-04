@@ -1,8 +1,8 @@
 import raw from 'raw.macro';
 
-import startUrl from './start.png';
-import stopUrl from './stop.png';
-import toolbarUrl from './toolbar.png';
+import startUrl from './start-min.png';
+import stopUrl from './stop-min.png';
+import toolbarUrl from './toolbar-min.png';
 
 interface Images {
   [index: string]: string | undefined;

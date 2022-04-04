@@ -6,6 +6,15 @@ Use this to:
 - Record **what** you did, whenever you stop
 - Review a **history** of what you've done.
 
+## How it works
+
+You don't log in.
+There is no back-end database.
+Data you enter is permanently stored **within your browser**.
+It's pretty good for privacy, your data never leaves your browser, no data is sent back to the server.
+
+If you have more than one browser or machine, data isn't shared: each has its own independent database.
+
 ## How to use it
 
 The UI needs only a minimum of input:

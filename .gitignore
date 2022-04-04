@@ -135,3 +135,4 @@ yarn-error.log*
 
 dependencies/dependencies.png
 *.toc.md
+src/help/images.scrap
