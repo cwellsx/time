@@ -5,10 +5,11 @@ import * as ReactRouter from 'react-router-dom';
 
 import { AppContext, useContext } from './appContext';
 import { ErrorMessage } from './error';
-import { useHelp } from './fetch';
 import { useController, useTestResults } from './io';
 import * as Page from './pages';
 import * as Component from './topbar';
+
+// import { useHelp } from './fetch';
 
 const App: React.FunctionComponent = () => {
   const [error, setError, testing, setTesting] = useContext();
@@ -83,13 +84,21 @@ const Settings: React.FunctionComponent = () => {
   );
 };
 
+// const Help: React.FunctionComponent = () => {
+//   const markdown = useHelp();
+//   if (!markdown) return <h1>Loading...</h1>;
+//   return (
+//     <React.Fragment>
+//       <h1>Help</h1>
+//       <Page.Help markdown={markdown} />
+//     </React.Fragment>
+//   );
+// };
+
 const Help: React.FunctionComponent = () => {
-  const markdown = useHelp();
-  if (!markdown) return <h1>Loading...</h1>;
   return (
     <React.Fragment>
-      <h1>Help</h1>
-      <Page.Help markdown={markdown} />
+      <Page.Help />
     </React.Fragment>
   );
 };

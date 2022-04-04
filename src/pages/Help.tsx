@@ -1,16 +1,20 @@
-import raw from 'raw.macro';
+import './help.sass';
+
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { HeadingProps } from 'react-markdown/lib/ast-to-react';
+import { HeadingProps, TransformImage } from 'react-markdown/lib/ast-to-react';
 
-const markdown = raw("../fetch/help.md");
+import { help, images } from '../help';
+
+// const markdown = raw("../fetch/help.md");
 
 type HelpProps = {
-  markdown: string;
+  //markdown: string;
 };
 
 export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
   // const markdown = props.markdown;
+  const markdown = help;
 
   // [Headings are missing anchors / ids](https://github.com/remarkjs/react-markdown/issues/69)
   function HeadingRenderer(props: React.PropsWithChildren<HeadingProps>) {
@@ -26,5 +30,17 @@ export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
     return React.createElement("h" + props.level, { id: slug }, props.children);
   }
 
-  return <ReactMarkdown components={{ h2: HeadingRenderer }}>{markdown}</ReactMarkdown>;
+  const transformImageUri: TransformImage = (src: string, alt: string, title: string | null) => {
+    const url = images[src] ?? "";
+    console.log(url);
+    return url;
+  };
+
+  return (
+    <div className="help">
+      <ReactMarkdown components={{ h2: HeadingRenderer }} transformImageUri={transformImageUri}>
+        {markdown}
+      </ReactMarkdown>
+    </div>
+  );
 };

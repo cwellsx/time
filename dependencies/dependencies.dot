@@ -1,9 +1,9 @@
 digraph SRC {
-  "App.tsx" -> {"error" "fetch" "io" "pages" "topbar" "appContext.ts"};
+  "App.tsx" -> {"error" "io" "pages" "topbar" "appContext.ts"};
   "appContext.ts" -> {};
 
   "error" [shape=folder];
-  "fetch" [shape=folder];
+  "help" [shape=folder];
   "io" [shape=folder];
   "model" [shape=folder];
   "pages" [shape=folder];
@@ -14,10 +14,6 @@ digraph SRC {
   
   "error" -> {"ErrorMessage.tsx"};
   "ErrorMessage.tsx" -> {};
-
-  "fetch" -> {"fetchHooks.ts"};
-  "fetchHooks.ts" -> {"error" "help.md" "appContext.ts"}
-  "help.md" -> {}
 
   "io" -> {"controller.ts" "ioHooks.ts" "tests.ts"};
   "io" -> {"model" "states"} [style=dotted];
@@ -43,7 +39,7 @@ digraph SRC {
   "What.tsx" -> {"tabs"};
   "History.tsx" -> {"sums.ts" "EditWhat.tsx"};
   "Settings.tsx" -> {};
-  "Help.tsx" -> {};
+  "Help.tsx" -> {"help"};
   "Tests.tsx" -> {"weeks.ts" "sums.ts" "appContext.ts"};
   "sums.ts" -> {"weeks.ts" "date.ts"};
   "EditWhat.tsx" -> {"tags"};

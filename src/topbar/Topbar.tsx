@@ -1,9 +1,9 @@
-import "./topbar.sass";
+import './topbar.sass';
 
-import React from "react";
-import * as ReactRouter from "react-router-dom";
+import React from 'react';
+import * as ReactRouter from 'react-router-dom';
 
-import * as Icon from "./topbarIcons";
+import * as Icon from './topbarIcons';
 
 export const Topbar: React.FunctionComponent = () => {
   return (
@@ -35,7 +35,7 @@ export const Topbar: React.FunctionComponent = () => {
             </ReactRouter.NavLink>
           </li>
           <li className="icon">
-            <ReactRouter.NavLink to="/help" title="Settings">
+            <ReactRouter.NavLink to="/help" title="Help">
               <Icon.Help width="24" height="24" />
               <span>Help</span>
             </ReactRouter.NavLink>
