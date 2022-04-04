@@ -38,6 +38,7 @@ export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
 
   return (
     <div className="help">
+      {/* <ReactMarkdown components={{ h2: HeadingRenderer, link: HeadingRenderer }} transformImageUri={transformImageUri}> */}
       <ReactMarkdown components={{ h2: HeadingRenderer }} transformImageUri={transformImageUri}>
         {markdown}
       </ReactMarkdown>
