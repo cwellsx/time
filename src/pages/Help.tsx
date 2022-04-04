@@ -4,7 +4,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { HeadingProps, TransformImage } from 'react-markdown/lib/ast-to-react';
 
-import { help, images } from '../help';
+import { help, images, toc } from '../help';
 
 // const markdown = raw("../fetch/help.md");
 
@@ -38,8 +38,11 @@ export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
 
   return (
     <div className="help">
+      <div className="toc">
+        <ReactMarkdown transformImageUri={transformImageUri}>{toc}</ReactMarkdown>
+      </div>
       {/* <ReactMarkdown components={{ h2: HeadingRenderer, link: HeadingRenderer }} transformImageUri={transformImageUri}> */}
-      <ReactMarkdown components={{ h2: HeadingRenderer }} transformImageUri={transformImageUri}>
+      <ReactMarkdown components={{ h1: HeadingRenderer, h2: HeadingRenderer }} transformImageUri={transformImageUri}>
         {markdown}
       </ReactMarkdown>
     </div>

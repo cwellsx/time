@@ -1,5 +1,4 @@
 #content .help
-  padding: 0 0.5em
 
   & > *
     margin-bottom: 1.5rem
@@ -18,3 +17,29 @@
   li,
   li > p
     margin-bottom: 0.5rem
+
+  .toc
+    position: fixed
+    top: 74px
+    left: 0
+    white-space: nowrap
+    padding: 0 1rem
+
+    ul
+      list-style: none
+      font-weight: bold
+      font-size: 1.25rem
+      padding-left: 0
+
+      ul
+        padding: 0.5rem 0 0.5rem 1.5rem
+        font-size: 1.125rem
+        font-weight: normal
+
+        li
+          margin-bottom: 4px
+
+  @media (max-width:1400px)
+    .toc
+      position: static
+      padding: 0

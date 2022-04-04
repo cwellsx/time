@@ -1,0 +1,5 @@
+- [Help](./help#help)
+  - [How it works](./help#how-it-works)
+  - [How to use it](./help#how-to-use-it)
+  - [Tags and Tasks](./help#tags-and-tasks)
+  - [Toolbar](./help#toolbar)

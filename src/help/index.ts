@@ -14,4 +14,5 @@ export const images: Images = {
   stop: stopUrl,
 };
 
+export const toc = raw("./toc.md");
 export const help = raw("./help.md");

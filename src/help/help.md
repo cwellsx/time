@@ -15,6 +15,8 @@ It's pretty good for privacy, your data never leaves your browser, no data is se
 
 If you have more than one browser or machine, data isn't shared: each has its own independent database.
 
+You needn't keep the web page open when you're working: just bookmark it so you can update it any time.
+
 ## How to use it
 
 The UI needs only a minimum of input:
