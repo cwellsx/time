@@ -3,3 +3,4 @@
   - [How to use it](./help#how-to-use-it)
   - [Tags and Tasks](./help#tags-and-tasks)
   - [Toolbar](./help#toolbar)
+- [Now](/help/now#now)

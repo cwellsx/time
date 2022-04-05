@@ -24,7 +24,9 @@ const App: React.FunctionComponent = () => {
             <ReactRouter.Route path="/what" element={<What />} />
             <ReactRouter.Route path="/history" element={<History />} />
             <ReactRouter.Route path="/settings" element={<Settings />} />
-            <ReactRouter.Route path="/help" element={<Help />} />
+            <ReactRouter.Route path="/help" element={<Help />}>
+              <ReactRouter.Route path=":helpId" element={<Help />} />
+            </ReactRouter.Route>
             <ReactRouter.Route path="/tests" element={<Tests />} />
             <ReactRouter.Route path="*" element={<p>URL Not Found</p>} />
           </ReactRouter.Routes>
@@ -96,9 +98,11 @@ const Settings: React.FunctionComponent = () => {
 // };
 
 const Help: React.FunctionComponent = () => {
+  let { helpId } = ReactRouter.useParams();
+  console.log(helpId);
   return (
     <React.Fragment>
-      <Page.Help />
+      <Page.Help helpId={helpId} />
     </React.Fragment>
   );
 };

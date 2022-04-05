@@ -16,3 +16,4 @@ export const images: Images = {
 
 export const toc = raw("./toc.md");
 export const help = raw("./help.md");
+export const now = raw("./now.md");
