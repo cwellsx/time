@@ -27,17 +27,23 @@
 
     ul
       list-style: none
+
+    & > ul
       font-weight: bold
       font-size: 1.25rem
       padding-left: 0
 
+      & > li
+        margin-bottom: 1.5rem
+
       ul
-        padding: 0.5rem 0 0.5rem 1.5rem
-        font-size: 1.125rem
+        padding-top: 0.5rem
+        padding-left: 1rem
+        font-size: 1rem
         font-weight: normal
 
         li
-          margin-bottom: 4px
+          //margin-bottom: 4px
 
   @media (max-width:1400px)
     .toc

@@ -6,17 +6,6 @@ Use this to:
 - Record **what** you did, whenever you stop
 - Review a **history** of what you've done.
 
-## How it works
-
-You don't log in.
-There is no back-end database.
-Data you enter is permanently stored **within your browser**.
-It's pretty good for privacy, your data never leaves your browser, no data is sent back to the server.
-
-If you have more than one browser or machine, data isn't shared: each has its own independent database.
-
-You needn't keep the web page open when you're working: just bookmark it so you can update it any time.
-
 ## How to use it
 
 The UI needs only a minimum of input:
@@ -51,6 +40,17 @@ I use **tags** to define recurring types of activity (for example, "meeting", "c
 - These activities tend to recur, maybe year after year
 - Doing a task might include several activities (or some types of activity are instead of a task)
 - You might want to breakdown how much time you spend on various activities
+
+## How it works
+
+You don't log in.
+There is no back-end database.
+Data you enter is permanently stored **within your browser**.
+It's pretty good for privacy, your data never leaves your browser, no data is sent back to the server.
+
+If you have more than one browser or machine, data isn't shared: each has its own independent database.
+
+You needn't keep the web page open when you're working: just bookmark it so you can update it any time.
 
 ## Toolbar
 
