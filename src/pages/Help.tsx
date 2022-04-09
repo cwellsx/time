@@ -5,16 +5,20 @@ import ReactMarkdown from 'react-markdown';
 import { HeadingProps, TransformImage } from 'react-markdown/lib/ast-to-react';
 import * as ReactRouter from 'react-router-dom';
 
-import { help, images, now } from '../help';
+import { help, images, now, what } from '../help';
+import * as Topbar from '../topbar';
 
 type HelpProps = {
   helpId: string | undefined;
 };
 
+type ImportedSvg = React.FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string | undefined }>;
+
 type Page = {
   markdown: string;
   title: string;
   helpId: string | undefined;
+  icon: ImportedSvg;
 };
 
 const pages: Page[] = [
@@ -22,11 +26,19 @@ const pages: Page[] = [
     markdown: help,
     title: "Help",
     helpId: undefined,
+    icon: Topbar.Icon.Help,
   },
   {
     markdown: now,
     title: "Now",
     helpId: "now",
+    icon: Topbar.Icon.Now,
+  },
+  {
+    markdown: what,
+    title: "What",
+    helpId: "what",
+    icon: Topbar.Icon.Tags,
   },
 ];
 
@@ -43,13 +55,18 @@ function getToc(page: Page): JSX.Element {
       {pages.map((it) => {
         const hrefPage = "/help" + (it.helpId ? "/" + it.helpId : "");
         const h1Slug = getSlug(it.title);
+        const h1Text = (
+          <>
+            {<it.icon />} {it.title}
+          </>
+        );
         return (
           <li key={h1Slug}>
             {it !== page ? (
-              <ReactRouter.NavLink to={hrefPage}>{it.title}</ReactRouter.NavLink>
+              <ReactRouter.NavLink to={hrefPage}>{h1Text}</ReactRouter.NavLink>
             ) : (
               <>
-                <a href={hrefPage + "#" + h1Slug}>{it.title}</a>
+                <a href={hrefPage + "#" + h1Slug}>{h1Text}</a>
                 {!h2s.length ? undefined : (
                   <ul>
                     {h2s.map((it) => {

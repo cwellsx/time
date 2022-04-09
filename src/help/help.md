@@ -19,6 +19,8 @@ The UI needs only a minimum of input:
 
    ![Stop button](stop)
 
+   You can optionally also define [Tags and Tasks](./what).
+
 The period and the comment will be visible on the **History** page.
 
 ## Tags and Tasks
@@ -46,7 +48,9 @@ I use **tags** to define recurring types of activity (for example, "meeting", "c
 You don't log in.
 There is no back-end database.
 Data you enter is permanently stored **within your browser**.
-It's pretty good for privacy, your data never leaves your browser, no data is sent back to the server.
+
+- That's good for privacy: your data never leaves your browser, no data is sent back to the server.
+- It's fast, responds instantly, for the same reason: there's no network delay, it's a local application.
 
 If you have more than one browser or machine, data isn't shared: each has its own independent database.
 
