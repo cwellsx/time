@@ -5,54 +5,26 @@ import ReactMarkdown from 'react-markdown';
 import { HeadingProps, TransformImage } from 'react-markdown/lib/ast-to-react';
 import * as ReactRouter from 'react-router-dom';
 
-import { help, images, now, what } from './markdown';
-import * as Icon from './icons';
+import { images } from './markdown';
+import { pages, Page } from './pageProperties';
 
 type HelpProps = {
   helpId: string | undefined;
 };
-
-type ImportedSvg = React.FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string | undefined }>;
-
-type Page = {
-  markdown: string;
-  title: string;
-  helpId: string | undefined;
-  icon: ImportedSvg;
-};
-
-const pages: Page[] = [
-  {
-    markdown: help,
-    title: "Help",
-    helpId: undefined,
-    icon: Icon.Help,
-  },
-  {
-    markdown: now,
-    title: "Now",
-    helpId: "now",
-    icon: Icon.Now,
-  },
-  {
-    markdown: what,
-    title: "What",
-    helpId: "what",
-    icon: Icon.Tags,
-  },
-];
 
 function getSlug(text: string): string {
   return text.toLowerCase().replace(/\W/g, "-");
 }
 
 function getToc(page: Page): JSX.Element {
+  if (!page.markdown) return <>should not hqppen</>;
   const lines = page.markdown.split(/\r?\n/);
   const h2s = lines.filter((it) => it.startsWith("## ")).map((it) => it.substring(3));
   console.log(JSON.stringify(h2s));
   return (
     <ul>
       {pages.map((it) => {
+        if (!it.markdown) return undefined;
         const hrefPage = "/help" + (it.helpId ? "/" + it.helpId : "");
         const h1Slug = getSlug(it.title);
         const h1Text = (
@@ -133,7 +105,7 @@ export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
       }}
       transformImageUri={transformImageUri}
     >
-      {page.markdown}
+      {page.markdown ?? "should not hqppen"}
     </ReactMarkdown>
   );
 
