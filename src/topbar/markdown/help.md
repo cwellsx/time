@@ -8,20 +8,20 @@ Use this to:
 
 ## How to use it
 
-The UI needs only a minimum of input:
+The UI needs only a minimum of input, on the [Now](/help/now) page;
 
-1. On the Now page, press the **Start** button
+1. Press the **Start** button
 
    ![Start button](start)
 
 1. Do some work
-1. When you finish or pause, type a **comment** to say what you have done, and press the **Stop** button.
+1. When you finish or pause, type a **Comment** to say what you have done, and press the **Stop** button.
 
    ![Stop button](stop)
 
-   You can optionally also define [Tags and Tasks](./what).
+Finished periods can be seen on the [History](/help/history) page.
 
-The period and the comment will be visible on the **History** page.
+As well as comments you can also define [Tags and Tasks](/help/what).
 
 ## Tags and Tasks
 
@@ -47,17 +47,22 @@ I use **tags** to define recurring types of activity (for example, "meeting", "c
 
 You don't log in.
 There is no back-end database.
-Data you enter is permanently stored **within your browser**.
+Data you enter is [permanently stored](/help/settings) in your browser.
 
-- That's good for privacy: your data never leaves your browser, no data is sent back to the server.
-- It's fast, responds instantly, for the same reason: there's no network delay, it's a local application.
+- Privacy &ndash; your data never leaves your browser, it is not sent back to the server.
+- Speed &ndash; the UI responds instantly, no network delay, it's a local application.
+
+You needn't keep the web page open when you're working, it won't forget your data, just bookmark it so you can update it any time.
 
 If you have more than one browser or machine, data isn't shared: each has its own independent database.
-
-You needn't keep the web page open when you're working: just bookmark it so you can update it any time.
 
 ## Toolbar
 
 Click the toolbar buttons to choose which page:
 
 ![Toolbar](toolbar)
+
+- [Now](/help/now)
+- [What](/help/what)
+- [History](/help/history)
+- [Settings](/help/settings)

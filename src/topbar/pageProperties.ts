@@ -1,16 +1,24 @@
 import React from 'react';
 
-import { help, now, what } from './markdown';
+import { help, now, what, history, settings } from './markdown';
 import * as Icon from './icons';
 
 type ImportedSvg = React.FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string | undefined }>;
 
 export type Page = {
-    href: string,
-    markdown: string | undefined;
-    title: string;
-    helpId: string | undefined;
-    icon: ImportedSvg;
+  href: string,
+  markdown: string | undefined;
+  title: string;
+  helpId: string | undefined;
+  icon: ImportedSvg;
+};
+
+export type HelpPage = {
+  href: string,
+  markdown: string;
+  title: string;
+  helpId: string | undefined;
+  icon: ImportedSvg;
 };
 
 export const pages: Page[] = [
@@ -30,14 +38,14 @@ export const pages: Page[] = [
     },
     {
         href: "/history",
-        markdown: undefined,
+        markdown: history,
         title: "History",
         helpId: "history",
         icon: Icon.History,
     },
     {
         href: "/settings",
-        markdown: undefined,
+        markdown: settings,
         title: "Settings",
         helpId: "settings",
         icon: Icon.Settings,
@@ -58,3 +66,13 @@ export const pages: Page[] = [
     },
 ];
 
+function getHelpPages(): HelpPage[] {
+  const all: HelpPage[] = pages.filter(it => !!it.markdown) as HelpPage[];
+  const index = all.findIndex(it => !it.helpId);
+  const help = all[index]
+  all.splice(index, 1)
+  all.splice(0, 0, help)
+  return all
+}
+
+export const helpPages: HelpPage[] = getHelpPages();

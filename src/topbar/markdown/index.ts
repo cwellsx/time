@@ -24,3 +24,5 @@ export const toc = raw("./toc.md");
 export const help = raw("./help.md");
 export const now = raw("./now.md");
 export const what = raw("./what.md");
+export const history = raw("./history.md");
+export const settings = raw("./settings.md");

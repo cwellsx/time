@@ -6,7 +6,7 @@ import { HeadingProps, TransformImage } from 'react-markdown/lib/ast-to-react';
 import * as ReactRouter from 'react-router-dom';
 
 import { images } from './markdown';
-import { pages, Page } from './pageProperties';
+import { helpPages, HelpPage } from './pageProperties';
 
 type HelpProps = {
   helpId: string | undefined;
@@ -16,15 +16,13 @@ function getSlug(text: string): string {
   return text.toLowerCase().replace(/\W/g, "-");
 }
 
-function getToc(page: Page): JSX.Element {
-  if (!page.markdown) return <>should not hqppen</>;
+function getToc(page: HelpPage): JSX.Element {
   const lines = page.markdown.split(/\r?\n/);
   const h2s = lines.filter((it) => it.startsWith("## ")).map((it) => it.substring(3));
   console.log(JSON.stringify(h2s));
   return (
     <ul>
-      {pages.map((it) => {
-        if (!it.markdown) return undefined;
+      {helpPages.map((it) => {
         const hrefPage = "/help" + (it.helpId ? "/" + it.helpId : "");
         const h1Slug = getSlug(it.title);
         const h1Text = (
@@ -62,7 +60,7 @@ function getToc(page: Page): JSX.Element {
 
 export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
   const helpId = props.helpId;
-  const page: Page = pages.find((it) => it.helpId == helpId) ?? pages[0];
+  const page: HelpPage = helpPages.find((it) => it.helpId == helpId) ?? helpPages[0];
 
   // [Headings are missing anchors / ids](https://github.com/remarkjs/react-markdown/issues/69)
   function HeadingRenderer(props: React.PropsWithChildren<HeadingProps>) {
@@ -87,7 +85,9 @@ export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
     >
   ) {
     console.log("ReactRouter.NavLink");
-    return <ReactRouter.NavLink to={props.href!}>{props.children}</ReactRouter.NavLink>;
+    const page = helpPages.find(it => props.href === `/help/${it.helpId}`)
+    const icon = page ?<page.icon /> : undefined;
+    return <ReactRouter.NavLink to={props.href!}>{icon}{props.children}</ReactRouter.NavLink>;
   }
 
   const transformImageUri: TransformImage = (src: string, alt: string, title: string | null) => {
@@ -105,7 +105,7 @@ export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
       }}
       transformImageUri={transformImageUri}
     >
-      {page.markdown ?? "should not hqppen"}
+      {page.markdown}
     </ReactMarkdown>
   );
 

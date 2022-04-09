@@ -11,7 +11,7 @@ export const Topbar: React.FunctionComponent = () => {
       <div className="container">
         <ul className="icons">
           {pages.map((it) => (
-            <li className="icon">
+            <li key={it.title} className="icon">
               <ReactRouter.NavLink to={it.href} title={it.title}>
                 <it.icon width="24" height="24" />
                 <span>{it.title}</span>
