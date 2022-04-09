@@ -5,8 +5,8 @@ import ReactMarkdown from 'react-markdown';
 import { HeadingProps, TransformImage } from 'react-markdown/lib/ast-to-react';
 import * as ReactRouter from 'react-router-dom';
 
-import { help, images, now, what } from '../help';
-import * as Topbar from '../topbar';
+import { help, images, now, what } from './markdown';
+import * as Icon from './icons';
 
 type HelpProps = {
   helpId: string | undefined;
@@ -26,19 +26,19 @@ const pages: Page[] = [
     markdown: help,
     title: "Help",
     helpId: undefined,
-    icon: Topbar.Icon.Help,
+    icon: Icon.Help,
   },
   {
     markdown: now,
     title: "Now",
     helpId: "now",
-    icon: Topbar.Icon.Now,
+    icon: Icon.Now,
   },
   {
     markdown: what,
     title: "What",
     helpId: "what",
-    icon: Topbar.Icon.Tags,
+    icon: Icon.Tags,
   },
 ];
 

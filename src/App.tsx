@@ -102,7 +102,7 @@ const Help: React.FunctionComponent = () => {
   console.log(helpId);
   return (
     <React.Fragment>
-      <Page.Help helpId={helpId} />
+      <Component.Help helpId={helpId} />
     </React.Fragment>
   );
 };
