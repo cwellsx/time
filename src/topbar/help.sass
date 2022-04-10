@@ -1,9 +1,13 @@
 #content .help
 
-  & > *
-    margin-bottom: 1.5rem
+  & > *,
+  li > p
+    margin-bottom: 0.5rem
 
 .help
+  h2
+    margin-top: 1.5rem
+
   img
     padding: 0.5em
     border: 1px solid #c0c0c0
@@ -18,14 +22,6 @@
     width: 1em
     fill: #4c8dbd
     margin-right: 0.25em
-
-  p+ul,
-  p+ol
-    margin-top: -1rem
-
-  li,
-  li > p
-    margin-bottom: 0.5rem
 
   .toc
     position: fixed
@@ -42,20 +38,17 @@
       font-size: 1.25rem
       padding-left: 0
 
-      & > li
-        margin-bottom: 1.5rem
+      & > li:not(:first-child)
+        margin-top: 1.5rem
 
-        // svg
-        //   height: 1.25rem
+      & > li:last-child
+        margin-bottom: 1.5rem
 
       ul
         padding-top: 0.5rem
         padding-left: 25px
         font-size: 1rem
         font-weight: normal
-
-        li
-          //margin-bottom: 4px
 
   @media (max-width:1279px)
     .toc

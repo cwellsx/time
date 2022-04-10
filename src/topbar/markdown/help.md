@@ -6,20 +6,22 @@
 
 ## How to use it
 
-You only need a minimum of input. On the [Now](/help/now) page when you're working:
+This needs only a minimum of user input.
+On the [Now](/help/now) page:
 
-1. Press the **Start** button
+1. When you begin work, press the **Start** button
 
    ![Start button](start)
 
-1. Do some work
-1. When you finish or pause, type a **Comment** to say what you did, and press the **Stop** button.
+   Do some work...
+
+1. Then when you finish or pause, type a **Comment** to say what you did, and press the **Stop** button.
 
    ![Stop button](stop)
 
-Finished periods can be seen on the [History](/help/history) page.
+You can review completed periods on the [History](/help/history) page.
 
-As well as comments you can also define [Tags and Tasks](/help/what).
+And as well as comments you can also define [Tags and Tasks](/help/what).
 
 ## How it works
 

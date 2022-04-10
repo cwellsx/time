@@ -1,21 +1,20 @@
 # Now
 
-Press the Start button when you start doing something, then record what you did and Stop when you finish.
+- When you start doing something, click the Start button 
+- When you finish or pause, record what you did and click Stop.
 
 ## Time Started or Stopped
 
-The first text on the page displays the current state:
+The first text on the page displays the current state, and the time at which you clicked the button:
 
-- Started after you pressed the Start button
-- Stopped after you pressed the Stop button
-
-It also displays the time at which you pressed the button.
+- Started &ndash; after you click the Start button
+- Stopped &ndash; after you click the Stop button
 
 When the state is Stopped, the only element on the page is the Start button.
 
 ## Start
 
-Press the Start button to begin recording a time period.
+Click the Start button to begin recording a time period.
 
 ![Start button](start)
 
@@ -30,7 +29,7 @@ The text changes to Started and new elements are displayed on the page:
 When you finish something or pause:
 
 - Type a comment to say what you have done
-- Press the Stop button
+- Click the Stop button
 
 ![Stop button](stop)
 
@@ -38,7 +37,7 @@ The state changes to Stopped.
 
 ## Next
 
-Pressing Next is just like pressing Stop and then Start again &ndash;
+Clicking Next is just like clicking Stop and then Start again &ndash;
 the current period is ended and recorded in the History,
 but the state remains Started instead of changing to Stopped.
 
@@ -52,4 +51,4 @@ Use this if you start a period but don't do anything.
 - If the most recent event was Start, then the event is deleted from the database
 - Or if the most recent event was Next, then the event is changed to Stop
 
-In both cases, the state after pressing the Cancel button is Stopped.
+In both cases, the state after clicking the Cancel button is Stopped.
