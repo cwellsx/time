@@ -27,7 +27,7 @@ function getToc(page: HelpPage): JSX.Element {
         const h1Slug = getSlug(it.title);
         const h1Text = (
           <>
-            {<it.icon />} {it.title}
+            {<it.icon />}{it.title}
           </>
         );
         return (
@@ -62,40 +62,7 @@ export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
   const helpId = props.helpId;
   const page: HelpPage = helpPages.find((it) => it.helpId == helpId) ?? helpPages[0];
 
-  // [Headings are missing anchors / ids](https://github.com/remarkjs/react-markdown/issues/69)
-  function HeadingRenderer(props: React.PropsWithChildren<HeadingProps>) {
-    function flatten(text: any, child: any): string {
-      return typeof child === "string"
-        ? text + child
-        : React.Children.toArray(child.props.children).reduce(flatten, text);
-    }
-
-    const children = React.Children.toArray(props.children);
-    const text = children.reduce(flatten, "") as string;
-    const slug = getSlug(text);
-
-    return React.createElement("h" + props.level, { id: slug }, props.children);
-  }
-
   console.log("Help");
-
-  function AnchorRenderer(
-    props: React.PropsWithChildren<
-      React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>
-    >
-  ) {
-    console.log("ReactRouter.NavLink");
-    const page = helpPages.find(it => props.href === `/help/${it.helpId}`)
-    const icon = page ?<page.icon /> : undefined;
-    return <ReactRouter.NavLink to={props.href!}>{icon}{props.children}</ReactRouter.NavLink>;
-  }
-
-  const transformImageUri: TransformImage = (src: string, alt: string, title: string | null) => {
-    const url = images[src] ?? "";
-    // console.log(url);
-    return url;
-  };
-
   const content = (
     <ReactMarkdown
       components={{
@@ -116,3 +83,37 @@ export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
     </div>
   );
 };
+
+
+// [Headings are missing anchors / ids](https://github.com/remarkjs/react-markdown/issues/69)
+function HeadingRenderer(props: React.PropsWithChildren<HeadingProps>) {
+  function flatten(text: any, child: any): string {
+    return typeof child === "string"
+      ? text + child
+      : React.Children.toArray(child.props.children).reduce(flatten, text);
+  }
+
+  const children = React.Children.toArray(props.children);
+  const text = children.reduce(flatten, "") as string;
+  const slug = getSlug(text);
+
+  return React.createElement("h" + props.level, { id: slug }, props.children);
+}
+
+function AnchorRenderer(
+  props: React.PropsWithChildren<
+    React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>
+  >
+) {
+  console.log("ReactRouter.NavLink");
+  const page = helpPages.find(it => props.href === `/help/${it.helpId}`)
+  const icon = page ? <page.icon /> : undefined;
+  return <ReactRouter.NavLink to={props.href!}>{icon}{props.children}</ReactRouter.NavLink>;
+}
+
+const transformImageUri: TransformImage = (src: string, alt: string, title: string | null) => {
+  const url = images[src] ?? "";
+  // console.log(url);
+  return url;
+};
+

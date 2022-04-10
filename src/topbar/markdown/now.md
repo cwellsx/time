@@ -1,8 +1,8 @@
 # Now
 
-Press the Start button when you start doing something, and Stop when you finish.
+Press the Start button when you start doing something, then record what you did and Stop when you finish.
 
-## Started or Stopped, and Time
+## Time Started or Stopped
 
 The first text on the page displays the current state:
 
@@ -53,15 +53,3 @@ Use this if you start a period but don't do anything.
 - Or if the most recent event was Next, then the event is changed to Stop
 
 In both cases, the state after pressing the Cancel button is Stopped.
-
-## Task and Tags
-
-If you have defined Tasks or Tags, then these input elements are also on the page, as well as for a Comment.
-
-![Tags and Tasks](tags1)
-
-Either type the text you want, or begin to type and then select the one you want from the popup list.
-
-![Begin to type](tags2)
-
-![Select](tags3)
