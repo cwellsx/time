@@ -73,6 +73,7 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
     ["Bug", "bug"],
     ["PR", "pr"],
     ["Pull Request", "pr"],
+    ["Requirement", "req"],
   ];
 
   function extractKey(description: string): [string, string] | undefined {

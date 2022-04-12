@@ -6,6 +6,9 @@ import tags1Url from './tags1-min.png';
 import tags2Url from './tags2-min.png';
 import tags3Url from './tags3-min.png';
 import toolbarUrl from './toolbar-min.png';
+import whatUrl from './what-min.png';
+import what1Url from './what1-min.png';
+import what2Url from './what2-min.png';
 
 interface Images {
   [index: string]: string | undefined;
@@ -18,6 +21,9 @@ export const images: Images = {
   tags1: tags1Url,
   tags2: tags2Url,
   tags3: tags3Url,
+  what: whatUrl,
+  what1: what1Url,
+  what2: what2Url,
 };
 
 export const toc = raw("./toc.md");

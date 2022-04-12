@@ -1,11 +1,11 @@
 # Now
 
-- When you start doing something, click the Start button 
+- When you start doing something, click the Start button
 - When you finish or pause, record what you did and click Stop.
 
 ## Time Started or Stopped
 
-The first text on the page displays the current state, and the time at which you clicked the button:
+The first text on the page shows the current state, and at what time you clicked the button:
 
 - Started &ndash; after you click the Start button
 - Stopped &ndash; after you click the Stop button
