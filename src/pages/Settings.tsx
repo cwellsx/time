@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useSetError } from '../error';
-import { showIsoDay } from './date';
+import { showIsoDay } from './helpDate';
 
 import type { RequiredType } from "../model";
 import type { SettingsState } from "../states";

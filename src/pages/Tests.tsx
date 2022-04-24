@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { useSetTesting, useTesting } from '../io';
-import { aggregate } from './sums';
+import { aggregate } from './helpSums';
+import { Weeks } from './helpWeeks';
 import { testEditWhen } from './testEditWhen';
-import { Weeks } from './weeks';
 
 import type { Period, TestResults } from "../model";
 

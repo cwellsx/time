@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { showWhen } from './date';
 import { EditWhat, WhatIsValid } from './EditWhat';
+import { showWhen } from './helpDate';
 
 import type { TimeStart, TimeStop } from "../model";
 import type { NowState } from "../states";

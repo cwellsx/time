@@ -6,7 +6,7 @@ import { useSetError } from '../error';
 import { EditWhat, WhatIsValid } from './EditWhat';
 import { EditWhen, WhenIsValid } from './EditWhen';
 import { helpEditWhen } from './helpEditWhen';
-import { aggregate } from './sums';
+import { aggregate } from './helpSums';
 
 import type { Period, Time, What } from "../model";
 import type { HistoryState } from "../states";

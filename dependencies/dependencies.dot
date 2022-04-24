@@ -36,17 +36,18 @@ digraph SRC {
 
   "pages" -> {"Now.tsx" "What.tsx" "History.tsx" "Settings.tsx" "Tests.tsx"};
   "pages" -> {"model" "states"} [style=dotted];
-  "date.ts" -> {};
-  "Now.tsx" -> {"date.ts" "EditWhat.tsx"};
+  "helpDate.ts" -> {};
+  "helpWeeks.ts" -> {};
+  "Now.tsx" -> {"helpDate.ts" "EditWhat.tsx"};
   "What.tsx" -> {"tabs" "error"};
-  "History.tsx" -> {"sums.ts" "EditWhat.tsx" "EditWhen.tsx" "helpEditWhen.ts" "error"};
-  "Settings.tsx" -> {"error" "date.ts"};
-  "Tests.tsx" -> {"weeks.ts" "sums.ts" "io" "testEditWhen.ts"};
-  "sums.ts" -> {"weeks.ts" "date.ts"};
+  "History.tsx" -> {"helpSums.ts" "EditWhat.tsx" "EditWhen.tsx" "helpEditWhen.ts" "error"};
+  "Settings.tsx" -> {"error" "helpDate.ts"};
+  "Tests.tsx" -> {"helpWeeks.ts" "helpSums.ts" "io" "testEditWhen.ts"};
+  "helpSums.ts" -> {"helpWeeks.ts" "helpDate.ts"};
   "testEditWhen.ts" -> {"helpEditWhen.ts" "io"};
-  "helpEditWhen.ts" -> {"date.ts"};
+  "helpEditWhen.ts" -> {"helpDate.ts"};
   "EditWhat.tsx" -> {"tags"};
-  "EditWhen.tsx" -> {"date.ts" "error"}
+  "EditWhen.tsx" -> {"helpDate.ts" "error"}
 
   "states" -> {"nowState.ts" "whatState.ts" "historyState.ts" "settingsState.ts" "editTagsState.ts" "model"} [style=dotted];
   "nowState.ts" -> {"editTagsState.ts"} [style=dotted];

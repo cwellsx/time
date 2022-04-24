@@ -1,5 +1,5 @@
-import { showDay, showTime } from './date';
-import { IsoWeek, nextWeek, Weeks } from './weeks';
+import { showDay, showTime } from './helpDate';
+import { IsoWeek, nextWeek, Weeks } from './helpWeeks';
 
 import type { Period, What } from "../model";
 

@@ -1,4 +1,4 @@
-import { showTime } from './date';
+import { showTime } from './helpDate';
 
 import type { Period, Time } from "../model";
 
