@@ -4,13 +4,12 @@ table.history
   td
     border: none
 
-    &:first-child, &:nth-child(2)
+    &:first-child, &.time
       /* 20px is too narrow but the table column will expand to fit the text, I just want it as narrow as possible */
       width: 20px
       white-space: nowrap
 
     &:first-child
-      text-align: right
       padding-left: 0
 
     &:last-child
@@ -20,17 +19,36 @@ table.history
     textarea
       width: 100%
 
-  td.editable:hover
-    background-color: rgb(223, 230, 235)
+  .day, .week
+    td:first-child
+      text-align: right
 
-  td.editable:hover:after
-    content: ""
-    display: block
-    background: url("edit_note_black_24dp.svg") no-repeat
-    width: 20px
-    height: 20px
-    float: right
-    margin: 0 6px 0 0
+  tr.editable
+    td:hover
+      background-color: rgb(223, 230, 235)
+
+    // td:nth-child(3):hover:after
+    //   content: ""
+    //   display: block
+    //   background: url("edit_note_black_24dp.svg") no-repeat
+    //   width: 20px
+    //   height: 20px
+    //   float: right
+    //   margin: 0 6px 0 0
+
+    &:hover
+      position: relative
+
+    &:hover:after
+      content: ""
+      display: block
+      background: url("edit_note_black_24dp.svg") no-repeat
+      width: 20px
+      height: 20px
+      // float: right
+      margin: 0 6px 0 0
+      position: absolute
+      right: -26px
 
   .week, .day
 
@@ -42,10 +60,14 @@ table.history
     td:first-child
       font-size: 1.2rem
       padding-top: 1.5rem
-      padding-bottom: 0.5rem
 
     td
       vertical-align: baseline
+
+  .day
+
+    td
+      padding-top: 0.5rem
 
   .span
 

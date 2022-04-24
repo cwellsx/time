@@ -29,8 +29,10 @@ interface Schema extends DBSchema {
   };
 }
 
-async function open(dbName: DbName): Promise<IDBPDatabase<Schema>> {
-  const db = await openDB<Schema>(dbName, 1, {
+export type Database = IDBPDatabase<Schema>;
+
+export async function open(dbName: DbName): Promise<Database> {
+  const db: Database = await openDB<Schema>(dbName, 1, {
     upgrade(db, oldVersion, newVersion, transaction) {
       if (oldVersion < 1) {
         db.createObjectStore("times", {
@@ -49,7 +51,7 @@ async function open(dbName: DbName): Promise<IDBPDatabase<Schema>> {
   return db;
 }
 
-export class Database {
+export class Fetched {
   constructor(
     dbName: DbName,
     times: Time[],
@@ -74,8 +76,8 @@ export class Database {
 }
 
 export class EditDatabase {
-  private readonly db: IDBPDatabase<Schema>;
-  constructor(db: IDBPDatabase<Schema>) {
+  protected readonly db: Database;
+  constructor(db: Database) {
     this.db = db;
   }
   putConfig(config: Config): Promise<number> {
@@ -111,12 +113,24 @@ export class EditDatabase {
   addWhat(what: "tags" | "tasks", tag: TagInfo): Promise<string> {
     return this.db.add(what, tag);
   }
-  editHistory(timeStop: TimeStop): Promise<number> {
+  editWhat(timeStop: TimeStop): Promise<number> {
     return this.db.put("times", timeStop);
+  }
+  async editWhen(deleted: number[], inserted: Time[]): Promise<void> {
+    const tx = this.db.transaction("times", "readwrite");
+    const store = tx.objectStore("times");
+    for (const when of deleted) {
+      console.log(`delete ${JSON.stringify(when)}`);
+      await store.delete(when);
+    }
+    for (const time of inserted) {
+      console.log(`add ${JSON.stringify(time)}`);
+      await store.add(time);
+    }
   }
 }
 
-export async function fetchDatabase(dbName: DbName): Promise<Database> {
+export async function fetchDatabase(dbName: DbName): Promise<Fetched> {
   console.log("fetchDatabase");
   const db = await open(dbName);
   const tx = db.transaction(["times", "config", "tags", "tasks"]);
@@ -124,7 +138,16 @@ export async function fetchDatabase(dbName: DbName): Promise<Database> {
   const config = await tx.objectStore("config").get(configVersion);
   const tags = await tx.objectStore("tags").getAll();
   const tasks = await tx.objectStore("tasks").getAll();
-  return new Database(dbName, times, tags, tasks, config, await persisted());
+  return new Fetched(dbName, times, tags, tasks, config, await persisted());
+}
+
+export async function clearDatabase(dbName: DbName): Promise<void> {
+  console.log("clearDatabase");
+  const db = await open(dbName);
+  await db.clear("times");
+  await db.clear("config");
+  await db.clear("tags");
+  await db.clear("tasks");
 }
 
 export async function deleteDatabase(dbName: DbName): Promise<void> {

@@ -1,8 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { useSetTesting, useTesting } from "../appContext";
-import { aggregate } from "./sums";
-import { Weeks } from "./weeks";
+import { useSetTesting, useTesting } from '../appContext';
+import { aggregate } from './sums';
+import { testEditWhen } from './testEditWhen';
+import { Weeks } from './weeks';
 
 import type { Period, TestResults } from "../model";
 
@@ -12,10 +13,15 @@ type TestProps = {
 
 export const Tests: React.FunctionComponent<TestProps> = (props: TestProps) => {
   const { results, periods } = props.testResults;
+  const [testEditHistory, setTestEditHistory] = React.useState<boolean | undefined>(undefined);
   const testing = useTesting();
   const setTesting = useSetTesting();
   const handleChange = () => {
     setTesting(!testing);
+  };
+  const onTestEditHistory = () => {
+    const promise = testEditWhen();
+    promise.then((result) => setTestEditHistory(result)).catch((error) => setTestEditHistory(false));
   };
   return (
     <>
@@ -28,10 +34,14 @@ export const Tests: React.FunctionComponent<TestProps> = (props: TestProps) => {
       </ul>
       <p>testDates: {testDates() ? "✅" : "❌"}</p>
       <p>testSums: {testSums(periods) ? "✅" : "❌"}</p>
+      {testEditHistory === undefined ? undefined : <p>testEditWhen: {testEditHistory ? "✅" : "❌"}</p>}
       <p>
         <label>
           <input type="checkbox" checked={testing} onChange={handleChange} /> Display the test database
         </label>
+      </p>
+      <p>
+        <input type="button" value="Test Edit History" onClick={(e) => onTestEditHistory()} />
       </p>
     </>
   );

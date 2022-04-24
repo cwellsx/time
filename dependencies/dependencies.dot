@@ -36,13 +36,16 @@ digraph SRC {
   "pages" -> {"model" "states"} [style=dotted];
   "date.ts" -> {};
   "Now.tsx" -> {"date.ts" "EditWhat.tsx"};
-  "What.tsx" -> {"tabs"};
-  "History.tsx" -> {"sums.ts" "EditWhat.tsx"};
+  "What.tsx" -> {"tabs" "error"};
+  "History.tsx" -> {"sums.ts" "EditWhat.tsx" "EditWhen.tsx" "helpEditWhen.ts"};
   "Settings.tsx" -> {};
   "Help.tsx" -> {"help"};
-  "Tests.tsx" -> {"weeks.ts" "sums.ts" "appContext.ts"};
+  "Tests.tsx" -> {"weeks.ts" "sums.ts" "appContext.ts" "testEditWhen.ts"};
   "sums.ts" -> {"weeks.ts" "date.ts"};
+  "testEditWhen.ts" -> {"helpEditWhen.ts" "io"};
+  "helpEditWhen.ts" -> {"date.ts"};
   "EditWhat.tsx" -> {"tags"};
+  "EditWhen.tsx" -> {"date.ts" "error"}
 
   "states" -> {"nowState.ts" "whatState.ts" "historyState.ts" "settingsState.ts" "editTagsState.ts" "model"} [style=dotted];
   "nowState.ts" -> {"editTagsState.ts"} [style=dotted];

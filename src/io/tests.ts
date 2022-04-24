@@ -37,13 +37,24 @@ function createTimes(year: number, nDays: number, nTimesPerDay: number): Time[] 
 }
 
 const tests: Test[] = [
+  // {
+  //   title: "deleteDatabase",
+  //   run: async () => await DB.deleteDatabase("test"),
+  // },
   {
-    title: "deleteDatabase",
-    run: async () => await DB.deleteDatabase("test"),
+    title: "clearDatabase",
+    run: async () => await DB.clearDatabase("test"),
   },
   {
     title: "fetchDatabase",
     run: async () => await DB.fetchDatabase("test"),
+  },
+  {
+    title: "putConfig",
+    run: async () => {
+      const edit = await DB.editDatabase("test");
+      await edit.putConfig({ historyEditable: true });
+    },
   },
   {
     title: "create tags",
@@ -146,4 +157,33 @@ export async function getTestResults(): Promise<TestResults> {
   const db = await DB.fetchDatabase("test");
   const periods: Period[] = DB.getPeriods(db.times);
   return { results, periods };
+}
+
+export type EditWhenState = {
+  getTimes(): Promise<Time[]>;
+  getPeriods(): Promise<Period[]>;
+  clear(): Promise<void>;
+  editWhen(deleted: number[], inserted: Time[]): Promise<void>;
+  addTimes(times: Time[]): Promise<number[]>;
+};
+
+class TestEditWhenDatabase extends DB.EditDatabase implements EditWhenState {
+  constructor(db: DB.Database) {
+    super(db);
+  }
+  clear(): Promise<void> {
+    return this.db.clear("times");
+  }
+  async getTimes(): Promise<Time[]> {
+    return this.db.getAll("times");
+  }
+  async getPeriods(): Promise<Period[]> {
+    const times = await this.db.getAll("times");
+    return DB.getPeriods(times);
+  }
+}
+
+export async function getTestEditWhen(): Promise<EditWhenState> {
+  const db: DB.Database = await DB.open("test");
+  return new TestEditWhenDatabase(db);
 }

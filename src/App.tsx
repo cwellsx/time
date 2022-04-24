@@ -86,17 +86,6 @@ const Settings: React.FunctionComponent = () => {
   );
 };
 
-// const Help: React.FunctionComponent = () => {
-//   const markdown = useHelp();
-//   if (!markdown) return <h1>Loading...</h1>;
-//   return (
-//     <React.Fragment>
-//       <h1>Help</h1>
-//       <Page.Help markdown={markdown} />
-//     </React.Fragment>
-//   );
-// };
-
 const Help: React.FunctionComponent = () => {
   let { helpId } = ReactRouter.useParams();
   console.log(helpId);

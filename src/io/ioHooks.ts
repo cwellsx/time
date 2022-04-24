@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useSetError, useTesting } from '../appContext';
 import { Controller } from './controller';
-import { Database, EditDatabase, editDatabase, fetchDatabase } from './database';
+import { EditDatabase, editDatabase, fetchDatabase, Fetched } from './database';
 import { persist } from './persist';
 import { getTestResults } from './tests';
 
@@ -22,8 +22,8 @@ type AsyncResult<T> = {
   reload: () => void;
 };
 
-function useDatabase(): AsyncResult<Database> {
-  const [state, setState] = React.useState<Database | undefined>(undefined);
+function useDatabase(): AsyncResult<Fetched> {
+  const [state, setState] = React.useState<Fetched | undefined>(undefined);
   const [version, setVersion] = React.useState(0);
   const testing = useTesting();
   const setError = useSetError();

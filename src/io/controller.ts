@@ -1,4 +1,4 @@
-import { Database, EditDatabase, getPeriods } from './database';
+import { EditDatabase, Fetched, getPeriods } from './database';
 import { persist } from './persist';
 
 import type { SetError } from "../appContext";
@@ -25,31 +25,31 @@ interface Tags {
 
 export class Controller implements NowState, WhatState, HistoryState, SettingsState {
   // private data
-  private readonly database: Database;
+  private readonly fetched: Fetched;
   private readonly editDatabase: () => Promise<EditDatabase>;
   private readonly reload: () => void;
   private readonly setError: SetError;
   private readonly tasks: Tasks;
   private readonly tags: Tags;
 
-  constructor(database: Database, editDatabase: () => Promise<EditDatabase>, reload: () => void, setError: SetError) {
+  constructor(fetched: Fetched, editDatabase: () => Promise<EditDatabase>, reload: () => void, setError: SetError) {
     console.log("controller");
-    this.database = database;
+    this.fetched = fetched;
     this.editDatabase = editDatabase;
     this.reload = reload;
     this.setError = setError;
 
-    const times = database.times;
+    const times = fetched.times;
     const length = times.length;
     this.last = length ? times[length - 1] : undefined;
-    this.config = database.config || {};
-    this.persisted = database.persisted;
+    this.config = fetched.config || {};
+    this.persisted = fetched.persisted;
     this.periods = getPeriods(times);
 
     this.tasks = {};
-    for (const task of database.tasks) this.tasks[task.key] = { tagInfo: task, usedDate: 0 };
+    for (const task of fetched.tasks) this.tasks[task.key] = { tagInfo: task, usedDate: 0 };
     this.tags = {};
-    for (const tag of database.tags) this.tags[tag.key] = { tagInfo: tag, count: 0 };
+    for (const tag of fetched.tags) this.tags[tag.key] = { tagInfo: tag, count: 0 };
 
     for (const time of times) {
       if (time.type != "start") {
@@ -106,13 +106,14 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
 
   // interface SettingsState
   readonly persisted: boolean;
+
   persist(): void {
     persist()
       .then(() => this.reload)
       .catch((error) => this.setError(error));
   }
   getDatabaseAsJson(): string {
-    return JSON.stringify(this.database, null, 2);
+    return JSON.stringify(this.fetched, null, 2);
   }
   setTagsRequired(value: RequiredType): void {
     this.config.tagsRequired = value;
@@ -129,7 +130,7 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
 
   // interface WhatState
   getAllWhat(whatType: WhatType): TagInfo[] {
-    return whatType === "tags" ? this.database.tags : this.database.tasks;
+    return whatType === "tags" ? this.fetched.tags : this.fetched.tasks;
   }
   createWhat(what: WhatType, tag: TagInfo): void {
     this.editDatabase()
@@ -164,23 +165,23 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
 
   // interface HistoryState
   readonly periods: Period[];
-  editHistory(when: number, what: What): void {
-    const found = this.database.times.find((it) => it.when === when);
+
+  editWhat(when: number, what: What): void {
+    const found = this.findTime(when);
     if (!found) {
-      this.setError("editHistory -- specified time not found");
+      this.setError("editWhat -- specified time not found");
       return;
     }
     const type = found.type;
     if (type === "start") {
-      this.setError("editHistory -- specified time unexpected type");
+      this.setError("editWhat -- specified time unexpected type");
       return;
     }
     const stop: TimeStop = { when, type, note: what.note, tags: what.tags, task: what.task };
-
     this.editDatabase()
       .then(async (edit) => {
         try {
-          await edit.editHistory(stop);
+          await edit.editWhat(stop);
           this.reload();
         } catch (e) {
           this.setError(e);
@@ -192,13 +193,28 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
     const found = this.tasks[task];
     return found ? found.tagInfo.summary : undefined;
   }
+  findTime(when: number): Time | undefined {
+    return this.fetched.times.find((it) => it.when === when);
+  }
+  editWhen(deleted: number[], inserted: Time[]): void {
+    this.editDatabase()
+      .then(async (edit) => {
+        try {
+          await edit.editWhen(deleted, inserted);
+          this.reload();
+        } catch (e) {
+          this.setError(e);
+        }
+      })
+      .catch((error) => this.setError(error));
+  }
 
   // EditWhatState
   getAllTags(): TagCount[] {
-    return Controller.getAllTagCounts(this.database.tags);
+    return Controller.getAllTagCounts(this.fetched.tags);
   }
   getAllTasks(): TagCount[] {
-    return Controller.getAllTagCounts(this.database.tasks);
+    return Controller.getAllTagCounts(this.fetched.tasks);
   }
 
   // private
@@ -207,7 +223,6 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
       return { key: tag.key, summary: tag.summary, count: 1 };
     });
   }
-
   private saveConfig(config: Config): void {
     this.editDatabase()
       .then(async (edit) => {

@@ -14,7 +14,8 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
   const state = props.state;
   const config = state.config;
 
-  const whatIsValidRef = React.useRef<WhatIsValid>({ what: {}, isValid: false });
+  // set isValid: true as default initial state because onWhatIsValid is called only if EditWhat displays tags or tasks
+  const whatIsValidRef = React.useRef<WhatIsValid>({ what: {}, isValid: true });
   const [showValidationError, setShowValidationError] = React.useState<boolean>(false);
 
   const { text, time, started } = new Displayed(state);
