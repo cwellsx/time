@@ -1,46 +1,47 @@
 digraph SRC {
-  "App.tsx" -> {"error" "io" "pages" "topbar" "appContext.ts"};
-  "appContext.ts" -> {};
+  "App.tsx" -> {"error" "io" "pages" "topbar"};
 
   "error" [shape=folder];
-  "help" [shape=folder];
   "io" [shape=folder];
-  "model" [shape=folder];
+  "model" [shape=folder] [style=dotted];
   "pages" [shape=folder];
-  "states" [shape=folder];
+  "states" [shape=folder] [style=dotted];
   "tabs" [shape=folder];
   "tags" [shape=folder];
   "topbar" [shape=folder];
+  "icons" [shape=folder];
+  "markdown" [shape=folder];
   
-  "error" -> {"ErrorMessage.tsx"};
+  "error" -> {"ErrorMessage.tsx" "appErrorContext.ts"};
   "ErrorMessage.tsx" -> {};
+  "appErrorContext.ts" -> {};
 
-  "io" -> {"controller.ts" "ioHooks.ts" "tests.ts"};
+  "io" -> {"controller.ts" "ioHooks.ts" "tests.ts" "appTestingContext.ts"};
   "io" -> {"model" "states"} [style=dotted];
   "controller.ts" -> {"persist.ts" "database.ts"};
-  "controller.ts" -> {"appContext.ts"} [style=dotted];
+  "controller.ts" -> {"error"} [style=dotted];
   "database.ts" -> {"persist.ts"};
-  "ioHooks.ts" -> {"controller.ts" "database.ts" "persist.ts" "tests.ts" "appContext.ts"};
+  "ioHooks.ts" -> {"controller.ts" "database.ts" "persist.ts" "tests.ts" "appTestingContext.ts" "error"};
   "tests.ts" -> {"database.ts" "persist.ts"};
   "persist.ts" -> {}
+  "appTestingContext.ts" -> {};
 
   "model" -> {"config.ts" "period.ts" "testResult.ts" "time.ts" "tags" "whatType.ts" "what.ts"} [style=dotted];
-  "config.ts" -> {};
-  "period.ts" -> {"what.ts"};
-  "testResult.ts" -> {};
-  "time.ts" -> {"what.ts"};
-  "what.ts" -> {};
-  "whatType.ts" -> {};
+  "config.ts" -> {} [style=dotted];
+  "period.ts" -> {"what.ts"} [style=dotted];
+  "testResult.ts" -> {} [style=dotted];
+  "time.ts" -> {"what.ts"} [style=dotted];
+  "what.ts" -> {} [style=dotted];
+  "whatType.ts" -> {} [style=dotted];
 
-  "pages" -> {"Now.tsx" "What.tsx" "History.tsx" "Settings.tsx" "Help.tsx" "Tests.tsx"};
+  "pages" -> {"Now.tsx" "What.tsx" "History.tsx" "Settings.tsx" "Tests.tsx"};
   "pages" -> {"model" "states"} [style=dotted];
   "date.ts" -> {};
   "Now.tsx" -> {"date.ts" "EditWhat.tsx"};
   "What.tsx" -> {"tabs" "error"};
-  "History.tsx" -> {"sums.ts" "EditWhat.tsx" "EditWhen.tsx" "helpEditWhen.ts"};
-  "Settings.tsx" -> {};
-  "Help.tsx" -> {"help"};
-  "Tests.tsx" -> {"weeks.ts" "sums.ts" "appContext.ts" "testEditWhen.ts"};
+  "History.tsx" -> {"sums.ts" "EditWhat.tsx" "EditWhen.tsx" "helpEditWhen.ts" "error"};
+  "Settings.tsx" -> {"error" "date.ts"};
+  "Tests.tsx" -> {"weeks.ts" "sums.ts" "io" "testEditWhen.ts"};
   "sums.ts" -> {"weeks.ts" "date.ts"};
   "testEditWhen.ts" -> {"helpEditWhen.ts" "io"};
   "helpEditWhen.ts" -> {"date.ts"};
@@ -49,10 +50,10 @@ digraph SRC {
 
   "states" -> {"nowState.ts" "whatState.ts" "historyState.ts" "settingsState.ts" "editTagsState.ts" "model"} [style=dotted];
   "nowState.ts" -> {"editTagsState.ts"} [style=dotted];
-  "whatState.ts" -> {};
+  "whatState.ts" -> {} [style=dotted];
   "historyState.ts" -> {"editTagsState.ts"} [style=dotted];
-  "settingsState.ts" -> {};
-  "editTagsState.ts" -> {};
+  "settingsState.ts" -> {} [style=dotted];
+  "editTagsState.ts" -> {} [style=dotted];
 
   "tabs" -> {"Tabs.tsx"};
   "Tabs.tsx" -> {};
@@ -62,9 +63,10 @@ digraph SRC {
   "EditTags.tsx" -> {"error" "selectTagsState.ts" "tagsHook.ts" "tagsIcons.ts"};
   "tagsHook.ts" -> {"selectTagsState.ts"};
   "tagsIcons.ts" -> {};
-  "tagsTypes.ts" -> {};
+  "tagsTypes.ts" -> {} [style=dotted];
 
-  "topbar" -> {"TopBar.tsx"};
-  "TopBar.tsx" -> {"topbarIcons.ts"};
-  "topbarIcons.ts" -> {};
+  "topbar" -> {"TopBar.tsx" "Help.tsx"};
+  "TopBar.tsx" -> {"pageProperties.ts"};
+  "pageProperties.ts" -> {"markdown" "icons"};
+  "Help.tsx" -> {"markdown" "pageProperties.ts"};
 }

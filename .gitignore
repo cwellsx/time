@@ -134,5 +134,6 @@ yarn-error.log*
 #
 
 dependencies/dependencies.png
+dependencies/dependencies_2.*
 *.toc.md
 images.scrap

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useSetTesting, useTesting } from '../appContext';
+import { useSetTesting, useTesting } from '../io';
 import { aggregate } from './sums';
 import { testEditWhen } from './testEditWhen';
 import { Weeks } from './weeks';

@@ -2,7 +2,7 @@ import './history.sass';
 
 import React from 'react';
 
-import { useSetError } from '../appContext';
+import { useSetError } from '../error';
 import { EditWhat, WhatIsValid } from './EditWhat';
 import { EditWhen, WhenIsValid } from './EditWhen';
 import { helpEditWhen } from './helpEditWhen';

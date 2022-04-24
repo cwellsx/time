@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { useSetError, useTesting } from '../appContext';
+import { useSetError } from '../error';
+import { useTesting } from './appTestingContext';
 import { Controller } from './controller';
 import { EditDatabase, editDatabase, fetchDatabase, Fetched } from './database';
 import { persist } from './persist';

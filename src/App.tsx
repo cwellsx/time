@@ -3,36 +3,38 @@ import './App.sass';
 import React from 'react';
 import * as ReactRouter from 'react-router-dom';
 
-import { AppContext, useContext } from './appContext';
-import { ErrorMessage } from './error';
-import { useController, useTestResults } from './io';
+import { AppErrorContext, ErrorMessage, useAppErrorContext } from './error';
+import { AppTestingContext, useAppTestingContext, useController, useTestResults } from './io';
 import * as Page from './pages';
 import * as Component from './topbar';
 
 // import { useHelp } from './fetch';
 
 const App: React.FunctionComponent = () => {
-  const [error, setError, testing, setTesting] = useContext();
+  const [error, setError] = useAppErrorContext();
+  const [testing, setTesting] = useAppTestingContext();
   return (
-    <AppContext.Provider value={{ setError, testing, setTesting }}>
-      <ReactRouter.BrowserRouter basename={process.env.PUBLIC_URL}>
-        <Component.Topbar />
-        <div id="content">
-          <ErrorMessage errorMessage={error} />
-          <ReactRouter.Routes>
-            <ReactRouter.Route path="/" element={<Now />} />
-            <ReactRouter.Route path="/what" element={<What />} />
-            <ReactRouter.Route path="/history" element={<History />} />
-            <ReactRouter.Route path="/settings" element={<Settings />} />
-            <ReactRouter.Route path="/help" element={<Help />}>
-              <ReactRouter.Route path=":helpId" element={<Help />} />
-            </ReactRouter.Route>
-            <ReactRouter.Route path="/tests" element={<Tests />} />
-            <ReactRouter.Route path="*" element={<p>URL Not Found</p>} />
-          </ReactRouter.Routes>
-        </div>
-      </ReactRouter.BrowserRouter>
-    </AppContext.Provider>
+    <AppErrorContext.Provider value={{ setError }}>
+      <AppTestingContext.Provider value={{ testing, setTesting }}>
+        <ReactRouter.BrowserRouter basename={process.env.PUBLIC_URL}>
+          <Component.Topbar />
+          <div id="content">
+            <ErrorMessage errorMessage={error} />
+            <ReactRouter.Routes>
+              <ReactRouter.Route path="/" element={<Now />} />
+              <ReactRouter.Route path="/what" element={<What />} />
+              <ReactRouter.Route path="/history" element={<History />} />
+              <ReactRouter.Route path="/settings" element={<Settings />} />
+              <ReactRouter.Route path="/help" element={<Help />}>
+                <ReactRouter.Route path=":helpId" element={<Help />} />
+              </ReactRouter.Route>
+              <ReactRouter.Route path="/tests" element={<Tests />} />
+              <ReactRouter.Route path="*" element={<p>URL Not Found</p>} />
+            </ReactRouter.Routes>
+          </div>
+        </ReactRouter.BrowserRouter>
+      </AppTestingContext.Provider>
+    </AppErrorContext.Provider>
   );
 };
 
