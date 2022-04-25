@@ -1,73 +1,92 @@
 digraph SRC {
-  "App.tsx" -> {"error" "io" "pages" "topbar"};
+  "App" -> {"error" "io" "pages" "topbar"};
 
-  "error" [shape=folder];
-  "io" [shape=folder];
-  "model" [shape=folder] [style=dotted];
-  "pages" [shape=folder];
-  "states" [shape=folder] [style=dotted];
-  "tabs" [shape=folder];
-  "tags" [shape=folder];
-  "topbar" [shape=folder];
+  "error" [shape=folder, color=red, fontsize="22pt"];
+  "io" [shape=folder, color=green, fontsize="22pt"];
+  "model" [shape=folder, fontsize="22pt"] [style=dotted];
+  "pages" [shape=folder, color=blue, fontsize="22pt"];
+  "states" [shape=folder, fontsize="22pt"] [style=dotted];
+  "tabs" [shape=folder, fontsize="22pt"];
+  "tags" [shape=folder, color=brown, fontsize="22pt"];
+  "topbar" [shape=folder, fontsize="22pt"];
   "icons" [shape=folder];
   "markdown" [shape=folder];
   
-  "error" -> {"ErrorMessage.tsx" "appErrorContext.ts"};
-  "ErrorMessage.tsx" -> {};
-  "appErrorContext.ts" -> {};
+  "error" -> {"ErrorMessage" "appErrorContext"} [color=red];
+  "ErrorMessage" [shape=rect];
+  "ErrorMessage" -> {};
+  "appErrorContext" -> {};
 
-  "io" -> {"controller.ts" "ioHooks.ts" "tests.ts" "appTestingContext.ts"};
+  "io" -> {"controller" "ioHooks" "tests" "appTestingContext"} [color=green];
   "io" -> {"model" "states"} [style=dotted];
-  "controller.ts" -> {"persist.ts" "database.ts"};
-  "controller.ts" -> {"error"} [style=dotted];
-  "database.ts" -> {"persist.ts"};
-  "ioHooks.ts" -> {"controller.ts" "database.ts" "persist.ts" "tests.ts" "appTestingContext.ts" "error"};
-  "tests.ts" -> {"database.ts" "persist.ts"};
-  "persist.ts" -> {}
-  "appTestingContext.ts" -> {};
+  "controller" -> {"persist" "database"} [color=green];
+  "controller" -> {"error"} [style=dotted];
+  "database" -> {"persist"} [color=green];
+  "ioHooks" -> {"controller" "database" "persist" "tests" "appTestingContext"} [color=green];
+  "ioHooks" -> {"error"};
+  "tests" -> {"database" "persist"} [color=green];
+  "persist" -> {}
+  "appTestingContext" -> {};
 
-  "model" -> {"config.ts" "period.ts" "testResult.ts" "time.ts" "tags" "whatType.ts" "what.ts"} [style=dotted];
-  "config.ts" -> {} [style=dotted];
-  "period.ts" -> {"what.ts"} [style=dotted];
-  "testResult.ts" -> {} [style=dotted];
-  "time.ts" -> {"what.ts"} [style=dotted];
-  "what.ts" -> {} [style=dotted];
-  "whatType.ts" -> {} [style=dotted];
+  "model" -> {"config" "period" "testResult" "time" "tags" "whatType" "what"} [style=dotted];
+  "config" -> {} [style=dotted];
+  "period" -> {"what"} [style=dotted];
+  "testResult" -> {} [style=dotted];
+  "time" -> {"what"} [style=dotted];
+  "what" -> {} [style=dotted];
+  "whatType" -> {} [style=dotted];
 
-  "pages" -> {"Now.tsx" "What.tsx" "History.tsx" "Settings.tsx" "Tests.tsx"};
+  "pages" -> {"Now" "What" "History" "Settings" "Tests"} [color=blue];
+  "Now" [shape=rect];
+  "What" [shape=rect];
+  "History" [shape=rect];
+  "Settings" [shape=rect];
+  "Tests" [shape=rect];
+  "EditWhat" [shape=rect];
+  "EditWhen" [shape=rect];
   "pages" -> {"model" "states"} [style=dotted];
-  "helpDate.ts" -> {};
-  "helpWeeks.ts" -> {};
-  "Now.tsx" -> {"helpDate.ts" "EditWhat.tsx"};
-  "What.tsx" -> {"tabs" "error"};
-  "History.tsx" -> {"helpSums.ts" "EditWhat.tsx" "EditWhen.tsx" "helpEditWhen.ts" "error"};
-  "Settings.tsx" -> {"error" "helpDate.ts"};
-  "Tests.tsx" -> {"helpWeeks.ts" "helpSums.ts" "io" "testEditWhen.ts"};
-  "helpSums.ts" -> {"helpWeeks.ts" "helpDate.ts"};
-  "testEditWhen.ts" -> {"helpEditWhen.ts" "io"};
-  "helpEditWhen.ts" -> {"helpDate.ts"};
-  "EditWhat.tsx" -> {"tags"};
-  "EditWhen.tsx" -> {"helpDate.ts" "error"}
+  "helpDate" -> {};
+  "helpWeeks" -> {};
+  "Now" -> {"helpDate" "EditWhat"} [color=blue];
+  "What" -> {"tabs" "error"};
+  "History" -> {"helpSums" "EditWhat" "EditWhen" "helpEditWhen"} [color=blue];
+  "History" -> {"error"};
+  "Settings" -> {"helpDate"} [color=blue];
+  "Settings" -> {"error"};
+  "Tests" -> {"helpWeeks" "helpSums" "testEditWhen"} [color=blue];
+  "Tests" -> {"io"};
+  "helpSums" -> {"helpWeeks" "helpDate"} [color=blue];
+  "testEditWhen" -> {"helpEditWhen"} [color=blue];
+  "testEditWhen" -> {"io"};
+  "helpEditWhen" -> {"helpDate"} [color=blue];
+  "EditWhat" -> {"tags"};
+  "EditWhen" -> {"helpDate"} [color=blue]
+  "EditWhen" -> {"error"}
 
-  "states" -> {"nowState.ts" "whatState.ts" "historyState.ts" "settingsState.ts" "editTagsState.ts" "model"} [style=dotted];
-  "nowState.ts" -> {"editTagsState.ts"} [style=dotted];
-  "whatState.ts" -> {} [style=dotted];
-  "historyState.ts" -> {"editTagsState.ts"} [style=dotted];
-  "settingsState.ts" -> {} [style=dotted];
-  "editTagsState.ts" -> {} [style=dotted];
+  "states" -> {"nowState" "whatState" "historyState" "settingsState" "editWhatState" "model"} [style=dotted];
+  "nowState" -> {"editWhatState"} [style=dotted];
+  "whatState" -> {} [style=dotted];
+  "historyState" -> {"editWhatState"} [style=dotted];
+  "settingsState" -> {} [style=dotted];
+  "editWhatState" -> {} [style=dotted];
 
-  "tabs" -> {"Tabs.tsx"};
-  "Tabs.tsx" -> {};
+  "tabs" -> {"Tabs"};
+  "Tabs" [shape=rect];
+  "Tabs" -> {};
 
-  "tags" -> {"EditTags.tsx"};
-  "tags" -> {"tagsTypes.ts"} [style=dotted];
-  "EditTags.tsx" -> {"error" "selectTagsState.ts" "tagsHook.ts" "tagsIcons.ts"};
-  "tagsHook.ts" -> {"selectTagsState.ts"};
-  "tagsIcons.ts" -> {};
-  "tagsTypes.ts" -> {} [style=dotted];
+  "tags" -> {"EditTags"} [color=brown];
+  "tags" -> {"tagsTypes"} [style=dotted];
+  "EditTags" [shape=rect];
+  "EditTags" -> {"selectTagsState" "tagsHook" "tagsIcons"} [color=brown];
+  "EditTags" -> {"error"};
+  "tagsHook" -> {"selectTagsState"} [color=brown];
+  "tagsIcons" -> {};
+  "tagsTypes" -> {} [style=dotted];
 
-  "topbar" -> {"TopBar.tsx" "Help.tsx"};
-  "TopBar.tsx" -> {"pageProperties.ts"};
-  "pageProperties.ts" -> {"markdown" "icons"};
-  "Help.tsx" -> {"markdown" "pageProperties.ts"};
+  "topbar" -> {"TopBar" "Help"};
+  "TopBar" [shape=rect];
+  "Help" [shape=rect];
+  "TopBar" -> {"pageProperties"};
+  "pageProperties" -> {"markdown" "icons"};
+  "Help" -> {"markdown" "pageProperties"};
 }
