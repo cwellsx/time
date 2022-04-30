@@ -168,9 +168,6 @@ export type EditWhenState = {
 };
 
 class TestEditWhenDatabase extends DB.EditDatabase implements EditWhenState {
-  constructor(db: DB.Database) {
-    super(db);
-  }
   clear(): Promise<void> {
     return this.db.clear("times");
   }

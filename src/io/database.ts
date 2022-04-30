@@ -2,7 +2,7 @@ import { DBSchema, deleteDB, IDBPDatabase, openDB } from 'idb';
 
 import { persisted } from './persist';
 
-import type { Config, Time, TagInfo, Period, TimeStop, What } from "../model";
+import type { Config, Time, TagInfo, Period, TimeStop } from "../model";
 
 export type DbName = "production" | "test";
 

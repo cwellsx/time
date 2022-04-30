@@ -1,7 +1,7 @@
 import { showDay, showTime } from './helpDate';
 import { IsoWeek, nextWeek, Weeks } from './helpWeeks';
 
-import type { Period, What } from "../model";
+import type { Period } from "../model";
 
 export interface IShow {
   getKey(): string;

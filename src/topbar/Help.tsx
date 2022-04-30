@@ -61,7 +61,7 @@ function getToc(page: HelpPage): JSX.Element {
 
 export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
   const helpId = props.helpId;
-  const page: HelpPage = helpPages.find((it) => it.helpId == helpId) ?? helpPages[0];
+  const page: HelpPage = helpPages.find((it) => it.helpId === helpId) ?? helpPages[0];
 
   console.log("Help");
   const content = (

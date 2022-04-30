@@ -151,13 +151,13 @@ async function testOne(db: EditWhenState, testCase: TestCase): Promise<void> {
   await db.addTimes(times);
   const periods = await db.getPeriods();
   const period = periods.find((it) => it.start === testCase.period * 60000);
-  if (!period) throw "Input period not found";
+  if (!period) throw Error("Input period not found");
   const altered: Period = { start: testCase.altered[0] * 60000, stop: testCase.altered[1] * 60000 };
   const findTime: FindTime = (it: number) => times.find((time) => time.when === it);
-  const { min, max, isModified, getDifferences } = helpEditWhen(period, altered, periods, findTime);
+  const { getDifferences } = helpEditWhen(period, altered, periods, findTime);
   const { deleted, inserted } = getDifferences();
   console.log(`editing ${JSON.stringify(deleted)} ${JSON.stringify(inserted)}`);
-  for (const it of deleted) if (!findTime(it)) throw `deleted not found ${it}`;
+  for (const it of deleted) if (!findTime(it)) throw Error(`deleted not found ${it}`);
   db.editWhen(deleted, inserted);
   const result = await db.getTimes();
   assertTimes(getTimes(testCase.expected), result);
@@ -173,7 +173,7 @@ function getTimes(from: Expected[]): Time[] {
 }
 
 function assertTimes(expected: Time[], actual: Time[]): void {
-  if (expected.length !== actual.length) throw `assertTimes expected=${expected.length} actual=${actual.length}`;
+  if (expected.length !== actual.length) throw Error(`assertTimes expected=${expected.length} actual=${actual.length}`);
   for (let i = 0; i < actual.length; ++i) {
     assertTime(expected[i], actual[i]);
   }
@@ -184,5 +184,5 @@ function assertTime(expected: Time, actual: Time): void {
     return time.type === "start" ? undefined : time.note;
   }
   if (expected.when !== actual.when || expected.type !== actual.type || getNote(expected) !== getNote(actual))
-    throw `assertTime expected=${JSON.stringify(expected)} actual=${JSON.stringify(actual)}`;
+    throw Error(`assertTime expected=${JSON.stringify(expected)} actual=${JSON.stringify(actual)}`);
 }

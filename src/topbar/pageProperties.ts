@@ -66,6 +66,10 @@ export const pages: Page[] = [
   },
 ];
 
+if (process.env.PUBLIC_URL) {
+  pages.pop();
+}
+
 function getHelpPages(): HelpPage[] {
   const all: HelpPage[] = pages.filter((it) => !!it.markdown) as HelpPage[];
   const index = all.findIndex((it) => !it.helpId);

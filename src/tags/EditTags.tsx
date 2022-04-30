@@ -40,7 +40,8 @@ export const EditTags: React.FunctionComponent<EditTagsProps> = (props) => {
   const [outputTags, setOutputTags] = React.useState<OutputTags>(getOutputTags(state));
   React.useEffect(() => {
     parentCallback(outputTags);
-  }, [outputTags]);
+  }, [outputTags, parentCallback]);
+
   const onOutput: ParentCallback = (output: OutputTags): void => {
     setOutputTags(output);
   };

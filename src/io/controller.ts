@@ -52,7 +52,7 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
     for (const tag of fetched.tags) this.tags[tag.key] = { tagInfo: tag, count: 0 };
 
     for (const time of times) {
-      if (time.type != "start") {
+      if (time.type !== "start") {
         const task = time.task;
         if (task) {
           const found = this.tasks[task];

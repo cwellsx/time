@@ -92,5 +92,5 @@ function testDates(): boolean {
 
 function testSums(periods: Period[]): boolean {
   const result = aggregate(periods);
-  return true;
+  return result.length > 0;
 }

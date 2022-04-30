@@ -23,11 +23,11 @@ export function helpEditWhen(period: Period, altered: Period, periods: Period[],
     if (!startEqual) {
       const when = altered.start;
       const oldTime = findTime(period.start);
-      if (!oldTime) throw "Unexpected start time not found";
+      if (!oldTime) throw Error("Unexpected start time not found");
 
       if (previous) {
         const previousTime = findTime(previous.stop);
-        if (!previousTime || previousTime.type === "start") throw "Unexpected previous period";
+        if (!previousTime || previousTime.type === "start") throw Error("Unexpected previous period");
 
         if (previous.stop >= when) {
           // they're now at the same time and may need to be merged -- i.e. event type: "next"
@@ -63,11 +63,11 @@ export function helpEditWhen(period: Period, altered: Period, periods: Period[],
     if (!stopEqual) {
       const when = altered.stop;
       const oldTime = findTime(period.stop);
-      if (!oldTime) throw "Unexpected stop time not found";
+      if (!oldTime) throw Error("Unexpected stop time not found");
 
       if (next) {
         const nextTime = findTime(next.start);
-        if (!nextTime || nextTime.type === "stop") throw "Unexpected next period";
+        if (!nextTime || nextTime.type === "stop") throw Error("Unexpected next period");
 
         if (next.start <= when) {
           // they're now at the same time and may need to be merged -- i.e. event type: "next"
@@ -103,7 +103,7 @@ export function helpEditWhen(period: Period, altered: Period, periods: Period[],
     return { deleted, inserted };
   };
 
-  const equals = (x: number, y: number): boolean => showTime(new Date(x)) == showTime(new Date(y));
+  const equals = (x: number, y: number): boolean => showTime(new Date(x)) === showTime(new Date(y));
   const startEqual = equals(period.start, altered.start);
   const stopEqual = equals(period.stop, altered.stop);
   const index = periods.findIndex((it) => it.start === period.start);

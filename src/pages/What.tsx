@@ -50,7 +50,7 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
     const what = whatType === "tasks" ? "Task" : "Tag";
     if (!key) {
       message = undefined;
-    } else if (key.indexOf(" ") != -1) {
+    } else if (key.indexOf(" ") !== -1) {
       message = `${what} ID cannot contain whitespace ' ' (use a hyphen '-' instead).`;
     } else if (state.keyAlreadyExists(whatType, key)) {
       message = `Duplicate (this ${what} ID is already defined).`;
