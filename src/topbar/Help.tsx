@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { HeadingProps, TransformImage } from 'react-markdown/lib/ast-to-react';
 import * as ReactRouter from 'react-router-dom';
 
+import { External } from './icons';
 import { images } from './markdown';
 import { HelpPage, helpPages } from './pageProperties';
 
@@ -105,13 +106,21 @@ function AnchorRenderer(
     React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>
   >
 ) {
-  console.log("ReactRouter.NavLink");
+  const { href, children } = props;
+  console.log("href=" + href);
+  if (props.href?.indexOf("://") !== -1) {
+    return (
+      <a href={href} target="_blank">
+        {children} <External />
+      </a>
+    );
+  }
   const page = helpPages.find((it) => props.href === `/help/${it.helpId}`);
   const icon = page ? <page.icon /> : undefined;
   return (
-    <ReactRouter.NavLink to={props.href!}>
+    <ReactRouter.NavLink to={href!}>
       {icon}
-      {props.children}
+      {children}
     </ReactRouter.NavLink>
   );
 }

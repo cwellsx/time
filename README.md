@@ -335,3 +335,5 @@ but it makes the source code a bit tidier.
 ### Icons
 
 The icons in the topbar are from https://fonts.google.com/icons
+
+An icon I added recently from there didn't have a viewbox, which needed to be added in order to make it resizable.
