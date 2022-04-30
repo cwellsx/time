@@ -42,3 +42,5 @@ export interface IdName {
 export interface Key {
   key: string;
 }
+
+export type ShowCount = (count: number) => React.ReactElement | string;

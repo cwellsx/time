@@ -7,7 +7,7 @@ import { getOnSelectTags, getOutputTags, log, RenderedElement, Validation } from
 import { useSelectTags } from './tagsHook';
 import * as Icon from './tagsIcons';
 
-import type { OutputTags, ParentCallback, TagCount } from "./tagsTypes";
+import type { OutputTags, ParentCallback, TagCount, ShowCount } from "./tagsTypes";
 
 // this is to display a little 'x' SVG -- a Close icon which is displayed on each tag -- clicking it will delete the tag
 // also to display a little '(!)' SVG -- an Error icon which is displayed in the element, if there's a validation error
@@ -21,6 +21,8 @@ interface EditTagsProps extends Validation {
   parentCallback: ParentCallback;
   // all existing tags from the server (for tag dictionary lookup)
   allTags: TagCount[];
+  // optionally format the count e.g. if it is a date
+  showCount?: ShowCount;
 }
 
 export const EditTags: React.FunctionComponent<EditTagsProps> = (props) => {
@@ -28,6 +30,9 @@ export const EditTags: React.FunctionComponent<EditTagsProps> = (props) => {
 
   // get the state
   const { state, dispatch, tagDictionary, assert, errorMessage } = useSelectTags(inputTags, allTags, props);
+
+  const showCountDefault: ShowCount = (count) => <>×&nbsp;{count}</>;
+  const showCount: ShowCount = props.showCount ?? showCountDefault;
 
   // need to wrap the parentCallback in React.useEffect to avoid error
   // "Cannot update a component (`...`) while rendering a different component"
@@ -182,7 +187,13 @@ export const EditTags: React.FunctionComponent<EditTagsProps> = (props) => {
         {state.elements.map(getElement)}
         {icon}
       </div>
-      <ShowHints hints={state.hints} inputValue={state.inputValue} result={handleHintResult} divRef={divRef} />
+      <ShowHints
+        hints={state.hints}
+        inputValue={state.inputValue}
+        result={handleHintResult}
+        divRef={divRef}
+        showCount={showCount}
+      />
       <ErrorMessage errorMessage={errorMessage} />
       {validationError}
     </div>
@@ -204,9 +215,10 @@ interface ShowHintsProps {
   result: (outputTag: string) => void;
   // reference to the div reference that contains the input and the hints
   divRef: React.RefObject<HTMLDivElement>;
+  showCount: ShowCount;
 }
 const ShowHints: React.FunctionComponent<ShowHintsProps> = (props) => {
-  const { hints, inputValue, result, divRef } = props;
+  const { hints, inputValue, result, divRef, showCount } = props;
   if (!inputValue.length) {
     return <div className="tag-hints hidden"></div>;
   }
@@ -215,7 +227,14 @@ const ShowHints: React.FunctionComponent<ShowHintsProps> = (props) => {
       {!hints.length
         ? "No results found."
         : hints.map((hint) => (
-            <ShowHint hint={hint} inputValue={inputValue} result={result} key={hint.key} divRef={divRef} />
+            <ShowHint
+              hint={hint}
+              inputValue={inputValue}
+              result={result}
+              key={hint.key}
+              divRef={divRef}
+              showCount={showCount}
+            />
           ))}
     </div>
   );
@@ -230,9 +249,10 @@ interface ShowHintProps {
   result: (outputTag: string) => void;
   // reference to the div reference that contains the input and the hints
   divRef: React.RefObject<HTMLDivElement>;
+  showCount: ShowCount;
 }
 const ShowHint: React.FunctionComponent<ShowHintProps> = (props) => {
-  const { hint, inputValue, result, divRef } = props;
+  const { hint, inputValue, result, divRef, showCount } = props;
 
   function getTag(key: string) {
     const index = key.indexOf(inputValue);
@@ -253,7 +273,8 @@ const ShowHint: React.FunctionComponent<ShowHintProps> = (props) => {
   // the key with the matched letters highlighted
   const tag = getTag(hint.key);
   // count the number of times this tag is used elsewhere, if any
-  const count = hint.count ? <span className="multiplier">×&nbsp;{hint.count}</span> : undefined;
+  //const count = hint.count ? <span className="multiplier">×&nbsp;{hint.count}</span> : undefined;
+  const count = hint.count ? <span className="multiplier">{showCount(hint.count)}</span> : undefined;
   // the summary, if any
   const summary = hint.summary ? <p>{hint.summary}</p> : undefined;
   // a link to more info i.e. the page which defines this tag

@@ -211,18 +211,23 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
 
   // EditWhatState
   getAllTags(): TagCount[] {
-    return Controller.getAllTagCounts(this.fetched.tags);
+    const result: TagCount[] = [];
+    for (const key in this.tags) {
+      const count = this.tags[key]!.count;
+      result.push({ key, count });
+    }
+    return result;
   }
   getAllTasks(): TagCount[] {
-    return Controller.getAllTagCounts(this.fetched.tasks);
+    const result: TagCount[] = [];
+    for (const key in this.tasks) {
+      const count = this.tasks[key]!.usedDate;
+      result.push({ key, count });
+    }
+    return result;
   }
 
   // private
-  private static getAllTagCounts(tags: TagInfo[]): TagCount[] {
-    return tags.map<TagCount>((tag) => {
-      return { key: tag.key, summary: tag.summary, count: 1 };
-    });
-  }
   private saveConfig(config: Config): void {
     this.editDatabase()
       .then(async (edit) => {

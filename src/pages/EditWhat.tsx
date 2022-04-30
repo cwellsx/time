@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { EditTags, OutputTags } from '../tags';
+import { EditTags, OutputTags, ShowCount } from '../tags';
+import { showDay } from './helpDate';
 
 import type { What } from "../model";
 import type { EditWhatState } from "../states";
-
 // you could temporarily change this to enable logging, for debugging
 const isLogging = false;
 
@@ -76,6 +76,8 @@ export const EditWhat: React.FunctionComponent<EditWhatProps> = (props: EditWhat
   const isEditTask = isTaskRequired || allTasks.length !== 0;
   const isEditTags = isTagsRequired || allTags.length !== 0;
 
+  const showTaskDate: ShowCount = (count) => showDay(new Date(count));
+
   const editTask = !isEditTask ? undefined : (
     <label>
       <span>Task:</span>
@@ -88,6 +90,7 @@ export const EditWhat: React.FunctionComponent<EditWhatProps> = (props: EditWhat
         canNewTag={false}
         showValidationError={props.showValidationError}
         hrefAllTags={"/tags"}
+        showCount={showTaskDate}
       />
     </label>
   );
