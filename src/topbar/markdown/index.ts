@@ -1,5 +1,8 @@
 import raw from 'raw.macro';
 
+import historyUrl from './history-min.png';
+import history2Url from './history2-min.png';
+import history3Url from './history3-min.png';
 import startUrl from './start-min.png';
 import stopUrl from './stop-min.png';
 import tags1Url from './tags1-min.png';
@@ -24,6 +27,9 @@ export const images: Images = {
   what: whatUrl,
   what1: what1Url,
   what2: what2Url,
+  history: historyUrl,
+  history2: history2Url,
+  history3: history3Url,
 };
 
 export const toc = raw("./toc.md");

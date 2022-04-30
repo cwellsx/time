@@ -6,7 +6,7 @@ import { HeadingProps, TransformImage } from 'react-markdown/lib/ast-to-react';
 import * as ReactRouter from 'react-router-dom';
 
 import { images } from './markdown';
-import { helpPages, HelpPage } from './pageProperties';
+import { HelpPage, helpPages } from './pageProperties';
 
 type HelpProps = {
   helpId: string | undefined;
@@ -27,7 +27,8 @@ function getToc(page: HelpPage): JSX.Element {
         const h1Slug = getSlug(it.title);
         const h1Text = (
           <>
-            {<it.icon />}{it.title}
+            {<it.icon />}
+            {it.title}
           </>
         );
         return (
@@ -84,7 +85,6 @@ export const Help: React.FunctionComponent<HelpProps> = (props: HelpProps) => {
   );
 };
 
-
 // [Headings are missing anchors / ids](https://github.com/remarkjs/react-markdown/issues/69)
 function HeadingRenderer(props: React.PropsWithChildren<HeadingProps>) {
   function flatten(text: any, child: any): string {
@@ -106,9 +106,14 @@ function AnchorRenderer(
   >
 ) {
   console.log("ReactRouter.NavLink");
-  const page = helpPages.find(it => props.href === `/help/${it.helpId}`)
+  const page = helpPages.find((it) => props.href === `/help/${it.helpId}`);
   const icon = page ? <page.icon /> : undefined;
-  return <ReactRouter.NavLink to={props.href!}>{icon}{props.children}</ReactRouter.NavLink>;
+  return (
+    <ReactRouter.NavLink to={props.href!}>
+      {icon}
+      {props.children}
+    </ReactRouter.NavLink>
+  );
 }
 
 const transformImageUri: TransformImage = (src: string, alt: string, title: string | null) => {
@@ -116,4 +121,3 @@ const transformImageUri: TransformImage = (src: string, alt: string, title: stri
   // console.log(url);
   return url;
 };
-

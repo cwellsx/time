@@ -1,13 +1,14 @@
 # Help
 
+Use this to:
+
 - Record **when** you start work
-- Whenever you stop, record **what** you did
-- Review a **history** of what you've done.
+- Record **what** you did, whenever you stop, or begin something else
+- Later, review the **history** of what you've done.
 
-## How to use it
+## How to use this
 
-This needs only a minimum of user input.
-On the [Now](/help/now) page:
+This needs only a minimum of user input &ndash; on the [Now](/help/now) page:
 
 1. When you begin work, press the **Start** button
 

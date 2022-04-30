@@ -1,7 +1,9 @@
 # Now
 
+On this page:
+
 - When you start doing something, click the Start button
-- When you finish or pause, record what you did and click Stop.
+- When you finish or pause, record what you did and click Stop or Next.
 
 ## Time Started or Stopped
 
@@ -21,8 +23,7 @@ Click the Start button to begin recording a time period.
 The text changes to Started and new elements are displayed on the page:
 
 - Stop, Next, and Cancel buttons
-- An input element for a Comment
-- Optional input elements for a Task and Tags
+- An input element for a Comment (and optional input elements for a Task and Tags)
 
 ## Comment and Stop
 

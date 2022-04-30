@@ -1,21 +1,21 @@
 # What
 
-As well as comments you can also define Tags and Tasks.
+As well as comments on the [Now](/help/now) page, on this page you can also predefine "Tags" and "Tasks":
 
 1. **Predefine a list** of tags and tasks (and define new ones at any time)
-2. **Optionally select** a task and/or tags, with a comment, when you record the end of a time period
-3. **Filter** on a specific task or tag, when you view History
+2. **Optionally select** a task and/or tags, with a comment, on the [Now](/help/now) page at the end of a time period
+3. **Filter** on a specific task or tag, when you view [History](/help/history)
 
-## Define Tags or Tasks
+## 1. Define Tags or Tasks
 
 ![Tags or Tasks](what)
 
 ### Tasks
 
-I use tasks to define specific projects:
-
+I use tasks to define specific projects.
 Tasks end, and then do not recur.
-If you plan and estimate tasks in advance, you may want to review:
+
+Record the time you spend on each task, so you can review:
 
 - The actual time spent on a task, compared with the predicted time
 - What you actually did, compared with what you had planned
@@ -27,7 +27,11 @@ I use tags to define recurring types of activity (for example, "meeting", "codin
 - These activities tend to recur, maybe year after year
 - Doing a task might include several activities;
   or you might spend time on an activity, like "training", which you haven't defined as a task
-- You might want to breakdown how much time you spend on various activities
+
+Record the time you spend on each activity, so you can review:
+
+- A breakdown how much time within each task you spend on various activities
+- How much time you spend on some activity instead of on tasks
 
 ### Automatic Task IDs
 
@@ -40,7 +44,7 @@ To do this the software supports the following keywords: "Task", "Bug", "Require
 
 ![Task ID](what1)
 
-## Record on the Now page
+## 2. Record on the Now page
 
 - The [Now](/help/now) page shows additional input elements &ndash;
   so you can select a Task or Tag (and a Comment) before you press the Stop or Next button.
@@ -53,7 +57,7 @@ To do this the software supports the following keywords: "Task", "Bug", "Require
 
   ![Select](tags3)
 
-## View on the History page
+## 3. View on the History page
 
 After a task or tag is associated with one or more time periods, then it is shown as a hyperlink,
 and clicking on it will show a filtered view of the [History](/help/history) page.
