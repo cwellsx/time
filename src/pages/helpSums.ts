@@ -134,7 +134,7 @@ function flatten(weeks: Week[]): IShow[] {
   const result: IShow[] = [];
   for (const week of weeks.reverse()) {
     result.push(week);
-    for (const day of week.days) {
+    for (const day of week.days.reverse()) {
       result.push(day);
       for (const span of day.spans) {
         result.push(span);

@@ -17,6 +17,7 @@ const App: React.FunctionComponent = () => {
     <AppErrorContext.Provider value={{ setError }}>
       <AppTestingContext.Provider value={{ testing, setTesting }}>
         <ReactRouter.BrowserRouter basename={process.env.PUBLIC_URL}>
+          <Component.ScrollToTop />
           <Component.Topbar />
           <div id="content">
             <ErrorMessage errorMessage={error} />
