@@ -3,8 +3,8 @@
 Use this to:
 
 - Record **when** you start work
-- Record **what** you did, whenever you stop, or begin something else
-- Later, review the **history** of what you've done.
+- Record **what** you did, whenever you stop or begin something else
+- And later, review the **history** of what you've done.
 
 ## How to use this
 
@@ -31,7 +31,7 @@ There is no back-end database.
 Data you enter is [permanently stored](/help/settings) in your browser.
 
 - Private &ndash; your data never leaves your browser, it is not sent back to the server.
-- Fast &ndash; the UI responds instantly, no network delay, it's a local application.
+- Fast &ndash; the UI responds instantly, there's no network delay, it's a local application.
 
 You needn't keep this open when you're working, it won't forget your data. Just bookmark it to reopen it easily.
 

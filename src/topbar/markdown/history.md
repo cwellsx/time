@@ -6,7 +6,7 @@ This page shows what you recorded.
 
 ## Sort order
 
-History is show with the most recent week and day at the top of the list
+History is shown with the most recent week and day at the top of the list
 (i.e. in "reverse chronological order").
 
 The hours within each day are chronological.
@@ -29,6 +29,7 @@ then you can edit any period by clicking on it.
   ![Edit Time](history3)
 
   Using Chrome, click on the little clock item to get that dropdown menu on the "input time" element.
+  Or just use the keyboard to type in the new time.
 
 ## Filtering
 
