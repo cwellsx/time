@@ -44,17 +44,48 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
 
   const editingPeriod: Period | undefined = editingRow ? editingRow[1] : undefined;
 
-  const onClick: React.MouseEventHandler<HTMLTableElement> = (event: React.MouseEvent<HTMLTableElement>) => {
+  function useOutsideAlerter(ref: React.RefObject<HTMLTableElement>) {
+    React.useEffect(() => {
+      function handleClickOutside(event: any) {
+        if (ref.current && !ref.current.contains(event?.target)) {
+          setEditingRow(undefined);
+        }
+      }
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
+
+  const onTableClick: React.MouseEventHandler<HTMLTableElement> = (event: React.MouseEvent<HTMLTableElement>) => {
+    function getClicked(el: HTMLElement): { time: number; timeOrText: TimeOrText } | undefined {
+      const row = el.parentElement;
+      if (!row) return;
+      if (!row.className?.includes("editable")) return;
+      const timeString = row?.getAttribute("data-time");
+      if (!timeString) return;
+      const time = +timeString;
+      let index = getIndex(el);
+      const timeOrText: TimeOrText = index === row.childElementCount - 1 ? "text" : "time";
+      return { time, timeOrText };
+    }
+
     if (!state.config.historyEditable) return;
     const target = event.target;
     const el = target as HTMLElement;
-    if (el.tagName !== "TD") return;
-    const row = el.parentElement;
-    if (!row) return;
-    if (!row.className?.includes("editable")) return;
-    const timeString = row?.getAttribute("data-time");
-    if (!timeString) return;
-    const time = +timeString;
+    if (el.tagName !== "TD") {
+      // this isn't a new click but it may be a click inside the input or textArea
+      return;
+    }
+
+    const clicked = getClicked(el);
+    if (!clicked) {
+      setEditingRow(undefined);
+      return;
+    }
+    const { time, timeOrText } = clicked;
+
     const period: Period | undefined = rows
       .map<Period | undefined>((it) => it.getPeriod())
       .find((it) => it && it.stop === time);
@@ -70,8 +101,6 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
       return index;
     }
 
-    let index = getIndex(el);
-    const timeOrText: TimeOrText = index === row.childElementCount - 1 ? "text" : "time";
     setEditingRow([timeOrText, period!]);
     setWhatIsValid({ what: period!, isValid: true });
     setWhenIsValid({ when: period!, isValid: true });
@@ -162,8 +191,11 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
     );
   }
 
+  const tableRef = React.createRef<HTMLTableElement>();
+  useOutsideAlerter(tableRef);
+
   return (
-    <table className="history" onClick={onClick}>
+    <table className="history" onClick={onTableClick} ref={tableRef}>
       <tbody>
         {rows.map((show) => {
           const period: Period | undefined = show.getPeriod();
