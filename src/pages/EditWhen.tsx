@@ -99,7 +99,7 @@ export const EditWhen: React.FunctionComponent<EditWhenProps> = (props: EditWhen
             className={startError ? "invalid" : "valid"}
             defaultValue={startTimeOriginal}
             min={startMinTime}
-            max={stopMinTime}
+            // max={stopMinTime}
             onChange={onChangeStart}
             onFocus={(_event) => onFocus("start", true)}
             onBlur={(_event) => onFocus("start", false)}
@@ -115,7 +115,7 @@ export const EditWhen: React.FunctionComponent<EditWhenProps> = (props: EditWhen
             type="time"
             className={stopError ? "invalid" : "valid"}
             defaultValue={stopTimeOriginal}
-            min={startMaxTime}
+            // min={startMaxTime}
             max={stopMaxTime}
             onChange={onChangeStop}
             onFocus={(_event) => onFocus("stop", true)}
