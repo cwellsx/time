@@ -1,5 +1,5 @@
-import { EditDatabase, Fetched, getPeriods } from './database';
-import { persist } from './persist';
+import { EditDatabase, Fetched, getPeriods } from "./database";
+import { persist } from "./persist";
 
 import type { SetError } from "../error";
 import type { Config, Period, TagCount, TagInfo, Time, WhatType, RequiredType, What, TimeStop } from "../model";
@@ -214,7 +214,8 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
     const result: TagCount[] = [];
     for (const key in this.tags) {
       const count = this.tags[key]!.count;
-      result.push({ key, count });
+      const summary = this.tags[key]!.tagInfo.summary;
+      result.push({ key, summary, count });
     }
     return result;
   }
@@ -222,7 +223,8 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
     const result: TagCount[] = [];
     for (const key in this.tasks) {
       const count = this.tasks[key]!.usedDate;
-      result.push({ key, count });
+      const summary = this.tasks[key]!.tagInfo.summary;
+      result.push({ key, summary, count });
     }
     return result;
   }
