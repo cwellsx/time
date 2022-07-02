@@ -6,7 +6,8 @@ import { useSetError } from '../error';
 import { EditWhat, WhatIsValid } from './EditWhat';
 import { EditWhen, WhenIsValid } from './EditWhen';
 import { helpEditWhen } from './helpEditWhen';
-import { aggregate } from './helpSums';
+import { aggregate } from './helpHistory';
+import { AllTotals, getAllTotals, Total } from './helpTotals';
 
 import type { Period, Time, What } from "../model";
 import type { HistoryState } from "../states";
@@ -35,6 +36,8 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
   const filtered = filter ? periods.filter(filter) : periods;
 
   const rows = aggregate(filtered);
+
+  const allTotals = filter ? getAllTotals(filtered, props) : undefined;
 
   const [editingRow, setEditingRow] = React.useState<[TimeOrText, Period] | undefined>(undefined);
   // unlike Now.tsx this is useState instead of userRef because on edit callback we want to re-render the Save button
@@ -195,42 +198,45 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
   useOutsideAlerter(tableRef);
 
   return (
-    <table className="history" onClick={onTableClick} ref={tableRef}>
-      <tbody>
-        {rows.map((show) => {
-          const period: Period | undefined = show.getPeriod();
-          const editing: boolean = !!editingPeriod && period?.stop === editingPeriod.stop;
-          const timeOrText: TimeOrText | undefined = editingRow && editing ? editingRow[0] : undefined;
-          const cells = !timeOrText ? (
-            <>
-              <td>{show.getId()}</td>
-              <td className="time">{formatTime(show.getMinutes())}</td>
-              <td>{getText(period)}</td>
-            </>
-          ) : timeOrText === "text" ? (
-            <>
-              <td>{show.getId()}</td>
-              <td className="time">{formatTime(show.getMinutes())}</td>
-              <td>{getEditText(period!)}</td>
-            </>
-          ) : (
-            <>
-              <td colSpan={2}>{getEditTime(period!)}</td>
-              <td>{getText(period)}</td>
-            </>
-          );
-          //const showText = !editing ? getText(period) : getEdit(period!);
-          const time = period?.stop;
-          const editable = state.config.historyEditable && show.getClass() === "span";
-          const className = !editable ? show.getClass() : show.getClass() + " editable";
-          return (
-            <tr key={show.getKey()} className={className} data-time={time}>
-              {cells}
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <>
+      {allTotals ? showAllTotals(allTotals, props) : undefined}
+      <table className="history" onClick={onTableClick} ref={tableRef}>
+        <tbody>
+          {rows.map((show) => {
+            const period: Period | undefined = show.getPeriod();
+            const editing: boolean = !!editingPeriod && period?.stop === editingPeriod.stop;
+            const timeOrText: TimeOrText | undefined = editingRow && editing ? editingRow[0] : undefined;
+            const cells = !timeOrText ? (
+              <>
+                <td>{show.getId()}</td>
+                <td className="time">{formatTime(show.getMinutes())}</td>
+                <td>{getText(period)}</td>
+              </>
+            ) : timeOrText === "text" ? (
+              <>
+                <td>{show.getId()}</td>
+                <td className="time">{formatTime(show.getMinutes())}</td>
+                <td>{getEditText(period!)}</td>
+              </>
+            ) : (
+              <>
+                <td colSpan={2}>{getEditTime(period!)}</td>
+                <td>{getText(period)}</td>
+              </>
+            );
+            //const showText = !editing ? getText(period) : getEdit(period!);
+            const time = period?.stop;
+            const editable = state.config.historyEditable && show.getClass() === "span";
+            const className = !editable ? show.getClass() : show.getClass() + " editable";
+            return (
+              <tr key={show.getKey()} className={className} data-time={time}>
+                {cells}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </>
   );
 };
 
@@ -247,4 +253,42 @@ function whatsEqual(x: What, y: What): boolean {
     ? !y.tags
     : x.tags.length === y.tags?.length && x.tags.every((it, index) => (it = y.tags![index]));
   return x.note === y.note && x.task === y.task && tagsEquals;
+}
+
+function showAllTotals(allTotals: AllTotals, props: HistoryProps): JSX.Element {
+  function getTaskText(task: string) {
+    const text = props.state.getTaskDescription(task);
+    return `[${task}]` + (text ? `: ${text}` : "");
+  }
+  function getTagText(tag: string) {
+    const text = props.state.getTaskDescription(tag);
+    return `[${tag}]` + (text ? `: ${text}` : "");
+  }
+  function showTotals(text: string, totals: Total[]): JSX.Element {
+    return (
+      <>
+        <tr>
+          <th colSpan={2}>{text}</th>
+        </tr>
+        {totals.map((it) => {
+          return (
+            <tr>
+              <td>{it.text}</td>
+              <td>{formatTime(it.minutes)}</td>
+            </tr>
+          );
+        })}
+      </>
+    );
+  }
+  const title = props.task ? getTaskText(props.task) : getTagText(props.tag!);
+  const getSubtitle = props.task ? getTagText : getTaskText;
+  return (
+    <fieldset>
+      <legend>Totals</legend>
+      <table className="totals">
+        <tbody>{showTotals(title, allTotals.totals)}</tbody>
+      </table>
+    </fieldset>
+  );
 }

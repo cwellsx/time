@@ -1,7 +1,8 @@
-table.history
+table.history,
+table.totals
   border: none
 
-  td
+  td, th
     border: none
 
     &:first-child, &.time
@@ -79,3 +80,11 @@ table.history
 
 .missingTask
   color: red
+
+table.totals
+
+  th
+    text-align: left
+
+  td:first-child
+    text-align: right

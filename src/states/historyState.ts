@@ -6,6 +6,7 @@ export type HistoryState = EditWhatState & {
   readonly config: Config;
   editWhat(when: number, what: What): void;
   getTaskDescription(task: string): string | undefined;
+  getTagDescription(tag: string): string | undefined;
   findTime(when: number): Time | undefined;
   editWhen(deleted: number[], inserted: Time[]): void;
 };

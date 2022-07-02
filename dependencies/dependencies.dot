@@ -49,13 +49,13 @@ digraph SRC {
   "helpWeeks" -> {};
   "Now" -> {"helpDate" "EditWhat"} [color=blue];
   "What" -> {"tabs" "error"};
-  "History" -> {"helpSums" "EditWhat" "EditWhen" "helpEditWhen"} [color=blue];
+  "History" -> {"helpHistory" "EditWhat" "EditWhen" "helpEditWhen"} [color=blue];
   "History" -> {"error"};
   "Settings" -> {"helpDate"} [color=blue];
   "Settings" -> {"error"};
-  "Tests" -> {"helpWeeks" "helpSums" "testEditWhen"} [color=blue];
+  "Tests" -> {"helpWeeks" "helpHistory" "testEditWhen"} [color=blue];
   "Tests" -> {"io"};
-  "helpSums" -> {"helpWeeks" "helpDate"} [color=blue];
+  "helpHistory" -> {"helpWeeks" "helpDate"} [color=blue];
   "testEditWhen" -> {"helpEditWhen"} [color=blue];
   "testEditWhen" -> {"io"};
   "helpEditWhen" -> {"helpDate"} [color=blue];

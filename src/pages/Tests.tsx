@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useSetTesting, useTesting } from '../io';
-import { aggregate } from './helpSums';
+import { aggregate } from './helpHistory';
 import { Weeks } from './helpWeeks';
 import { testEditWhen } from './testEditWhen';
 

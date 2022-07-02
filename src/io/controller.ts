@@ -1,5 +1,5 @@
-import { EditDatabase, Fetched, getPeriods } from "./database";
-import { persist } from "./persist";
+import { EditDatabase, Fetched, getPeriods } from './database';
+import { persist } from './persist';
 
 import type { SetError } from "../error";
 import type { Config, Period, TagCount, TagInfo, Time, WhatType, RequiredType, What, TimeStop } from "../model";
@@ -191,6 +191,10 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   }
   getTaskDescription(task: string): string | undefined {
     const found = this.tasks[task];
+    return found ? found.tagInfo.summary : undefined;
+  }
+  getTagDescription(tag: string): string | undefined {
+    const found = this.tags[tag];
     return found ? found.tagInfo.summary : undefined;
   }
   findTime(when: number): Time | undefined {
