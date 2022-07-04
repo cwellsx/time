@@ -1,8 +1,19 @@
-import { EditDatabase, Fetched, getPeriods } from './database';
+import { Edge, EditDatabase, Fetched, getPeriods } from './database';
 import { persist } from './persist';
 
 import type { SetError } from "../error";
-import type { Config, Period, TagCount, TagInfo, Time, WhatType, RequiredType, What, TimeStop } from "../model";
+import type {
+  Config,
+  Period,
+  TagCount,
+  TagInfo,
+  Time,
+  WhatType,
+  RequiredType,
+  What,
+  TimeStop,
+  Parents,
+} from "../model";
 import type { HistoryState, NowState, SettingsState, WhatState } from "../states";
 
 interface Tasks {
@@ -67,6 +78,17 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
         }
       }
     }
+
+    function toParents(edges: Edge[]): Parents {
+      const result: Parents = {};
+      for (const edge of edges) {
+        result[edge.child] = edge.parent;
+      }
+      return result;
+    }
+
+    this.taskParents = toParents(fetched.taskParents);
+    this.tagParents = toParents(fetched.tagParents);
   }
 
   // interface NowState
@@ -232,6 +254,10 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
     }
     return result;
   }
+
+  // EditTreeState
+  readonly taskParents: Parents;
+  readonly tagParents: Parents;
 
   // private
   private saveConfig(config: Config): void {

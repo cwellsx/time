@@ -6,6 +6,11 @@ import type { Config, Time, TagInfo, Period, TimeStop } from "../model";
 
 export type DbName = "production" | "test";
 
+export type Edge = {
+  child: string;
+  parent: string;
+};
+
 // we only store on Config instance in the table, not several,
 // so use this value as the key of that object in its table
 const configVersion = 1;
@@ -27,12 +32,20 @@ interface Schema extends DBSchema {
     key: string;
     value: TagInfo;
   };
+  taskParents: {
+    key: string;
+    value: Edge;
+  };
+  tagParents: {
+    key: string;
+    value: Edge;
+  };
 }
 
 export type Database = IDBPDatabase<Schema>;
 
 export async function open(dbName: DbName): Promise<Database> {
-  const db: Database = await openDB<Schema>(dbName, 1, {
+  const db: Database = await openDB<Schema>(dbName, 2, {
     upgrade(db, oldVersion, newVersion, transaction) {
       if (oldVersion < 1) {
         db.createObjectStore("times", {
@@ -46,34 +59,29 @@ export async function open(dbName: DbName): Promise<Database> {
           keyPath: "key",
         });
       }
+      if (oldVersion < 2) {
+        db.createObjectStore("taskParents", {
+          keyPath: "child",
+        });
+        db.createObjectStore("tagParents", {
+          keyPath: "child",
+        });
+      }
     },
   });
   return db;
 }
 
-export class Fetched {
-  constructor(
-    dbName: DbName,
-    times: Time[],
-    tags: TagInfo[],
-    tasks: TagInfo[],
-    config: Config | undefined,
-    persisted: boolean
-  ) {
-    this.dbName = dbName;
-    this.times = times;
-    this.tags = tags;
-    this.tasks = tasks;
-    this.config = config;
-    this.persisted = persisted;
-  }
+export type Fetched = {
   readonly dbName: DbName;
   readonly times: Time[];
   readonly tags: TagInfo[];
   readonly tasks: TagInfo[];
+  readonly taskParents: Edge[];
+  readonly tagParents: Edge[];
   readonly config?: Config;
   readonly persisted: boolean;
-}
+};
 
 export class EditDatabase {
   protected readonly db: Database;
@@ -133,12 +141,14 @@ export class EditDatabase {
 export async function fetchDatabase(dbName: DbName): Promise<Fetched> {
   console.log("fetchDatabase");
   const db = await open(dbName);
-  const tx = db.transaction(["times", "config", "tags", "tasks"]);
+  const tx = db.transaction(["times", "config", "tags", "tasks", "taskParents", "tagParents"]);
   const times = await tx.objectStore("times").getAll();
   const config = await tx.objectStore("config").get(configVersion);
   const tags = await tx.objectStore("tags").getAll();
   const tasks = await tx.objectStore("tasks").getAll();
-  return new Fetched(dbName, times, tags, tasks, config, await persisted());
+  const taskParents = await tx.objectStore("taskParents").getAll();
+  const tagParents = await tx.objectStore("tagParents").getAll();
+  return { dbName, times, tags, tasks, taskParents, tagParents, config, persisted: await persisted() };
 }
 
 export async function clearDatabase(dbName: DbName): Promise<void> {
