@@ -4,25 +4,41 @@ import React from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-type EditTreeProps<T> = {
-  data: T[];
-  getKey(item: T): string;
+type EditTreeProps = {
+  nodes: INode[];
   getParent(key: string): string | null;
-  render(item: T): React.ReactNode;
 };
 
-type Node<T> = {
-  data: T;
-  parent: Node<T> | null;
-  children: Node<T>[];
-};
+interface INode {
+  key: string;
+  parent: INode | null;
+  children: INode[];
+  render(): React.ReactNode;
+}
+
+export class NodeT<T> implements INode {
+  private readonly data: T;
+  private readonly renderT: (item: T) => React.ReactNode;
+  readonly key: string;
+  readonly parent: INode | null;
+  readonly children: INode[];
+
+  render(): React.ReactNode {
+    return this.renderT(this.data);
+  }
+
+  constructor(data: T, key: string, renderT: (item: T) => React.ReactNode) {
+    this.data = data;
+    this.renderT = renderT;
+    this.key = key;
+    this.parent = null;
+    this.children = [];
+  }
+}
 
 export const EditSampleTree = () => {
   type Data = { key: string };
   const data: Data[] = [{ key: "foo" }, { key: "bar" }];
-  const getKey = (item: Data) => {
-    return item.key;
-  };
   const getParent = (key: string) => {
     switch (key) {
       case "foo":
@@ -32,25 +48,19 @@ export const EditSampleTree = () => {
     }
   };
   const render = (item: Data): React.ReactNode => item.key;
-  return <EditTree data={data} getKey={getKey} getParent={getParent} render={render} />;
+  const nodes: INode[] = data.map((data) => new NodeT(data, data.key, render));
+  return <EditTree nodes={nodes} getParent={getParent} />;
 };
 
-// https://stackoverflow.com/questions/53958028/how-to-use-generics-in-props-in-react-in-a-functional-component
-export const EditTree = <T extends object>(
-  props: EditTreeProps<T> & { children?: React.ReactNode }
-): React.ReactElement => {
-  const { data, getKey, getParent, render } = props;
+export const EditTree: React.FunctionComponent<EditTreeProps> = (props: EditTreeProps) => {
+  const { nodes, getParent } = props;
 
-  const flat: Node<T>[] = data.map((data) => {
-    return { data, parent: null, children: [] };
-  });
+  const dictionary: { [index: string]: INode } = {};
+  for (const node of nodes) dictionary[node.key] = node;
 
-  const dictionary: { [index: string]: Node<T> } = {};
-  for (const node of flat) dictionary[getKey(node.data)] = node;
-
-  const tree: Node<T>[] = [];
-  for (const node of flat) {
-    const parentKey = getParent(getKey(node.data));
+  const tree: INode[] = [];
+  for (const node of nodes) {
+    const parentKey = getParent(node.key);
     if (parentKey === null) tree.push(node);
     else {
       const parent = dictionary[parentKey];
@@ -59,20 +69,20 @@ export const EditTree = <T extends object>(
     }
   }
 
-  const renderNodes = (nodes: Node<T>[]) => {
-    return nodes.map((node) => {
-      return (
-        <li>
-          {render(node.data)}
-          {node.children.length ? <ul>{renderNodes(node.children)}</ul> : undefined}
-        </li>
-      );
-    });
-  };
-
-  const renderTree = (nodes: Node<T>[]) => {
-    return <ul className="editTree">{renderNodes(nodes)}</ul>;
-  };
-
   return <DndProvider backend={HTML5Backend}>{renderTree(tree)}</DndProvider>;
+};
+
+const renderNodes = (nodes: INode[]) => {
+  return nodes.map((node) => {
+    return (
+      <li>
+        {node.render()}
+        {node.children.length ? <ul>{renderNodes(node.children)}</ul> : undefined}
+      </li>
+    );
+  });
+};
+
+const renderTree = (nodes: INode[]) => {
+  return <ul className="editTree">{renderNodes(nodes)}</ul>;
 };
