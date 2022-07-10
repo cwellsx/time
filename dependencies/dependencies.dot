@@ -6,11 +6,12 @@ digraph SRC {
   "model" [shape=folder, fontsize="22pt"] [style=dotted];
   "pages" [shape=folder, color=blue, fontsize="22pt"];
   "states" [shape=folder, fontsize="22pt"] [style=dotted];
-  "tabs" [shape=folder, fontsize="22pt"];
+  "tabs" [shape=folder, color=brown, fontsize="22pt"];
   "tags" [shape=folder, color=brown, fontsize="22pt"];
-  "topbar" [shape=folder, fontsize="22pt"];
-  "icons" [shape=folder];
-  "markdown" [shape=folder];
+  "topbar" [shape=folder, color=brown, fontsize="22pt"];
+  "tree" [shape=folder, color=brown, fontsize="22pt"];
+  "icons" [shape=folder, color=brown];
+  "markdown" [shape=folder, color=brown];
   
   "error" -> {"ErrorMessage" "appErrorContext"} [color=red];
   "ErrorMessage" [shape=rect];
@@ -47,9 +48,10 @@ digraph SRC {
   "pages" -> {"model" "states"} [style=dotted];
   "helpDate" -> {};
   "helpWeeks" -> {};
+  "helpTotals" -> {};
   "Now" -> {"helpDate" "EditWhat"} [color=blue];
-  "What" -> {"tabs" "error"};
-  "History" -> {"helpHistory" "EditWhat" "EditWhen" "helpEditWhen"} [color=blue];
+  "What" -> {"tabs" "error" "tree"};
+  "History" -> {"helpHistory" "helpTotals" "EditWhat" "EditWhen" "helpEditWhen"} [color=blue];
   "History" -> {"error"};
   "Settings" -> {"helpDate"} [color=blue];
   "Settings" -> {"error"};
@@ -59,6 +61,7 @@ digraph SRC {
   "testEditWhen" -> {"helpEditWhen"} [color=blue];
   "testEditWhen" -> {"io"};
   "helpEditWhen" -> {"helpDate"} [color=blue];
+  "EditWhat" -> {"helpDate"} [color=blue]
   "EditWhat" -> {"tags"};
   "EditWhen" -> {"helpDate"} [color=blue]
   "EditWhen" -> {"error"}
@@ -70,9 +73,14 @@ digraph SRC {
   "settingsState" -> {} [style=dotted];
   "editWhatState" -> {} [style=dotted];
 
-  "tabs" -> {"Tabs"};
+  "tabs" -> {"Tabs"} [color=brown];
   "Tabs" [shape=rect];
   "Tabs" -> {};
+
+  "tree" -> {"EditTree" "makeNodes"} [color=brown];
+  "EditTree" [shape=rect];
+  "EditTree" -> {"node"} [style=dotted, color=brown];
+  "makeNodes" -> {"node"} [style=dotted, color=brown];
 
   "tags" -> {"EditTags"} [color=brown];
   "tags" -> {"tagsTypes"} [style=dotted];
@@ -81,12 +89,12 @@ digraph SRC {
   "EditTags" -> {"error"};
   "tagsHook" -> {"selectTagsState"} [color=brown];
   "tagsIcons" -> {};
-  "tagsTypes" -> {} [style=dotted];
+  "tagsTypes" -> {} [style=dotted, color=brown];
 
-  "topbar" -> {"TopBar" "Help"};
+  "topbar" -> {"TopBar" "Help"} [color=brown];
   "TopBar" [shape=rect];
   "Help" [shape=rect];
-  "TopBar" -> {"pageProperties"};
-  "pageProperties" -> {"markdown" "icons"};
-  "Help" -> {"markdown" "pageProperties"};
+  "TopBar" -> {"pageProperties"} [color=brown];
+  "pageProperties" -> {"markdown" "icons"} [color=brown];
+  "Help" -> {"markdown" "pageProperties"} [color=brown];
 }

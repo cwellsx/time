@@ -4,7 +4,7 @@ import React from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import { INode } from './node';
+import type { INode } from "./node";
 
 type EditTreeProps = {
   roots: INode[];

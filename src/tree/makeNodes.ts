@@ -1,4 +1,4 @@
-import { INode } from './node';
+import type { INode } from "./node";
 
 class NodeT<T> implements INode {
   private readonly data: T;
