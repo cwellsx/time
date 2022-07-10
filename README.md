@@ -232,6 +232,14 @@ The application is implemented using these APIs.
   - https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
 - date-and-time
   - https://www.npmjs.com/package/date-and-time
+- react-dnd and react-dnd-html5-backend
+
+Per https://github.com/react-dnd/react-dnd/issues/3429 a non-latest version of react-dnd is installed, as follows,
+because its latest version is intended for React v18 and doesn't work with React v17 which this project is still using:
+
+```
+npm install react-dnd@15.1.2 react-dnd-html5-backend@15.1.2
+```
 
 ### Data stores
 
