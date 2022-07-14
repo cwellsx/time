@@ -29,11 +29,12 @@ digraph SRC {
   "persist" -> {}
   "appTestingContext" -> {};
 
-  "model" -> {"config" "period" "testResult" "time" "tags" "whatType" "what"} [style=dotted];
+  "model" -> {"config" "period" "testResult" "parents" "time" "tags" "whatType" "what"} [style=dotted];
   "config" -> {} [style=dotted];
   "period" -> {"what"} [style=dotted];
   "testResult" -> {} [style=dotted];
   "time" -> {"what"} [style=dotted];
+  "parents" -> {"what"} [style=dotted];
   "what" -> {} [style=dotted];
   "whatType" -> {} [style=dotted];
 
@@ -77,9 +78,12 @@ digraph SRC {
   "Tabs" [shape=rect];
   "Tabs" -> {};
 
-  "tree" -> {"EditTree" "makeNodes"} [color=brown];
+  "tree" -> {"EditTree" "SampleTree" "makeNodes"} [color=brown];
   "EditTree" [shape=rect];
+  "SampleTree" [shape=rect];
   "EditTree" -> {"node"} [style=dotted, color=brown];
+  "SampleTree" -> {"EditTree" "makeNodes"} [color=brown];
+  "SampleTree" -> {"node"} [style=dotted, color=brown];
   "makeNodes" -> {"node"} [style=dotted, color=brown];
 
   "tags" -> {"EditTags"} [color=brown];

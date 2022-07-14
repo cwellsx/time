@@ -1,12 +1,15 @@
 import './editTree.sass';
 
 import React from 'react';
-import { DndProvider } from 'react-dnd';
+import { DndProvider, useDrag } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import type { INode } from "./node";
 
-type EditTreeProps = { roots: INode[] };
+type EditTreeProps = {
+  roots: INode[];
+  setParent: (child: string, parent: string | null) => void;
+};
 export const EditTree: React.FunctionComponent<EditTreeProps> = (props: EditTreeProps) => {
   const { roots } = props;
   return (
@@ -19,9 +22,17 @@ export const EditTree: React.FunctionComponent<EditTreeProps> = (props: EditTree
 type ItemProps = { node: INode };
 export const Item: React.FunctionComponent<ItemProps> = (props: ItemProps) => {
   const { node } = props;
+
+  const [{ opacity }, drag, preview] = useDrag(() => ({
+    type: node.type,
+    collect: (monitor) => ({
+      opacity: monitor.isDragging() ? 0.4 : 1,
+    }),
+  }));
+
   return (
-    <div>
-      <div className="drag" />
+    <div ref={preview} style={{ opacity }}>
+      <div className="drag" ref={drag} />
       {node.render()}
     </div>
   );

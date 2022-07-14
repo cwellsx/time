@@ -5,7 +5,7 @@ import * as ReactRouter from 'react-router-dom';
 
 import { ErrorMessage } from '../error';
 import { Tabs } from '../tabs';
-import { EditTree, makeSampleTree } from '../tree';
+import { SampleTree } from '../tree';
 
 import type { WhatState } from "../states";
 import type { TabAction } from "../tabs";
@@ -175,7 +175,7 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
         {!key || validationErrorMessage ? undefined : newButtonText}
       </div>
       {showAll}
-      <EditTree roots={makeSampleTree()} />
+      <SampleTree />
     </React.Fragment>
   );
 };

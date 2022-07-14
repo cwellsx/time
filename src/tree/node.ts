@@ -3,4 +3,5 @@ export interface INode {
   parent: INode | null;
   children: INode[];
   render(): React.ReactNode;
+  type: string;
 }

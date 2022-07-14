@@ -1,2 +1,3 @@
-export { makeNodes as makeTree, makeSampleTree } from "./makeNodes";
+export { makeNodes } from "./makeNodes";
 export { EditTree } from "./EditTree";
+export { SampleTree } from "./SampleTree";

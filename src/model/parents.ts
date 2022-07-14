@@ -1,3 +1,3 @@
 export type Parents = {
-  [index: string]: string;
+  [index: string]: string | undefined;
 };
