@@ -5,7 +5,6 @@ class NodeT<T> implements INode {
   private readonly renderT: (item: T) => React.ReactNode;
   readonly key: string;
   readonly type: string;
-  readonly parent: INode | null;
   readonly children: INode[];
 
   render(): React.ReactNode {
@@ -17,7 +16,6 @@ class NodeT<T> implements INode {
     this.renderT = renderT;
     this.key = key;
     this.type = type;
-    this.parent = null;
     this.children = [];
   }
 }
@@ -40,7 +38,6 @@ export function makeNodes<T>(
     if (parentKey === null) tree.push(node);
     else {
       const parent = dictionary[parentKey];
-      node.parent = parent;
       parent.children.push(node);
     }
   }

@@ -20,7 +20,7 @@ export const SampleTree: React.FunctionComponent = () => {
   };
 
   const setParent = (child: string, parent: string | null) => {
-    const newParents = Object.assign(parents) as Parents;
+    const newParents = { ...parents };
     newParents[child] = parent ?? undefined;
     setParents(newParents);
   };

@@ -81,7 +81,10 @@ digraph SRC {
   "tree" -> {"EditTree" "SampleTree" "makeNodes"} [color=brown];
   "EditTree" [shape=rect];
   "SampleTree" [shape=rect];
+  "TreeItem" [shape=rect];
   "EditTree" -> {"node"} [style=dotted, color=brown];
+  "EditTree" -> {"TreeItem"} [color=brown];
+  "TreeItem" -> {"node"} [style=dotted, color=brown];
   "SampleTree" -> {"EditTree" "makeNodes"} [color=brown];
   "SampleTree" -> {"node"} [style=dotted, color=brown];
   "makeNodes" -> {"node"} [style=dotted, color=brown];

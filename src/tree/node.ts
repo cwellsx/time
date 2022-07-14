@@ -1,7 +1,6 @@
 export interface INode {
-  key: string;
-  parent: INode | null;
-  children: INode[];
+  readonly key: string;
+  readonly children: INode[];
   render(): React.ReactNode;
-  type: string;
+  readonly type: string;
 }
