@@ -2,10 +2,11 @@ export interface INode {
   readonly key: string;
   readonly parent: string | null;
   readonly children: INode[];
-  render(): React.ReactNode;
   readonly type: string;
+  render(): React.ReactNode;
+  isDescendantOf(other: string): boolean;
 }
 
 export type GetParent = (child: string) => string | null;
 export type SetParent = (child: string, parent: string) => void;
-export type IsAncestor = (child: string, parent: string) => boolean;
+export type IsDescendant = (child: string, parent: string) => boolean;

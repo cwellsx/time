@@ -36,6 +36,9 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
       // can't be own parent
       if (node.key === item.key) return;
 
+      // can't be parent of ancestor
+      if (node.isDescendantOf(item.key)) return;
+
       // if (!ref.current) {
       //   return;
       // }
