@@ -1,10 +1,10 @@
-import './editTree.sass';
+import "./editTree.sass";
 
-import React from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import React from "react";
+import { useDrag, useDrop } from "react-dnd";
 
 import type { Identifier, XYCoord } from "dnd-core";
-import type { INode } from "./node";
+import type { INode } from "./treeTypes";
 
 type DragObject = {
   key: string;
@@ -16,6 +16,7 @@ type CollectedProps = {
 };
 
 type ItemProps = { node: INode; index: number; setParent: (child: string, parent: string | null) => void };
+
 export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) => {
   const { node, index, setParent } = props;
 
@@ -34,6 +35,7 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
     hover(item: DragObject, monitor) {
       // can't be own parent
       if (node.key === item.key) return;
+
       // if (!ref.current) {
       //   return;
       // }
@@ -82,7 +84,6 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
   }));
 
   const itemRef = React.useRef<HTMLDivElement>(null);
-
   drop(preview(itemRef));
 
   return (

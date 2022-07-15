@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import { EditTree } from './EditTree';
-import { makeNodes } from './makeNodes';
+import { EditTree } from "./EditTree";
+import { makeTree } from "./makeTree";
 
-import type { INode } from "./node";
+import type { INode } from "./treeTypes";
 
 type Data = { key: string };
 type Parents = {
@@ -26,7 +26,7 @@ export const SampleTree: React.FunctionComponent = () => {
   };
 
   function makeSampleTree(): INode[] {
-    return makeNodes(
+    return makeTree(
       data,
       (item) => item.key,
       render,

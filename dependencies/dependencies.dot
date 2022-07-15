@@ -78,16 +78,16 @@ digraph SRC {
   "Tabs" [shape=rect];
   "Tabs" -> {};
 
-  "tree" -> {"EditTree" "SampleTree" "makeNodes"} [color=brown];
+  "tree" -> {"EditTree" "SampleTree" "makeTree"} [color=brown];
   "EditTree" [shape=rect];
   "SampleTree" [shape=rect];
   "TreeItem" [shape=rect];
-  "EditTree" -> {"node"} [style=dotted, color=brown];
+  "EditTree" -> {"treeTypes"} [style=dotted, color=brown];
   "EditTree" -> {"TreeItem"} [color=brown];
-  "TreeItem" -> {"node"} [style=dotted, color=brown];
-  "SampleTree" -> {"EditTree" "makeNodes"} [color=brown];
-  "SampleTree" -> {"node"} [style=dotted, color=brown];
-  "makeNodes" -> {"node"} [style=dotted, color=brown];
+  "TreeItem" -> {"treeTypes"} [style=dotted, color=brown];
+  "SampleTree" -> {"EditTree" "makeTree"} [color=brown];
+  "SampleTree" -> {"treeTypes"} [style=dotted, color=brown];
+  "makeTree" -> {"treeTypes"} [style=dotted, color=brown];
 
   "tags" -> {"EditTags"} [color=brown];
   "tags" -> {"tagsTypes"} [style=dotted];

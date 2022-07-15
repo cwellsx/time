@@ -1,9 +1,10 @@
-import type { INode } from "./node";
+import type { INode, GetParent } from "./treeTypes";
 
 class NodeT<T> implements INode {
   private readonly data: T;
   private readonly renderT: (item: T) => React.ReactNode;
   readonly key: string;
+  readonly parent: string | null;
   readonly type: string;
   readonly children: INode[];
 
@@ -11,35 +12,37 @@ class NodeT<T> implements INode {
     return this.renderT(this.data);
   }
 
-  constructor(data: T, key: string, type: string, renderT: (item: T) => React.ReactNode) {
+  constructor(data: T, key: string, parent: string | null, type: string, renderT: (item: T) => React.ReactNode) {
     this.data = data;
     this.renderT = renderT;
     this.key = key;
+    this.parent = parent;
     this.type = type;
     this.children = [];
   }
 }
 
-export function makeNodes<T>(
+export function makeTree<T>(
   data: T[],
   getKey: (item: T) => string,
   render: (item: T) => React.ReactNode,
-  getParent: (key: string) => string | null,
+  getParent: GetParent,
   getType: (item: T) => string
 ): INode[] {
-  const nodes: INode[] = data.map((data) => new NodeT(data, getKey(data), getType(data), render));
+  const nodes: INode[] = data.map((data) => {
+    const key = getKey(data);
+    const parent = getParent(key);
+    return new NodeT(data, key, parent, getType(data), render);
+  });
 
   const dictionary: { [index: string]: INode } = {};
   for (const node of nodes) dictionary[node.key] = node;
 
   const tree: INode[] = [];
   for (const node of nodes) {
-    const parentKey = getParent(node.key);
-    if (parentKey === null) tree.push(node);
-    else {
-      const parent = dictionary[parentKey];
-      parent.children.push(node);
-    }
+    const parentKey = node.parent;
+    const siblings = parentKey === null ? tree : dictionary[parentKey].children;
+    siblings.push(node);
   }
 
   return tree;

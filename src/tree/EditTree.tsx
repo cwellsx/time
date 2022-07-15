@@ -1,17 +1,18 @@
-import './editTree.sass';
+import "./editTree.sass";
 
-import React from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import React from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { TreeItem } from './TreeItem';
+import { TreeItem } from "./TreeItem";
 
-import type { INode } from "./node";
+import type { INode } from "./treeTypes";
 
 type EditTreeProps = {
   roots: INode[];
   setParent: (child: string, parent: string | null) => void;
 };
+
 export const EditTree: React.FunctionComponent<EditTreeProps> = (props: EditTreeProps) => {
   const { roots, setParent } = props;
 
