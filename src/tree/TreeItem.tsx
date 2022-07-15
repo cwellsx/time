@@ -25,6 +25,8 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
 
   // this is a heavily modified version of https://react-dnd.github.io/react-dnd/examples/sortable/simple
 
+  const id = `tree-${node.key}`;
+
   const [{ handlerId }, drop] = useDrop<DragObject, void, { handlerId: Identifier | null }>({
     accept: node.type,
     collect(monitor) {
@@ -39,42 +41,13 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
       // can't be parent of ancestor
       if (node.isDescendantOf(item.key)) return;
 
-      // if (!ref.current) {
-      //   return;
-      // }
-      // const dragIndex = item.siblingIndex;
-      // const hoverIndex = node.siblingIndex;
-      // // Don't replace items with themselves
-      // if (dragIndex === hoverIndex) {
-      //   return;
-      // }
-      // // Determine rectangle on screen
-      // const hoverBoundingRect = ref.current?.getBoundingClientRect();
-      // // Get vertical middle
-      // const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-      // // Determine mouse position
-      // const clientOffset = monitor.getClientOffset();
-      // // Get pixels to the top
-      // const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
-      // // Only perform the move when the mouse has crossed half of the items height
-      // // When dragging downwards, only move when the cursor is below 50%
-      // // When dragging upwards, only move when the cursor is above 50%
-      // // Dragging downwards
-      // if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-      //   return;
-      // }
-      // // Dragging upwards
-      // if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-      //   return;
-      // }
-      // // Time to actually perform the action
-      // moveCard(dragIndex, hoverIndex);
-      // // Note: we're mutating the monitor item here!
-      // // Generally it's better to avoid mutations,
-      // // but it's good here for the sake of performance
-      // // to avoid expensive index searches.
-      // item.index = hoverIndex;
-      setParent(item.key, node.key);
+      const self = document.getElementById(id);
+      const draggedOffset = monitor.getSourceClientOffset();
+
+      if (!self || !draggedOffset) return;
+
+      const isChild = draggedOffset.x > self.getBoundingClientRect().right;
+      setParent(item.key, isChild ? node.key : node.parent);
     },
   });
 
@@ -91,7 +64,7 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
 
   return (
     <div ref={itemRef} style={{ opacity }}>
-      <div className="drag" ref={drag} />
+      <div className="drag" ref={drag} id={id} />
       {node.render()}
     </div>
   );
