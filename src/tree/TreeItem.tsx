@@ -1,4 +1,4 @@
-import "./editTree.sass";
+import "./treeItem.sass";
 
 import React from "react";
 import { useDrag, useDrop } from "react-dnd";
@@ -20,12 +20,9 @@ type ItemProps = { node: INode; index: number; setParent: (child: string, parent
 export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) => {
   const { node, index, setParent } = props;
 
-  // const itemRef = React.useRef<HTMLDivElement>(null);
-  // const dragRef = React.useRef<HTMLDivElement>(null);
-
   // this is a heavily modified version of https://react-dnd.github.io/react-dnd/examples/sortable/simple
 
-  const id = `tree-${node.key}`;
+  const itemRef = React.useRef<HTMLDivElement>(null);
 
   const [{ handlerId }, drop] = useDrop<DragObject, void, { handlerId: Identifier | null }>({
     accept: node.type,
@@ -41,12 +38,13 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
       // can't be parent of ancestor
       if (node.isDescendantOf(item.key)) return;
 
-      const self = document.getElementById(id);
-      const draggedOffset = monitor.getSourceClientOffset();
+      const dropped = itemRef.current?.getBoundingClientRect();
+      const dragged = monitor.getSourceClientOffset();
 
-      if (!self || !draggedOffset) return;
+      if (!dropped || !dragged) return;
 
-      const isChild = draggedOffset.x > self.getBoundingClientRect().right;
+      const isChild = dragged.x > dropped.left + 48;
+
       setParent(item.key, isChild ? node.key : node.parent);
     },
   });
@@ -59,13 +57,17 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
     }),
   }));
 
-  const itemRef = React.useRef<HTMLDivElement>(null);
   drop(preview(itemRef));
 
   return (
-    <div ref={itemRef} style={{ opacity }}>
-      <div className="drag" ref={drag} id={id} />
-      {node.render()}
+    <div className="item" ref={itemRef} style={{ opacity }}>
+      <div className="line" />
+      <div className="pad">
+        <div className="drag" ref={drag} />
+      </div>
+      <div className="pad">
+        <span className="content">{node.render()}</span>
+      </div>
     </div>
   );
 };
