@@ -26,10 +26,21 @@ ul.editTree
     border-left: 1px solid #000
     height: 100%
     width: 0px
-    top: 2px
+    top: 0px
 
   li.last-sibling::after
-    height: 17px
+    height: 18px
 
   li.root-sibling::after
-    top: 19px
+    top: 18px
+
+  li.only-sibling::after
+    top: -5px
+    height: 23px
+
+  li.first-sibling::after
+    top: -5px
+    height: calc(100% + 5px)
+
+  li.no-siblings::after, li.no-siblings::before
+    visibility: hidden

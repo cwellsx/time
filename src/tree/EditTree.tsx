@@ -8,7 +8,7 @@ import { TreeItem } from "./TreeItem";
 
 import type { INode, SetParent } from "./treeTypes";
 
-type Sibling = "root-sibling" | "no-siblings" | "middle-sibling" | "last-sibling";
+type Sibling = "root-sibling" | "no-siblings" | "middle-sibling" | "last-sibling" | "first-sibling" | "only-sibling";
 
 function getSibling(index: number, n: number, root: boolean): Sibling {
   if (root) {
@@ -16,6 +16,7 @@ function getSibling(index: number, n: number, root: boolean): Sibling {
     if (n === 1) return "no-siblings";
     if (index === 0) return "root-sibling";
   }
+  if (index === 0) return n > 1 ? "first-sibling" : "only-sibling";
   return index === n - 1 ? "last-sibling" : "middle-sibling";
 }
 
