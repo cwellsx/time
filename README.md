@@ -241,6 +241,16 @@ because its latest version is intended for React v18 and doesn't work with React
 npm install react-dnd@15.1.2 react-dnd-html5-backend@15.1.2
 ```
 
+News:
+
+- I installed the latest versions for react and react-dnd and others, which seems to fix this problem:
+
+  [Fix for "Invariant Violation: Expected targetIds to be registered"](https://github.com/react-dnd/react-dnd/pull/3432)
+
+- However I opened this issue
+
+  [Examples don't use createRoot which is new in React 18.](https://github.com/react-dnd/react-dnd/issues/3476)
+
 ### Data stores
 
 - Only the most primitive, unprocessed data is persisted to the database:

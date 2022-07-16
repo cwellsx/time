@@ -1,8 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+
+/* This is what React 18 wants but this breaks the tree's drag-and-drop --
+   see https://github.com/react-dnd/react-dnd/issues/3476
+
+import { createRoot } from "react-dom/client";
+
+const container = document.getElementById("root");
+const root = createRoot(container!); // createRoot(container!) if you use TypeScript
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+*/
 
 ReactDOM.render(
   <React.StrictMode>
