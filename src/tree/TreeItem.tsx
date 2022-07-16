@@ -4,7 +4,7 @@ import React from "react";
 import { useDrag, useDrop } from "react-dnd";
 
 import type { Identifier, XYCoord } from "dnd-core";
-import type { INode } from "./treeTypes";
+import type { INode, SetParent } from "./treeTypes";
 
 type DragObject = {
   key: string;
@@ -15,7 +15,11 @@ type CollectedProps = {
   opacity: number;
 };
 
-type ItemProps = { node: INode; index: number; setParent: (child: string, parent: string | null) => void };
+type ItemProps = {
+  node: INode;
+  index: number;
+  setParent: SetParent;
+};
 
 export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) => {
   const { node, index, setParent } = props;
@@ -43,7 +47,7 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
 
       if (!dropped || !dragged) return;
 
-      const isChild = dragged.x > dropped.left + 48;
+      const isChild = dragged.x > dropped.left + 24;
 
       setParent(item.key, isChild ? node.key : node.parent);
     },
@@ -61,7 +65,6 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
 
   return (
     <div className="item" ref={itemRef} style={{ opacity }}>
-      <div className="line" />
       <div className="pad">
         <div className="drag" ref={drag} />
       </div>

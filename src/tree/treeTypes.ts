@@ -8,5 +8,4 @@ export interface INode {
 }
 
 export type GetParent = (child: string) => string | null;
-export type SetParent = (child: string, parent: string) => void;
-export type IsDescendant = (child: string, parent: string) => boolean;
+export type SetParent = (child: string, parent: string | null) => void;

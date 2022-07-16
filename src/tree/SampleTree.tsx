@@ -12,7 +12,7 @@ type Parents = {
 const render = (item: Data): React.ReactNode => item.key;
 
 export const SampleTree: React.FunctionComponent = () => {
-  const [data, setData] = React.useState<Data[]>([{ key: "foo" }, { key: "bar" }, { key: "baz" }]);
+  const [data, setData] = React.useState<Data[]>([{ key: "foo" }, { key: "bar" }, { key: "baz" }, { key: "bat" }]);
   const [parents, setParents] = React.useState<Parents>({ baz: "bar" });
 
   const getParent = (key: string) => {
