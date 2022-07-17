@@ -38,12 +38,13 @@ digraph SRC {
   "what" -> {} [style=dotted];
   "whatType" -> {} [style=dotted];
 
-  "pages" -> {"Now" "What" "History" "Settings" "Tests"} [color=blue];
+  "pages" -> {"Now" "What" "History" "Settings"} [color=blue];
+  "pages" -> {"Tests"} [color=gold];
   "Now" [shape=rect];
   "What" [shape=rect];
   "History" [shape=rect];
   "Settings" [shape=rect];
-  "Tests" [shape=rect];
+  "Tests" [shape=rect] [color=gold];
   "EditWhat" [shape=rect];
   "EditWhen" [shape=rect];
   "pages" -> {"model" "states"} [style=dotted];
@@ -56,11 +57,9 @@ digraph SRC {
   "History" -> {"error"};
   "Settings" -> {"helpDate"} [color=blue];
   "Settings" -> {"error"};
-  "Tests" -> {"helpWeeks" "helpHistory" "testEditWhen"} [color=blue];
-  "Tests" -> {"io"};
+  "Tests" -> {"testEditWhen" "helpWeeks" "helpHistory" "io"} [color=gold];
   "helpHistory" -> {"helpWeeks" "helpDate"} [color=blue];
-  "testEditWhen" -> {"helpEditWhen"} [color=blue];
-  "testEditWhen" -> {"io"};
+  "testEditWhen" -> {"helpEditWhen" "io"} [color=gold];
   "helpEditWhen" -> {"helpDate"} [color=blue];
   "EditWhat" -> {"helpDate"} [color=blue]
   "EditWhat" -> {"tags"};
