@@ -47,12 +47,17 @@ digraph SRC {
   "Tests" [shape=rect] [color=gold];
   "EditWhat" [shape=rect];
   "EditWhen" [shape=rect];
+  "EditTable" [shape=rect];
+  "EditSummary" [shape=rect];
+  "NewWhat" [shape=rect];
   "pages" -> {"model" "states"} [style=dotted];
   "helpDate" -> {};
   "helpWeeks" -> {};
   "helpTotals" -> {};
   "Now" -> {"helpDate" "EditWhat"} [color=blue];
   "What" -> {"tabs" "error" "tree"};
+  "What" -> {"NewWhat" "EditSummary"} [color=blue];
+  "EditSummary" -> {"EditTable"} [color=blue];
   "History" -> {"helpHistory" "helpTotals" "EditWhat" "EditWhen" "helpEditWhen"} [color=blue];
   "History" -> {"error"};
   "Settings" -> {"helpDate"} [color=blue];
