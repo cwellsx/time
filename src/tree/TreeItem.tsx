@@ -1,7 +1,7 @@
 import "./treeItem.sass";
 
 import React from "react";
-import { useDrag, useDrop } from "react-dnd";
+import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 
 import type { Identifier, XYCoord } from "dnd-core";
 import type { INode, SetParent } from "./treeTypes";
@@ -28,6 +28,23 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
 
   const itemRef = React.useRef<HTMLDivElement>(null);
 
+  function target(item: DragObject, monitor: DropTargetMonitor<DragObject, void>, isDrop: boolean): void {
+    // can't be own parent
+    if (node.key === item.key) return;
+
+    // can't be parent of ancestor
+    if (node.isDescendantOf(item.key)) return;
+
+    const dropped = itemRef.current?.getBoundingClientRect();
+    const dragged = monitor.getSourceClientOffset();
+
+    if (!dropped || !dragged) return;
+
+    const isChild = dragged.x > dropped.left + 24;
+
+    setParent(item.key, isChild ? node.key : node.parent, isDrop);
+  }
+
   const [{ handlerId }, drop] = useDrop<DragObject, void, { handlerId: Identifier | null }>({
     accept: node.type,
     collect(monitor) {
@@ -36,20 +53,10 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
       };
     },
     hover(item: DragObject, monitor) {
-      // can't be own parent
-      if (node.key === item.key) return;
-
-      // can't be parent of ancestor
-      if (node.isDescendantOf(item.key)) return;
-
-      const dropped = itemRef.current?.getBoundingClientRect();
-      const dragged = monitor.getSourceClientOffset();
-
-      if (!dropped || !dragged) return;
-
-      const isChild = dragged.x > dropped.left + 24;
-
-      setParent(item.key, isChild ? node.key : node.parent);
+      target(item, monitor, false);
+    },
+    drop(item: DragObject, monitor) {
+      target(item, monitor, true);
     },
   });
 

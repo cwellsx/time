@@ -125,6 +125,11 @@ export class EditDatabase {
     const tag: TagInfo = { key, summary };
     return this.db.put(whatType, tag);
   }
+  setParent(whatType: "tags" | "tasks", child: string, parent: string | undefined): Promise<string | void> {
+    const table = whatType === "tasks" ? "taskParents" : "tagParents";
+    if (parent) return this.db.put(table, { child, parent });
+    else return this.db.delete(table, child);
+  }
   editWhat(timeStop: TimeStop): Promise<number> {
     return this.db.put("times", timeStop);
   }

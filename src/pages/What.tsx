@@ -3,14 +3,13 @@ import "./what.sass";
 import React from "react";
 
 import { Tabs } from "../tabs";
-import { SampleTree } from "../tree";
+import { EditSubtasks } from "./EditSubtasks";
 import { EditSummary } from "./EditSummary";
 import { NewWhat } from "./NewWhat";
 
 import type { WhatState } from "../states";
 import type { TabAction } from "../tabs";
-import type { WhatType, TagInfo } from "../model";
-
+import type { WhatType } from "../model";
 type WhatProps = {
   state: WhatState;
 };
@@ -45,7 +44,7 @@ export const What: React.FunctionComponent<WhatProps> = (props: WhatProps) => {
       <Tabs actions={tabActions} selected={selectedTab} />
       <NewWhat whatType={whatType} state={state} text={text} />
       <EditSummary whatType={whatType} state={state} text={text} />
-      <SampleTree />
+      <EditSubtasks whatType={whatType} state={state} />
     </React.Fragment>
   );
 };

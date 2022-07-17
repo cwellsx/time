@@ -151,6 +151,9 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   }
 
   // interface WhatState
+  readonly taskParents: Parents;
+  readonly tagParents: Parents;
+
   getAllWhat(whatType: WhatType): TagInfo[] {
     return whatType === "tags" ? this.fetched.tags : this.fetched.tasks;
   }
@@ -195,6 +198,18 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
       const found = this.tasks[key];
       return !!found && found.usedDate > 0;
     }
+  }
+  setParent(whatType: WhatType, child: string, parent: string | undefined): void {
+    this.editDatabase()
+      .then(async (edit) => {
+        try {
+          await edit.setParent(whatType, child, parent);
+          this.reload();
+        } catch (e) {
+          this.setError(e);
+        }
+      })
+      .catch((error) => this.setError(error));
   }
 
   // interface HistoryState
@@ -266,10 +281,6 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
     }
     return result;
   }
-
-  // EditTreeState
-  readonly taskParents: Parents;
-  readonly tagParents: Parents;
 
   // private
   private saveConfig(config: Config): void {

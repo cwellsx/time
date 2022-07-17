@@ -19,7 +19,7 @@ export const SampleTree: React.FunctionComponent = () => {
     return parents[key] ?? null;
   };
 
-  const setParent = (child: string, parent: string | null) => {
+  const setParent = (child: string, parent: string | null, isDrop: boolean) => {
     const newParents = { ...parents };
     newParents[child] = parent ?? undefined;
     setParents(newParents);
