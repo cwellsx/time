@@ -1,6 +1,6 @@
-import { DBSchema, deleteDB, IDBPDatabase, openDB } from 'idb';
+import { DBSchema, deleteDB, IDBPDatabase, openDB } from "idb";
 
-import { persisted } from './persist';
+import { persisted } from "./persist";
 
 import type { Config, Time, TagInfo, Period, TimeStop } from "../model";
 
@@ -118,8 +118,12 @@ export class EditDatabase {
     const store = tx.objectStore("times");
     return Promise.all(times.map(async (time) => store.add(time)));
   }
-  addWhat(what: "tags" | "tasks", tag: TagInfo): Promise<string> {
-    return this.db.add(what, tag);
+  addWhat(whatType: "tags" | "tasks", tag: TagInfo): Promise<string> {
+    return this.db.add(whatType, tag);
+  }
+  editSummary(whatType: "tags" | "tasks", key: string, summary: string): Promise<string> {
+    const tag: TagInfo = { key, summary };
+    return this.db.put(whatType, tag);
   }
   editWhat(timeStop: TimeStop): Promise<number> {
     return this.db.put("times", timeStop);

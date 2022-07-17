@@ -1,5 +1,5 @@
-import { Edge, EditDatabase, Fetched, getPeriods } from './database';
-import { persist } from './persist';
+import { Edge, EditDatabase, Fetched, getPeriods } from "./database";
+import { persist } from "./persist";
 
 import type { SetError } from "../error";
 import type {
@@ -154,11 +154,23 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   getAllWhat(whatType: WhatType): TagInfo[] {
     return whatType === "tags" ? this.fetched.tags : this.fetched.tasks;
   }
-  createWhat(what: WhatType, tag: TagInfo): void {
+  createWhat(whatType: WhatType, tag: TagInfo): void {
     this.editDatabase()
       .then(async (edit) => {
         try {
-          await edit.addWhat(what, tag);
+          await edit.addWhat(whatType, tag);
+          this.reload();
+        } catch (e) {
+          this.setError(e);
+        }
+      })
+      .catch((error) => this.setError(error));
+  }
+  editSummary(whatType: WhatType, key: string, summary: string): void {
+    this.editDatabase()
+      .then(async (edit) => {
+        try {
+          await edit.editSummary(whatType, key, summary);
           this.reload();
         } catch (e) {
           this.setError(e);
