@@ -12,17 +12,9 @@ type EditSubtasksProps = {
 export const EditSubtasks: React.FunctionComponent<EditSubtasksProps> = (props: EditSubtasksProps) => {
   const { whatType, state } = props;
 
-  for (const key in state.taskParents) {
-    console.log(`child1=${key} parent=${state.taskParents[key]}`);
-  }
-
   const [parents, setParents] = React.useState<Parents>(whatType === "tasks" ? state.taskParents : state.tagParents);
   const data = whatType === "tasks" ? state.getAllTasks() : state.getAllTags();
   if (!data.length) return <></>;
-
-  for (const key in parents) {
-    console.log(`child=${key} parent=${parents[key]}`);
-  }
 
   function getKey(item: TagCount): string {
     return item.key;
@@ -38,13 +30,13 @@ export const EditSubtasks: React.FunctionComponent<EditSubtasksProps> = (props: 
   }
 
   const setParent = (child: string, parent: string | null, isDrop: boolean) => {
-    console.log(`setParent ${child} ${parent} ${isDrop}`);
     if (isDrop) {
       state.setParent(whatType, child, parent ?? undefined);
       return;
     }
     const newParents = { ...parents };
-    newParents[child] = parent ?? undefined;
+    if (parent) newParents[child] = parent;
+    else delete newParents[child];
     setParents(newParents);
   };
 

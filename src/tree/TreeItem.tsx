@@ -9,6 +9,7 @@ import type { INode, SetParent } from "./treeTypes";
 type DragObject = {
   key: string;
   index: number;
+  parent: string | null;
 };
 
 type CollectedProps = {
@@ -17,7 +18,7 @@ type CollectedProps = {
 
 type ItemProps = {
   node: INode;
-  index: number;
+  index: number; // not currently used, could be used if we wanted to control the order of siblings
   setParent: SetParent;
 };
 
@@ -30,15 +31,19 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
 
   function target(item: DragObject, monitor: DropTargetMonitor<DragObject, void>, isDrop: boolean): void {
     // can't be own parent
-    if (node.key === item.key) return;
-
     // can't be parent of ancestor
-    if (node.isDescendantOf(item.key)) return;
+    if (!monitor.canDrop()) return;
 
     const dropped = itemRef.current?.getBoundingClientRect();
     const dragged = monitor.getSourceClientOffset();
 
     if (!dropped || !dragged) return;
+
+    if (item.key == node.key) {
+      // dropping on self
+      setParent(item.key, node.parent, isDrop);
+      return;
+    }
 
     const isChild = dragged.x > dropped.left + 24;
 
@@ -52,6 +57,9 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
         handlerId: monitor.getHandlerId(),
       };
     },
+    canDrop(item: DragObject, monitor) {
+      return !node.isDescendantOf(item.key);
+    },
     hover(item: DragObject, monitor) {
       target(item, monitor, false);
     },
@@ -62,10 +70,15 @@ export const TreeItem: React.FunctionComponent<ItemProps> = (props: ItemProps) =
 
   const [{ opacity }, drag, preview] = useDrag<DragObject, unknown, CollectedProps>(() => ({
     type: node.type,
-    item: { key: node.key, index },
+    item: { key: node.key, index, parent: node.parent },
     collect: (monitor) => ({
       opacity: monitor.isDragging() ? 0.4 : 1,
     }),
+    end: (item, monitor) => {
+      const { key, parent } = item;
+      const didDrop = monitor.didDrop();
+      if (!didDrop) setParent(key, parent, false);
+    },
   }));
 
   drop(preview(itemRef));
