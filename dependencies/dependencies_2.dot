@@ -1,0 +1,84 @@
+digraph SRC {
+  "App" -> {"error" "io" "pages" "topbar"};
+
+  "error" [shape=folder, color=red, fontsize="22pt"];
+  "io" [shape=folder, color=green, fontsize="22pt"];
+  "pages" [shape=folder, color=blue, fontsize="22pt"];
+  "tabs" [shape=folder, color=brown, fontsize="22pt"];
+  "tags" [shape=folder, color=brown, fontsize="22pt"];
+  "topbar" [shape=folder, color=brown, fontsize="22pt"];
+  "tree" [shape=folder, color=brown, fontsize="22pt"];
+  "icons" [shape=folder, color=brown];
+  "markdown" [shape=folder, color=brown];
+  
+  "error" -> {"ErrorMessage" "appErrorContext"} [color=red];
+  "ErrorMessage" [shape=rect];
+  "ErrorMessage" -> {};
+  "appErrorContext" -> {};
+
+  "io" -> {"controller" "ioHooks" "tests" "appTestingContext"} [color=green];
+  "controller" -> {"persist" "database"} [color=green];
+  "database" -> {"persist"} [color=green];
+  "ioHooks" -> {"controller" "database" "persist" "tests" "appTestingContext"} [color=green];
+  "ioHooks" -> {"error"};
+  "tests" -> {"database" "persist"} [color=green];
+  "persist" -> {}
+  "appTestingContext" -> {};
+
+
+  "pages" -> {"Now" "What" "History" "Settings"} [color=blue];
+  "Now" [shape=rect];
+  "What" [shape=rect];
+  "History" [shape=rect];
+  "Settings" [shape=rect];
+  "EditWhat" [shape=rect];
+  "EditWhen" [shape=rect];
+  "EditTable" [shape=rect];
+  "EditSummary" [shape=rect];
+  "EditSubtasks" [shape=rect];
+  "NewWhat" [shape=rect];
+  "helpDate" -> {};
+  "helpWeeks" -> {};
+  "helpTotals" -> {};
+  "Now" -> {"helpDate" "EditWhat"} [color=blue];
+  "What" -> {"tabs" "error"};
+  "What" -> {"NewWhat" "EditSummary" "EditSubtasks"} [color=blue];
+  "EditSummary" -> {"EditTable"} [color=blue];
+  "EditSubtasks" -> {"tree"};
+  "History" -> {"helpHistory" "helpTotals" "EditWhat" "EditWhen" "helpEditWhen"} [color=blue];
+  "History" -> {"error"};
+  "Settings" -> {"helpDate"} [color=blue];
+  "Settings" -> {"error"};
+  "helpHistory" -> {"helpWeeks" "helpDate"} [color=blue];
+  "helpEditWhen" -> {"helpDate"} [color=blue];
+  "EditWhat" -> {"helpDate"} [color=blue]
+  "EditWhat" -> {"tags"};
+  "EditWhen" -> {"helpDate"} [color=blue]
+  "EditWhen" -> {"error"}
+
+
+  "tabs" -> {"Tabs"} [color=brown];
+  "Tabs" [shape=rect];
+  "Tabs" -> {};
+
+  "tree" -> {"EditTree" "SampleTree" "makeTree"} [color=brown];
+  "EditTree" [shape=rect];
+  "SampleTree" [shape=rect];
+  "TreeItem" [shape=rect];
+  "EditTree" -> {"TreeItem"} [color=brown];
+  "SampleTree" -> {"EditTree" "makeTree"} [color=brown];
+
+  "tags" -> {"EditTags"} [color=brown];
+  "EditTags" [shape=rect];
+  "EditTags" -> {"selectTagsState" "tagsHook" "tagsIcons"} [color=brown];
+  "EditTags" -> {"error"};
+  "tagsHook" -> {"selectTagsState"} [color=brown];
+  "tagsIcons" -> {};
+
+  "topbar" -> {"TopBar" "Help"} [color=brown];
+  "TopBar" [shape=rect];
+  "Help" [shape=rect];
+  "TopBar" -> {"pageProperties"} [color=brown];
+  "pageProperties" -> {"markdown" "icons"} [color=brown];
+  "Help" -> {"markdown" "pageProperties"} [color=brown];
+}

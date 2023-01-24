@@ -133,7 +133,7 @@ yarn-error.log*
 # The following are added by me
 #
 
-dependencies/dependencies.png
-dependencies/dependencies_2.*
+#dependencies/dependencies.png
+#dependencies/dependencies_2.*
 *.toc.md
 images.scrap
