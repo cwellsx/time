@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import { useSetError } from '../error';
-import { showIsoDay } from './helpDate';
+import { useSetError } from "../error";
+import { showIsoDay } from "./helpDate";
 
 import type { RequiredType } from "../model";
 import type { SettingsState } from "../states";
@@ -72,7 +72,7 @@ export const Settings: React.FunctionComponent<SettingsProps> = (props: Settings
   };
 
   const onHistoryEditable: React.ChangeEventHandler<HTMLInputElement> = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const checked = event.target.checked;
     setHistoryEditable(checked);
@@ -120,6 +120,8 @@ export const Settings: React.FunctionComponent<SettingsProps> = (props: Settings
           </label>
         </div>
       </div>
+      <h2>Version</h2>
+      <p>1.0</p>
     </>
   );
 };
