@@ -98,29 +98,35 @@ export class EditDatabase {
     if (last !== time.last) throw new Error("unexpected previous time -- refresh the browser window and try agtain");
     return this.db.add("times", time);
   }
-  cancelLast(time: Time | undefined): Promise<void> {
+  async cancelLast(time: Time | undefined): Promise<void> {
     if (!time) {
       throw new Error("cancelLast -- !time");
     }
     switch (time.type) {
       case "start":
-        return this.db.delete("times", time.when);
+        await this.db.delete("times", time.when);
+        return;
       case "next":
         const stop = { ...time };
         stop.type = "stop";
-        const promise = this.db.put("times", stop);
-        // https://stackoverflow.com/a/32961289/49942
-        return promise.then(() => {});
+        await this.db.put("times", stop);
+        return;
       case "stop":
         throw new Error("cancelLast -- time.type=='stop'");
       default:
         throw new Error("cancelLast -- unhandled time.type");
     }
   }
-  addTimes(times: Time[]): Promise<number[]> {
+  async addTimes(times: Time[]): Promise<number[]> {
     const tx = this.db.transaction("times", "readwrite");
     const store = tx.objectStore("times");
-    return Promise.all(times.map(async (time) => store.add(time)));
+    const result: number[] = [];
+    for (const time of times) {
+      result.push(await store.add(time));
+    }
+    await tx.done;
+    return result;
+    //return Promise.all(times.map(async (time) => store.add(time)));
   }
   addWhat(whatType: "tags" | "tasks", tag: TagInfo): Promise<string> {
     return this.db.add(whatType, tag);
@@ -148,6 +154,22 @@ export class EditDatabase {
       console.log(`add ${JSON.stringify(time)}`);
       await store.add(time);
     }
+    await tx.done;
+  }
+  async overwrite(fetched: Fetched): Promise<void> {
+    const storeNames = Array.from(this.db.objectStoreNames);
+    const tx = this.db.transaction(storeNames, "readwrite");
+    for (const storeName of storeNames) {
+      await tx.objectStore(storeName).clear();
+      if (storeName === "config") {
+        const config = fetched[storeName];
+        if (config) await tx.objectStore("config").put(config, configVersion);
+        continue;
+      }
+      const imported = fetched[storeName];
+      for (const row of imported) await tx.objectStore(storeName).add(row);
+    }
+    await tx.done;
   }
 }
 
@@ -171,6 +193,8 @@ export async function clearDatabase(dbName: DbName): Promise<void> {
   await db.clear("config");
   await db.clear("tags");
   await db.clear("tasks");
+  await db.clear("taskParents");
+  await db.clear("tagParents");
 }
 
 export async function deleteDatabase(dbName: DbName): Promise<void> {

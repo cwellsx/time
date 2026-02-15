@@ -38,16 +38,16 @@ interface Tags {
 export class Controller implements NowState, WhatState, HistoryState, SettingsState {
   // private data
   private readonly fetched: Fetched;
-  private readonly editDatabase: () => Promise<EditDatabase>;
+  private readonly onEditDatabase: () => Promise<EditDatabase>;
   private readonly reload: () => void;
   private readonly setError: SetError;
   private readonly tasks: Tasks;
   private readonly tags: Tags;
 
-  constructor(fetched: Fetched, editDatabase: () => Promise<EditDatabase>, reload: () => void, setError: SetError) {
+  constructor(fetched: Fetched, onEditDatabase: () => Promise<EditDatabase>, reload: () => void, setError: SetError) {
     console.log("controller");
     this.fetched = fetched;
-    this.editDatabase = editDatabase;
+    this.onEditDatabase = onEditDatabase;
     this.reload = reload;
     this.setError = setError;
 
@@ -96,59 +96,58 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   readonly last: Time | undefined;
   readonly config: Config;
 
-  saveTime(time: NewTime): void {
-    this.editDatabase()
-      .then(async (edit) => {
-        try {
-          await edit.addTime(time);
-          this.reload();
-        } catch (e) {
-          this.setError(e);
-        }
-      })
-      .catch((error) => this.setError(error));
+  async editDatabase(fn: (edit: EditDatabase) => Promise<unknown>, reload = true): Promise<void> {
+    try {
+      this.setError("");
+      const edit = await this.onEditDatabase();
+      await fn(edit);
+      if (reload) this.reload();
+    } catch (e) {
+      this.setError(e);
+    }
   }
-  saveWhat(what: What): void {
+  async saveTime(time: NewTime): Promise<void> {
+    await this.editDatabase(async (edit) => await edit.addTime(time));
+  }
+  async saveWhat(what: What): Promise<void> {
     this.config.note = what.note;
     this.config.tags = what.tags;
     this.config.task = what.task;
-    this.saveConfig(this.config);
+    await this.saveConfig(this.config);
   }
-  cancelLast(): void {
-    this.editDatabase()
-      .then(async (edit) => {
-        try {
-          await edit.cancelLast(this.last);
-          this.reload();
-        } catch (e) {
-          this.setError(e);
-        }
-      })
-      .catch((error) => this.setError(error));
+  async cancelLast(): Promise<void> {
+    await this.editDatabase(async (edit) => await edit.cancelLast(this.last));
   }
 
   // interface SettingsState
   readonly persisted: boolean;
 
-  persist(): void {
-    persist()
-      .then(() => this.reload)
-      .catch((error) => this.setError(error));
+  async persist(): Promise<void> {
+    try {
+      await persist();
+      this.reload();
+    } catch (e) {
+      this.setError(e);
+    }
   }
   getDatabaseAsJson(): string {
     return JSON.stringify(this.fetched, null, 2);
   }
-  setTagsRequired(value: RequiredType): void {
+  async setTagsRequired(value: RequiredType): Promise<void> {
     this.config.tagsRequired = value;
-    this.saveConfig(this.config);
+    await this.saveConfig(this.config);
   }
-  setTaskRequired(value: RequiredType): void {
+  async setTaskRequired(value: RequiredType): Promise<void> {
     this.config.taskRequired = value;
-    this.saveConfig(this.config);
+    await this.saveConfig(this.config);
   }
-  setHistoryEditable(value: boolean): void {
+  async setHistoryEditable(value: boolean): Promise<void> {
     this.config.historyEditable = value;
-    this.saveConfig(this.config);
+    await this.saveConfig(this.config);
+  }
+  async overwriteDatabaseAsJson(json: string): Promise<void> {
+    const fetched: Fetched = JSON.parse(json);
+    await this.editDatabase(async (edit) => await edit.overwrite(fetched));
   }
 
   // interface WhatState
@@ -158,33 +157,15 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   getAllWhat(whatType: WhatType): TagInfo[] {
     return whatType === "tags" ? this.fetched.tags : this.fetched.tasks;
   }
-  createWhat(whatType: WhatType, tag: TagInfo): void {
-    this.editDatabase()
-      .then(async (edit) => {
-        try {
-          await edit.addWhat(whatType, tag);
-          this.reload();
-        } catch (e) {
-          this.setError(e);
-        }
-      })
-      .catch((error) => this.setError(error));
+  async createWhat(whatType: WhatType, tag: TagInfo): Promise<void> {
+    await this.editDatabase(async (edit) => await edit.addWhat(whatType, tag));
   }
-  editSummary(whatType: WhatType, key: string, summary: string): void {
-    this.editDatabase()
-      .then(async (edit) => {
-        try {
-          await edit.editSummary(whatType, key, summary);
-          this.reload();
-        } catch (e) {
-          this.setError(e);
-        }
-      })
-      .catch((error) => this.setError(error));
+  async editSummary(whatType: WhatType, key: string, summary: string): Promise<void> {
+    await this.editDatabase(async (edit) => await edit.editSummary(whatType, key, summary));
   }
-  saveWhatType(whatType: WhatType): void {
+  async saveWhatType(whatType: WhatType): Promise<void> {
     this.config.whatType = whatType;
-    this.saveConfig(this.config);
+    await this.saveConfig(this.config);
   }
   keyAlreadyExists(whatType: WhatType, key: string): boolean {
     const all = this.getAllWhat(whatType);
@@ -200,23 +181,14 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
       return !!found && found.usedDate > 0;
     }
   }
-  setParent(whatType: WhatType, child: string, parent: string | undefined): void {
-    this.editDatabase()
-      .then(async (edit) => {
-        try {
-          await edit.setParent(whatType, child, parent);
-          this.reload();
-        } catch (e) {
-          this.setError(e);
-        }
-      })
-      .catch((error) => this.setError(error));
+  async setParent(whatType: WhatType, child: string, parent: string | undefined): Promise<void> {
+    await this.editDatabase(async (edit) => await edit.setParent(whatType, child, parent));
   }
 
   // interface HistoryState
   readonly periods: Period[];
 
-  editWhat(when: number, what: What): void {
+  async editWhat(when: number, what: What): Promise<void> {
     const found = this.findTime(when);
     if (!found) {
       this.setError("editWhat -- specified time not found");
@@ -228,16 +200,7 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
       return;
     }
     const stop: TimeStop = { when, type, note: what.note, tags: what.tags, task: what.task };
-    this.editDatabase()
-      .then(async (edit) => {
-        try {
-          await edit.editWhat(stop);
-          this.reload();
-        } catch (e) {
-          this.setError(e);
-        }
-      })
-      .catch((error) => this.setError(error));
+    await this.editDatabase(async (edit) => await edit.editWhat(stop));
   }
   getTaskDescription(task: string): string | undefined {
     const found = this.tasks[task];
@@ -250,17 +213,8 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   findTime(when: number): Time | undefined {
     return this.fetched.times.find((it) => it.when === when);
   }
-  editWhen(deleted: number[], inserted: Time[]): void {
-    this.editDatabase()
-      .then(async (edit) => {
-        try {
-          await edit.editWhen(deleted, inserted);
-          this.reload();
-        } catch (e) {
-          this.setError(e);
-        }
-      })
-      .catch((error) => this.setError(error));
+  async editWhen(deleted: number[], inserted: Time[]): Promise<void> {
+    await this.editDatabase(async (edit) => await edit.editWhen(deleted, inserted));
   }
 
   // EditWhatState
@@ -284,15 +238,7 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   }
 
   // private
-  private saveConfig(config: Config): void {
-    this.editDatabase()
-      .then(async (edit) => {
-        try {
-          await edit.putConfig(config);
-        } catch (e) {
-          this.setError(e);
-        }
-      })
-      .catch((error) => this.setError(error));
+  private async saveConfig(config: Config): Promise<void> {
+    await this.editDatabase(async (edit) => await edit.putConfig(config), false);
   }
 }

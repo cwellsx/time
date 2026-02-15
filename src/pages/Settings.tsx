@@ -47,6 +47,27 @@ export const Settings: React.FunctionComponent<SettingsProps> = (props: Settings
     }
   }
 
+  async function onImport(event: React.MouseEvent<HTMLButtonElement>): Promise<void> {
+    event.preventDefault();
+    try {
+      const [fileHandle] = await window.showOpenFilePicker({
+        types: [
+          {
+            description: "JSON Files",
+            accept: { "application/json": [".json"] },
+          },
+        ],
+        multiple: false,
+      });
+
+      const file = await fileHandle.getFile();
+      const text = await file.text();
+      await state.overwriteDatabaseAsJson(text);
+    } catch (e) {
+      setError(e);
+    }
+  }
+
   function getOptions(value: string, onChange: React.ChangeEventHandler<HTMLInputElement>) {
     return (
       <>
@@ -100,6 +121,7 @@ export const Settings: React.FunctionComponent<SettingsProps> = (props: Settings
           <span>Exported:</span>
           <span>
             <button onClick={onExport}>Save As</button>
+            <button onClick={onImport}>Import</button>
           </span>
         </div>
       </div>
