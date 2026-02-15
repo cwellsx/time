@@ -11,3 +11,7 @@ export type TimeStop = What & {
 };
 
 export type Time = TimeStart | TimeStop;
+
+export type NewTime = Time & {
+  readonly last: number | null;
+};

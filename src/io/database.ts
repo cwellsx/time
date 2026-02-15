@@ -2,7 +2,7 @@ import { DBSchema, deleteDB, IDBPDatabase, openDB } from "idb";
 
 import { persisted } from "./persist";
 
-import type { Config, Time, TagInfo, Period, TimeStop } from "../model";
+import type { Config, NewTime, Period, TagInfo, Time, TimeStop } from "../model";
 
 export type DbName = "production" | "test";
 
@@ -91,7 +91,11 @@ export class EditDatabase {
   putConfig(config: Config): Promise<number> {
     return this.db.put("config", config, configVersion);
   }
-  addTime(time: Time): Promise<number> {
+  async addTime(time: NewTime): Promise<number> {
+    const tx = this.db.transaction("times");
+    const cursor = await tx.objectStore("times").openCursor(null, "prev");
+    const last = cursor?.key ?? null;
+    if (last !== time.last) throw new Error("unexpected previous time -- refresh the browser window and try agtain");
     return this.db.add("times", time);
   }
   cancelLast(time: Time | undefined): Promise<void> {

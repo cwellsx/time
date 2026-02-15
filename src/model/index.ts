@@ -1,9 +1,9 @@
 export type { Config, RequiredType } from "./config";
-export type { TestResult, TestResults } from "./testResult";
-export type { TimeStart, TimeStop, Time } from "./time";
-export type { WhatType } from "./whatType";
-export type { Period } from "./period";
-export type { What } from "./what";
 export type { Parents } from "./parents";
+export type { Period } from "./period";
+export type { TestResult, TestResults } from "./testResult";
+export type { NewTime, Time, TimeStart, TimeStop } from "./time";
+export type { What } from "./what";
+export type { WhatType } from "./whatType";
 
-export type { TagInfo, TagCount } from "../tags";
+export type { TagCount, TagInfo } from "../tags";

@@ -10,4 +10,4 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
--
+- Prevent writing when the previous time is stale, i.e. already edited in another browser window

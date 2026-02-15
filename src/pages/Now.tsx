@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import { EditWhat, WhatIsValid } from './EditWhat';
-import { showWhen } from './helpDate';
+import { EditWhat, WhatIsValid } from "./EditWhat";
+import { showWhen } from "./helpDate";
 
 import type { TimeStart, TimeStop } from "../model";
 import type { NowState } from "../states";
@@ -18,12 +18,12 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
   const whatIsValidRef = React.useRef<WhatIsValid>({ what: {}, isValid: true });
   const [showValidationError, setShowValidationError] = React.useState<boolean>(false);
 
-  const { text, time, started } = new Displayed(state);
+  const { text, time, started, last } = new Displayed(state);
 
   function onStart(event: React.MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
     const time: TimeStart = { when: Date.now(), type: "start" };
-    state.saveTime(time);
+    state.saveTime({ ...time, last });
   }
 
   function onStop(event: React.MouseEvent<HTMLButtonElement>, type: "stop" | "next"): void {
@@ -35,7 +35,7 @@ export const Now: React.FunctionComponent<NowProps> = (props: NowProps) => {
     }
     const { note, task, tags } = whatIsValid.what;
     const time: TimeStop = { when: Date.now(), type, note, task, tags };
-    state.saveTime(time);
+    state.saveTime({ ...time, last });
   }
 
   function onCancel(event: React.MouseEvent<HTMLButtonElement>): void {
@@ -98,13 +98,16 @@ class Displayed {
       this.started = false;
       this.time = "";
       this.text = "";
+      this.last = null;
     } else {
       this.started = last.type !== "stop";
       this.text = this.started ? "Started" : "Stopped";
       this.time = showWhen(last.when);
+      this.last = last.when;
     }
   }
   readonly started: boolean;
   readonly text: string;
   readonly time: string;
+  readonly last: number | null;
 }

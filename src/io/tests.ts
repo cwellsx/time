@@ -1,7 +1,7 @@
-import * as DB from './database';
-import { persisted } from './persist';
+import * as DB from "./database";
+import { persisted } from "./persist";
 
-import type { Time, TimeStop, TestResult, Period, TestResults, TagInfo } from "../model";
+import type { NewTime, Period, TagInfo, TestResult, TestResults, Time, TimeStop } from "../model";
 
 type Test = {
   title: string;
@@ -16,9 +16,10 @@ function isTimeStop(time: Time): time is TimeStop {
   return time.type !== "start";
 }
 
-function createTimes(year: number, nDays: number, nTimesPerDay: number): Time[] {
+function createTimes(year: number, nDays: number, nTimesPerDay: number): NewTime[] {
   assert(nDays <= 360 && nTimesPerDay <= 20 && nTimesPerDay > 1);
-  const result: Time[] = [];
+  const result: NewTime[] = [];
+  let last = null;
   for (let i = 0; i < nDays; ++i) {
     const month = Math.floor(i / 20);
     const day = i % 20;
@@ -27,9 +28,10 @@ function createTimes(year: number, nDays: number, nTimesPerDay: number): Time[] 
       const note = j % 2 ? "hello" : undefined;
       const task = Math.floor(j / 2) % 2 ? "task-142" : undefined;
       const tags = Math.floor(j / 4) % 2 ? ["coding"] : undefined;
-      if (j === 0) result.push({ type: "start", when: when });
-      else if (j === nTimesPerDay - 1) result.push({ type: "stop", when, note, task, tags });
-      else result.push({ type: "next", when, note, task, tags });
+      if (j === 0) result.push({ type: "start", when, last });
+      else if (j === nTimesPerDay - 1) result.push({ type: "stop", when, note, task, tags, last });
+      else result.push({ type: "next", when, note, task, tags, last });
+      last = when;
     }
   }
   assert(result.length === nDays * nTimesPerDay);

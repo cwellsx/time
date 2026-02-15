@@ -4,15 +4,16 @@ import { persist } from "./persist";
 import type { SetError } from "../error";
 import type {
   Config,
+  NewTime,
+  Parents,
   Period,
+  RequiredType,
   TagCount,
   TagInfo,
   Time,
-  WhatType,
-  RequiredType,
-  What,
   TimeStop,
-  Parents,
+  What,
+  WhatType,
 } from "../model";
 import type { HistoryState, NowState, SettingsState, WhatState } from "../states";
 
@@ -95,7 +96,7 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   readonly last: Time | undefined;
   readonly config: Config;
 
-  saveTime(time: Time): void {
+  saveTime(time: NewTime): void {
     this.editDatabase()
       .then(async (edit) => {
         try {
