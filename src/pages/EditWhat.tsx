@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import { EditTags, OutputTags, ShowCount } from '../tags';
-import { showDay } from './helpDate';
+import { EditTags, OutputTags, ShowCount } from "../tags";
+import { showDay } from "./helpDate";
 
 import type { What } from "../model";
 import type { EditWhatState } from "../states";

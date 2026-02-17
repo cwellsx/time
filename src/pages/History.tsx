@@ -1,16 +1,16 @@
-import './history.sass';
+import "./history.sass";
 
-import React from 'react';
+import React from "react";
 
-import { useSetError } from '../error';
-import { EditWhat, WhatIsValid } from './EditWhat';
-import { EditWhen, WhenIsValid } from './EditWhen';
-import { helpEditWhen } from './helpEditWhen';
-import { aggregate } from './helpHistory';
-import { AllTotals, getAllTotals, Total } from './helpTotals';
+import { useSetError } from "../error";
+import { EditWhen, WhenIsValid } from "./EditWhen";
+import { helpEditWhen } from "./helpEditWhen";
+import { aggregate } from "./helpHistory";
+import { AllTotals, getAllTotals, Total } from "./helpTotals";
 
 import type { Period, Time, What } from "../model";
 import type { HistoryState } from "../states";
+import { EditHistoryWhat } from "./EditHistoryWhat";
 type HistoryProps = {
   state: HistoryState;
   task: string | undefined;
@@ -31,8 +31,8 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
   const filter: PeriodFilter | undefined = task
     ? (it: Period) => !!it.task && it.task === task
     : tag
-    ? (it: Period) => !!it.tags && it.tags.some((it2) => it2 === tag)
-    : undefined;
+      ? (it: Period) => !!it.tags && it.tags.some((it2) => it2 === tag)
+      : undefined;
   const filtered = filter ? periods.filter(filter) : periods;
 
   const rows = aggregate(filtered);
@@ -40,11 +40,8 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
   const allTotals = filter ? getAllTotals(filtered, props) : undefined;
 
   const [editingRow, setEditingRow] = React.useState<[TimeOrText, Period] | undefined>(undefined);
-  // unlike Now.tsx this is useState instead of userRef because on edit callback we want to re-render the Save button
-  const [whatIsValid, setWhatIsValid] = React.useState<WhatIsValid>({ what: {}, isValid: false });
-  const [whenIsValid, setWhenIsValid] = React.useState<WhenIsValid>({ when: { start: 0, stop: 0 }, isValid: false });
-  const [showValidationError, setShowValidationError] = React.useState<boolean>(false);
 
+  const [whenIsValid, setWhenIsValid] = React.useState<WhenIsValid>({ when: { start: 0, stop: 0 }, isValid: false });
   const editingPeriod: Period | undefined = editingRow ? editingRow[1] : undefined;
 
   function useOutsideAlerter(ref: React.RefObject<HTMLTableElement>) {
@@ -105,9 +102,7 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
     }
 
     setEditingRow([timeOrText, period!]);
-    setWhatIsValid({ what: period!, isValid: true });
     setWhenIsValid({ when: period!, isValid: true });
-    setShowValidationError(false);
   };
 
   function getText(what: What | undefined): JSX.Element | undefined {
@@ -164,36 +159,6 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
     );
   }
 
-  function getEditText(period: Period): JSX.Element {
-    function onSave(event: React.MouseEvent<HTMLButtonElement>): void {
-      if (!editingPeriod) return;
-      if (!whatIsValid.isValid) {
-        setShowValidationError(true);
-        return;
-      }
-      const what: What = whatIsValid.what;
-      state.editWhat(editingPeriod.stop, what);
-      setEditingRow(undefined);
-    }
-
-    const saveButton = whatsEqual(editingPeriod!, whatIsValid.what) ? undefined : (
-      <button onClick={onSave}>Save</button>
-    );
-    return (
-      <>
-        <div className="table">
-          <EditWhat
-            state={state}
-            showValidationError={showValidationError}
-            what={period}
-            parentCallback={setWhatIsValid}
-          />
-        </div>
-        {saveButton}
-      </>
-    );
-  }
-
   const tableRef = React.createRef<HTMLTableElement>();
   useOutsideAlerter(tableRef);
 
@@ -216,7 +181,17 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
               <>
                 <td>{show.getId()}</td>
                 <td className="time">{formatTime(show.getMinutes())}</td>
-                <td>{getEditText(period!)}</td>
+                <td>
+                  <EditHistoryWhat
+                    state={state}
+                    what={period!}
+                    onSave={(what) => {
+                      if (!editingPeriod) return;
+                      state.editWhat(editingPeriod.stop, what);
+                      setEditingRow(undefined);
+                    }}
+                  />
+                </td>
               </>
             ) : (
               <>
@@ -246,13 +221,6 @@ function formatTime(minutes: number) {
   const hours = Math.floor(minutes / 60);
   const padded = String(minutes % 60).padStart(2, "0");
   return `${hours}:${padded}`;
-}
-
-function whatsEqual(x: What, y: What): boolean {
-  const tagsEquals = !x.tags
-    ? !y.tags
-    : x.tags.length === y.tags?.length && x.tags.every((it, index) => (it = y.tags![index]));
-  return x.note === y.note && x.task === y.task && tagsEquals;
 }
 
 function showAllTotals(allTotals: AllTotals, props: HistoryProps): JSX.Element {

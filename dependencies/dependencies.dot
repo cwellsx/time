@@ -45,6 +45,7 @@ digraph SRC {
   "History" [shape=rect];
   "Settings" [shape=rect];
   "Tests" [shape=rect] [color=gold];
+  "HistoryEditWhat" [shape=rect];
   "EditWhat" [shape=rect];
   "EditWhen" [shape=rect];
   "EditTable" [shape=rect];
@@ -60,7 +61,8 @@ digraph SRC {
   "What" -> {"NewWhat" "EditSummary" "EditSubtasks"} [color=blue];
   "EditSummary" -> {"EditTable"} [color=blue];
   "EditSubtasks" -> {"tree"};
-  "History" -> {"helpHistory" "helpTotals" "EditWhat" "EditWhen" "helpEditWhen"} [color=blue];
+  "History" -> {"helpHistory" "helpTotals" "HistoryEditWhat" "EditWhen" "helpEditWhen"} [color=blue];
+  "HistoryEditWhat" -> {"EditWhat"} [color=blue];
   "History" -> {"error"};
   "Settings" -> {"helpDate"} [color=blue];
   "Settings" -> {"error"};
