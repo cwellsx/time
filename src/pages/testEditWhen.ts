@@ -1,6 +1,6 @@
-import { EditWhenState, getTestEditWhen } from '../io';
-import { Period, Time } from '../model';
-import { FindTime, helpEditWhen } from './helpEditWhen';
+import { EditWhenState, getTestEditWhen } from "../io";
+import { Period, Time } from "../model";
+import { FindTime, getDifferences, getMinMax, getPeriodsEquals } from "./helpEditWhen";
 
 type TTime = [number, "start" | "stop" | "next"];
 type TTime3 = [number, "start" | "stop" | "next", string];
@@ -154,8 +154,9 @@ async function testOne(db: EditWhenState, testCase: TestCase): Promise<void> {
   if (!period) throw Error("Input period not found");
   const altered: Period = { start: testCase.altered[0] * 60000, stop: testCase.altered[1] * 60000 };
   const findTime: FindTime = (it: number) => times.find((time) => time.when === it);
-  const { getDifferences } = helpEditWhen(period, altered, periods, findTime);
-  const { deleted, inserted } = getDifferences();
+  const minMax = getMinMax(period, periods);
+  const equals = getPeriodsEquals(period, altered);
+  const { deleted, inserted } = getDifferences(period, altered, minMax, equals, findTime);
   console.log(`editing ${JSON.stringify(deleted)} ${JSON.stringify(inserted)}`);
   for (const it of deleted) if (!findTime(it)) throw Error(`deleted not found ${it}`);
   db.editWhen(deleted, inserted);

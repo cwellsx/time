@@ -29,9 +29,6 @@ export const EditHistoryWhat: React.FunctionComponent<EditHistoryWhatProps> = (p
       return;
     }
     props.onSave(whatIsValid.what);
-    // const what: What = whatIsValid.what;
-    // state.editWhat(editingPeriod.stop, what);
-    // setEditingRow(undefined);
   }
 
   const saveButton = whatsEqual(what, whatIsValid.what) ? undefined : <button onClick={onSave}>Save</button>;

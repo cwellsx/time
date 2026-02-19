@@ -3,14 +3,14 @@ import "./history.sass";
 import React from "react";
 
 import { useSetError } from "../error";
-import { EditWhen, WhenIsValid } from "./EditWhen";
-import { helpEditWhen } from "./helpEditWhen";
+import { getDifferences, getMinMax, getPeriodsEquals } from "./helpEditWhen";
 import { aggregate } from "./helpHistory";
 import { AllTotals, getAllTotals, Total } from "./helpTotals";
 
 import type { Period, Time, What } from "../model";
 import type { HistoryState } from "../states";
 import { EditHistoryWhat } from "./EditHistoryWhat";
+import { EditHistoryWhen } from "./EditHistoryWhen";
 type HistoryProps = {
   state: HistoryState;
   task: string | undefined;
@@ -41,7 +41,7 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
 
   const [editingRow, setEditingRow] = React.useState<[TimeOrText, Period] | undefined>(undefined);
 
-  const [whenIsValid, setWhenIsValid] = React.useState<WhenIsValid>({ when: { start: 0, stop: 0 }, isValid: false });
+  //const [whenIsValid, setWhenIsValid] = React.useState<WhenIsValid>({ when: { start: 0, stop: 0 }, isValid: false });
   const editingPeriod: Period | undefined = editingRow ? editingRow[1] : undefined;
 
   function useOutsideAlerter(ref: React.RefObject<HTMLTableElement>) {
@@ -102,7 +102,6 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
     }
 
     setEditingRow([timeOrText, period!]);
-    setWhenIsValid({ when: period!, isValid: true });
   };
 
   function getText(what: What | undefined): JSX.Element | undefined {
@@ -136,27 +135,21 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
   }
 
   function getEditTime(period: Period): JSX.Element {
-    const findTime = (when: number): Time | undefined => state.findTime(when);
-    const { min, max, isModified, getDifferences } = helpEditWhen(period, whenIsValid.when, periods, findTime);
+    const minMax = getMinMax(period, periods);
 
-    function onSave(event: React.MouseEvent<HTMLButtonElement>): void {
+    function onSave(altered: Period): void {
       try {
-        const { deleted, inserted } = getDifferences();
+        const equals = getPeriodsEquals(period, altered);
+        const findTime = (when: number): Time | undefined => state.findTime(when);
+        const { deleted, inserted } = getDifferences(period, altered, minMax, equals, findTime);
         state.editWhen(deleted, inserted);
+        setEditingRow(undefined);
       } catch (error) {
         setError(error);
       }
     }
 
-    const saveButton = !whenIsValid.isValid || !isModified ? undefined : <button onClick={onSave}>Save</button>;
-    return (
-      <>
-        <div className="table close">
-          <EditWhen period={period} min={min} max={max} parentCallback={setWhenIsValid} />
-        </div>
-        {saveButton}
-      </>
-    );
+    return <EditHistoryWhen period={period} min={minMax.min} max={minMax.max} onSave={onSave} />;
   }
 
   const tableRef = React.createRef<HTMLTableElement>();
