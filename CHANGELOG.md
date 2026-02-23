@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - New README and CHANGELOG
 - New Import button in Settings
+- Filter History by year
 
 ### Fixed
 

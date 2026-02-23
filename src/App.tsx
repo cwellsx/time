@@ -1,39 +1,45 @@
-import './App.sass';
+import "./App.sass";
 
-import React from 'react';
-import * as ReactRouter from 'react-router-dom';
+import React from "react";
+import * as ReactRouter from "react-router-dom";
 
-import { AppErrorContext, ErrorMessage, useAppErrorContext } from './error';
-import { AppTestingContext, useAppTestingContext, useController, useTestResults } from './io';
-import * as Page from './pages';
-import * as Component from './topbar';
+import { AppErrorContext, ErrorMessage, useAppErrorContext } from "./error";
+import { AppTestingContext, useAppTestingContext, useController, useTestResults } from "./io";
+import * as Page from "./pages";
+import * as Component from "./topbar";
+import { AppYearContext, useAppYearContext } from "./topbar";
 
 // import { useHelp } from './fetch';
 
 const App: React.FunctionComponent = () => {
   const [error, setError] = useAppErrorContext();
   const [testing, setTesting] = useAppTestingContext();
+  const [year, setYear] = useAppYearContext();
   return (
     <AppErrorContext.Provider value={{ setError }}>
       <AppTestingContext.Provider value={{ testing, setTesting }}>
-        <ReactRouter.BrowserRouter basename={process.env.PUBLIC_URL}>
-          <Component.ScrollToTop />
-          <Component.Topbar />
-          <div id="content">
-            <ErrorMessage errorMessage={error} />
-            <ReactRouter.Routes>
-              <ReactRouter.Route path="/" element={<Now />} />
-              <ReactRouter.Route path="/what" element={<What />} />
-              <ReactRouter.Route path="/history" element={<History />} />
-              <ReactRouter.Route path="/settings" element={<Settings />} />
-              <ReactRouter.Route path="/help" element={<Help />}>
-                <ReactRouter.Route path=":helpId" element={<Help />} />
-              </ReactRouter.Route>
-              <ReactRouter.Route path="/tests" element={<Tests />} />
-              <ReactRouter.Route path="*" element={<p>URL Not Found</p>} />
-            </ReactRouter.Routes>
-          </div>
-        </ReactRouter.BrowserRouter>
+        <AppYearContext.Provider value={{ setYear }}>
+          <ReactRouter.BrowserRouter basename={process.env.PUBLIC_URL}>
+            <Component.ScrollToTop />
+            <Component.Topbar year={year} />
+            <div id="content">
+              <ErrorMessage errorMessage={error} />
+              <ReactRouter.Routes>
+                <ReactRouter.Route path="/" element={<Now />} />
+                <ReactRouter.Route path="/what" element={<What />} />
+                <ReactRouter.Route path="/history" element={<History />}>
+                  <ReactRouter.Route path=":year" element={<History />} />
+                </ReactRouter.Route>
+                <ReactRouter.Route path="/settings" element={<Settings />} />
+                <ReactRouter.Route path="/help" element={<Help />}>
+                  <ReactRouter.Route path=":helpId" element={<Help />} />
+                </ReactRouter.Route>
+                <ReactRouter.Route path="/tests" element={<Tests />} />
+                <ReactRouter.Route path="*" element={<p>URL Not Found</p>} />
+              </ReactRouter.Routes>
+            </div>
+          </ReactRouter.BrowserRouter>
+        </AppYearContext.Provider>
       </AppTestingContext.Provider>
     </AppErrorContext.Provider>
   );
@@ -72,7 +78,12 @@ const History: React.FunctionComponent = () => {
   const tag = searchParams.get("tag") ?? undefined;
   return (
     <React.Fragment>
-      <h1>History</h1>
+      <div className="title-header">
+        <h1>History</h1>
+        <div className="year-links">
+          <Page.HistoryYears state={controller} />
+        </div>
+      </div>
       <Page.History state={controller} task={task} tag={tag} />
     </React.Fragment>
   );

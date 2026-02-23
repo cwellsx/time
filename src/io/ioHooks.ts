@@ -1,13 +1,14 @@
-import React from 'react';
+import React from "react";
 
-import { useSetError } from '../error';
-import { useTesting } from './appTestingContext';
-import { Controller } from './controller';
-import { EditDatabase, editDatabase, fetchDatabase, Fetched } from './database';
-import { persist } from './persist';
-import { getTestResults } from './tests';
+import { useSetError } from "../error";
+import { useTesting } from "./appTestingContext";
+import { Controller } from "./controller";
+import { EditDatabase, editDatabase, fetchConfig, fetchDatabase, Fetched } from "./database";
+import { persist } from "./persist";
+import { getTestResults } from "./tests";
 
 import type { TestResults } from "../model";
+import { useSetYear } from "../topbar";
 
 /*
   useDatabase and useTestResults have a similar structure
@@ -90,4 +91,21 @@ export function useController(): Controller | undefined {
     return editDatabase(database.dbName);
   };
   return new Controller(database, onEditDatabase, reload, setError);
+}
+
+export function useConfigYear(): void {
+  const setYear = useSetYear();
+  const testing = useTesting();
+
+  React.useEffect(() => {
+    let disposed = false;
+    async function loadConfig() {
+      const config = await fetchConfig(!testing ? "production" : "test");
+      if (config && config.year && !disposed) setYear(config.year);
+    }
+    loadConfig();
+    return () => {
+      disposed = true;
+    };
+  }, [testing, setYear]);
 }

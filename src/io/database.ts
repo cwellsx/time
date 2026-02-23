@@ -2,7 +2,7 @@ import { DBSchema, deleteDB, IDBPDatabase, openDB } from "idb";
 
 import { persisted } from "./persist";
 
-import type { Config, NewTime, Period, TagInfo, Time, TimeStop } from "../model";
+import type { Config, NewTime, PeriodEx, TagInfo, Time, TimeStop } from "../model";
 
 export type DbName = "production" | "test";
 
@@ -186,6 +186,14 @@ export async function fetchDatabase(dbName: DbName): Promise<Fetched> {
   return { dbName, times, tags, tasks, taskParents, tagParents, config, persisted: await persisted() };
 }
 
+export async function fetchConfig(dbName: DbName): Promise<Config | undefined> {
+  console.log("fetchDatabase");
+  const db = await open(dbName);
+  const tx = db.transaction(["config"]);
+  const config = await tx.objectStore("config").get(configVersion);
+  return config;
+}
+
 export async function clearDatabase(dbName: DbName): Promise<void> {
   console.log("clearDatabase");
   const db = await open(dbName);
@@ -213,8 +221,8 @@ export async function editDatabase(dbName: DbName): Promise<EditDatabase> {
   return new EditDatabase(db);
 }
 
-export function getPeriods(times: Time[]): Period[] {
-  const result: Period[] = [];
+export function getPeriods(times: Time[]): PeriodEx[] {
+  const result: PeriodEx[] = [];
   const length = times.length;
   if (length > 0) {
     let prev: Time = times[0];
@@ -225,12 +233,13 @@ export function getPeriods(times: Time[]): Period[] {
           if (prev.type === "stop") {
             throw Error("period must start after stop");
           }
-          const period: Period = {
+          const period: PeriodEx = {
             start: prev.when,
             stop: time.when,
             task: time.task,
             note: time.note,
             tags: time.tags,
+            startYear: new Date(prev.when).getFullYear(),
           };
           result.push(period);
       }

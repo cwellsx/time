@@ -1,5 +1,5 @@
-import type { WhatType } from "./whatType";
 import type { What } from "./what";
+import type { WhatType } from "./whatType";
 
 export type RequiredType = "required" | "optional";
 
@@ -11,4 +11,6 @@ export type Config = What & {
   tagsRequired?: RequiredType;
   taskRequired?: RequiredType;
   historyEditable?: boolean;
+  // year
+  year?: string;
 };

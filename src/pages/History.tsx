@@ -1,16 +1,16 @@
 import "./history.sass";
 
 import React from "react";
-
+import { useParams } from "react-router-dom";
 import { useSetError } from "../error";
+import type { Period, PeriodEx, Time, What } from "../model";
+import type { HistoryState } from "../states";
+import { EditHistoryWhat } from "./EditHistoryWhat";
+import { EditHistoryWhen } from "./EditHistoryWhen";
 import { getDifferences, getMinMax, getPeriodsEquals } from "./helpEditWhen";
 import { aggregate } from "./helpHistory";
 import { AllTotals, getAllTotals, Total } from "./helpTotals";
 
-import type { Period, Time, What } from "../model";
-import type { HistoryState } from "../states";
-import { EditHistoryWhat } from "./EditHistoryWhat";
-import { EditHistoryWhen } from "./EditHistoryWhen";
 type HistoryProps = {
   state: HistoryState;
   task: string | undefined;
@@ -22,10 +22,11 @@ type PeriodFilter = (it: Period) => boolean;
 type TimeOrText = "text" | "time";
 
 export const History: React.FunctionComponent<HistoryProps> = (props: HistoryProps) => {
-  const state = props.state;
-  const task = props.task;
-  const tag = props.tag;
-  const periods: Period[] = state.periods;
+  const { year } = useParams();
+  const numericYear = year ? +year : undefined;
+
+  const { state, task, tag } = props;
+  const periods: PeriodEx[] = state.periods;
   const setError = useSetError();
 
   const filter: PeriodFilter | undefined = task
@@ -33,7 +34,9 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
     : tag
       ? (it: Period) => !!it.tags && it.tags.some((it2) => it2 === tag)
       : undefined;
-  const filtered = filter ? periods.filter(filter) : periods;
+  let filtered = filter ? periods.filter(filter) : periods;
+
+  if (numericYear) filtered = filtered.filter((period) => period.startYear === numericYear);
 
   const rows = aggregate(filtered);
 
@@ -41,7 +44,6 @@ export const History: React.FunctionComponent<HistoryProps> = (props: HistoryPro
 
   const [editingRow, setEditingRow] = React.useState<[TimeOrText, Period] | undefined>(undefined);
 
-  //const [whenIsValid, setWhenIsValid] = React.useState<WhenIsValid>({ when: { start: 0, stop: 0 }, isValid: false });
   const editingPeriod: Period | undefined = editingRow ? editingRow[1] : undefined;
 
   function useOutsideAlerter(ref: React.RefObject<HTMLTableElement>) {
@@ -243,7 +245,6 @@ function showAllTotals(allTotals: AllTotals, props: HistoryProps): JSX.Element {
     );
   }
   const title = props.task ? getTaskText(props.task) : getTagText(props.tag!);
-  const getSubtitle = props.task ? getTagText : getTaskText;
   return (
     <fieldset>
       <legend>Totals</legend>

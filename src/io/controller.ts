@@ -6,7 +6,7 @@ import type {
   Config,
   NewTime,
   Parents,
-  Period,
+  PeriodEx,
   RequiredType,
   TagCount,
   TagInfo,
@@ -186,7 +186,7 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   }
 
   // interface HistoryState
-  readonly periods: Period[];
+  readonly periods: PeriodEx[];
 
   async editWhat(when: number, what: What): Promise<void> {
     const found = this.findTime(when);
@@ -215,6 +215,10 @@ export class Controller implements NowState, WhatState, HistoryState, SettingsSt
   }
   async editWhen(deleted: number[], inserted: Time[]): Promise<void> {
     await this.editDatabase(async (edit) => await edit.editWhen(deleted, inserted));
+  }
+  async setYear(year: string | undefined): Promise<void> {
+    this.config.year = year ?? "";
+    await this.saveConfig(this.config);
   }
 
   // EditWhatState
