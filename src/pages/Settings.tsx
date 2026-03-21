@@ -121,7 +121,9 @@ export const Settings: React.FunctionComponent<SettingsProps> = (props: Settings
           <span>Exported:</span>
           <span>
             <button onClick={onExport}>Save As</button>
-            <button onClick={onImport}>Import</button>
+            <button onClick={onImport} className="under">
+              Import
+            </button>
           </span>
         </div>
       </div>
